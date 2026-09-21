@@ -7,4 +7,3 @@ bp = Blueprint('main', __name__, url_prefix='/')
 def index():
     return render_template('main/index.html')
                            # question_list=question_list, page=page, kw=kw)
-    return redirect(url_for('movie._list'))
