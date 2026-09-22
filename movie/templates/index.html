@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row my-3" id="section1">
+        <div class="swiper s1mySwiper">
+          <div class="swiper-wrapper">
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+          </div>
+        </div>
+        <div class="swiper-button-next"></div>
+		<div class="swiper-button-prev"></div>
+    </div>
+
+    <div class="row my-3" id="section2">
+        <div class="swiper s2mySwiper">
+          <div class="swiper-wrapper">
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+              <div class="swiper-slide"><div class="ex"></div></div>
+          </div>
+        </div>
+        <div class="swiper-button-next"></div>
+		<div class="swiper-button-prev"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    var section1_swiper = new Swiper('.s1mySwiper', {
+        slidesPerView: "auto",
+        spaceBetween: 20,
+        navigation: {
+            nextEl: '#section1 .swiper-button-next',
+            prevEl: '#section1 .swiper-button-prev',
+        },
+    });
+    var section2_swiper = new Swiper('.s2mySwiper', {
+        slidesPerView: "auto",
+        spaceBetween: 20,
+        navigation: {
+            nextEl: '#section2 .swiper-button-next',
+            prevEl: '#section2 .swiper-button-prev',
+        },
+    });
+</script>
+{% endblock %}
