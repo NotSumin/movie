@@ -5,6 +5,7 @@ body {
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 400;
     color: #333;
+    margin: 0;
 }
 
 a {
@@ -27,6 +28,7 @@ ul {
     padding: 20px 40px;
     position: fixed;
     top: 0;
+    z-index: 1000;
 }
 #mainNav .main-nav-container {
     width: 100%;
@@ -55,11 +57,94 @@ ul {
     font-size: 20px;
     font-weight: 700;
 }
+#mainNav .main-nav-container .main-nav-list-start li span {
+    color: #333;
+}
+#mainNav .main-nav-container .main-nav-list-start>li:hover>a {
+    color: #e60012;
+    transition: 0.3s;
+}
+#mainNav .main-nav-container .main-nav-list-start>li>a::after {
+    content: "";
+    display: block;
+    border-top: #e60012 3px solid;
+    transform: scaleX(0);
+    transform-origin: center;
+}
+#mainNav .main-nav-container .main-nav-list-start>li:hover>a::after {
+    transform: scaleX(1);
+    transition: 0.3s;
+}
+#mainNav .main-nav-container .main-nav-list-start>li:hover>span {
+    color: #e60012;
+    transition: 0.3s;
+    transform: rotate(180deg);
+    cursor: pointer;
+}
+#mainNav .main-nav-container .main-nav-list-start>li:not(:hover) a,
+#mainNav .main-nav-container .main-nav-list-start>li:not(:hover) a::after,
+#mainNav .main-nav-container .main-nav-list-start>li:not(:hover) span {
+    transition: 0.3s;
+}
+.main-nav-list-dropdown-customer {
+    position: relative;
+}
+.main-nav-list-dropdown-customer div {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    top: 40px;
+    left: 0;
+    height: 80px;
+    width: 100%;
+}
+.main-nav-list-dropdown-customer:hover div {
+    display: block;
+}
+.main-nav-list-dropdown-customer:hover div ul  {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-inline: 0;
+}
+.main-nav-list-dropdown-customer:hover div ul li {
+    width: 100%;
+}
+.main-nav-list-dropdown-customer:hover div ul li a {
+    font-size: 16px;
+}
+.main-nav-list-dropdown-customer:hover div ul li:hover {
+    background-color: #e60012;
+}
+.main-nav-list-dropdown-customer:hover div ul li:hover a {
+    color: #fff;
+}
 #mainNav .main-nav-container .main-nav-list-end {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding: 0 20px;
+}
+#mainNav .main-nav-container .main-nav-list-end li {
+    padding: 0 10px;
+}
+#mainNav .main-nav-container .main-nav-list-end .main-nav-login a {
+    background-color: #e60012;
+    color: #fff;
+    border-radius: 25px;
+    padding: 10px 20px;
+}
+#mainNav .main-nav-container .main-nav-list-end li:not(.main-nav-login):hover a {
+    color: #e60012;
+    transition: 0.3s;
+}
+#mainNav .main-nav-container .main-nav-list-end .main-nav-login:hover a {
+    background-color: #b8000f;
+    transition: 0.3s;
+}
+#mainNav .main-nav-container .main-nav-list-end li:not(.main-nav-login):not(:hover) a,
+#mainNav .main-nav-container .main-nav-list-end .main-nav-login:not(:hover) a {
+    transition: 0.3s;
 }

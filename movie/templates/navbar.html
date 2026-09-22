@@ -5,11 +5,14 @@
             <li>
                 <a href="{{ url_for('main.index') }}">예매</a>
             </li>
-            <li>
-                <a href="{{ url_for('main.index') }}">상영시관표</a>
-            </li>
-            <li>
-                <a href="{{ url_for('main.index') }}">고객센터</a>
+            <li class="main-nav-list-dropdown-customer">
+                <a href="{{ url_for('main.index') }}">고객센터</a> <span class="material-symbols-outlined">keyboard_arrow_down</span>
+                <div>
+                    <ul>
+                        <li><a href="{{ url_for('main.index') }}">Q&A</a></li>
+                        <li><a href="{{ url_for('main.index') }}">공지사항</a></li>
+                    </ul>
+                </div>
             </li>
         </ul>
         <ul class="main-nav-list main-nav-list-end">
@@ -21,7 +24,7 @@
             <li>
                 <a href="{{ url_for('auth.signup') }}">회원가입</a>
             </li>
-            <li>
+            <li class="main-nav-login">
                 <a href="{{ url_for('auth.login') }}">로그인</a>
             </li>
             {% endif %}
