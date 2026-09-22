@@ -1,26 +1,31 @@
-    <nav class="navbar bg-dark navbar-expand-sm" data-bs-theme="dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{{ url_for('main.index') }}">부귀영화</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          {% if g.user %}
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('auth.logout') }}">{{ g.user.username }} (로그아웃)</a>
+<nav id="mainNav">
+    <div class="main-nav-container">
+        <a class="main-nav-logo" href="{{ url_for('main.index') }}"><img id="mainNavLogo" src="{{ url_for('static', filename='img/logo.png') }}"></a>
+        <ul class="main-nav-list main-nav-list-start">
+            <li>
+                <a href="{{ url_for('main.index') }}">예매</a>
             </li>
-          </ul>
-          {% else %}
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('auth.signup') }}">회원가입</a>
+            <li>
+                <a href="{{ url_for('main.index') }}">상영시관표</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a>
+            <li>
+                <a href="{{ url_for('main.index') }}">고객센터</a>
             </li>
-          </ul>
-          {% endif %}
+        </ul>
+        <ul class="main-nav-list main-nav-list-end">
+            {% if g.user %}
+            <li>
+                <a href="{{ url_for('auth.logout') }}">{{ g.user.username }} (로그아웃)</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="{{ url_for('auth.signup') }}">회원가입</a>
+            </li>
+            <li>
+                <a href="{{ url_for('auth.login') }}">로그인</a>
+            </li>
+            {% endif %}
+        </ul>
         </div>
-      </div>
-    </nav>
+    </div>
+</nav>
