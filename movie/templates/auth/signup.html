@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h5 class="my-3 border-bottom pb-2">회원가입</h5>
@@ -7,20 +11,30 @@
         {{ form.csrf_token }}
         {% include 'form_errors.html' %}
 
-        {{ form.username.label }}
-        {{ form.username(class='form-control mb-3') }}
+        <div class="signup-field">
+          {{ form.username.label }}
+            {{ form.username(class='form-control') }}
+        </div>
 
-        {{ form.password1.label }}
-        {{ form.password1(class='form-control mb-3') }}
+        <div class="signup-field">
+            {{ form.email.label }}
+            {{ form.email(class='form-control') }}
+        </div>
 
-        {{ form.password2.label }}
-        {{ form.password2(class='form-control mb-3') }}
+        <div class="signup-field-password">
+            {{ form.password1.label }}
+            {{ form.password1(class='form-control') }}
+        </div>
 
-        {{ form.email.label }}
-        {{ form.email(class='form-control mb-3') }}
+        <div class="signup-field">
+            {{ form.password2.label }}
+            {{ form.password2(class='form-control') }}
+        </div>
 
-        {{ form.contact.label }}
-        {{ form.contact(class='form-control mb-3') }}
+        <div class="signup-field">
+            {{ form.contact.label }}
+            {{ form.contact(class='form-control') }}
+        </div>
 
         {{ form.submit(class='btn btn-primary') }}
     </form>
