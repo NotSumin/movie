@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ movie.title }} - 예고편</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #000;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .trailer-container {
+            width: 100%;
+            max-width: 1000px;
+            aspect-ratio: 16 / 9;
+        }
+
+        .trailer-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="trailer-container">
+
+    {% if movie.trailer_url %}
+
+        <iframe
+            src="{{ movie.trailer_url }}"
+            title="{{ movie.title }} 예고편"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+        </iframe>
+
+    {% else %}
+
+        <p style="color: white;">
+            등록된 예고편이 없습니다.
+        </p>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

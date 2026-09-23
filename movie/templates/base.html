@@ -41,6 +41,17 @@
 
     {% endblock %}
     <!-- 기본 템플릿 안에 삽입될 내용 End-->
+    {% set distributor_banners = [
+        {'url': 'https://direct.samsungfire.com/promotion/lottecinema/index.html', 'img': '/static/img/distributorbanner.png', 'alt': '삼성화재 광고', 'bg': '#E4F2FF'},
+        {'url': 'https://event.black-box.co.kr/lc/Default.aspx?ch=6&ver=2&mode=sktui', 'img': '/static/img/distributorbanner2.png', 'alt': '롯데시네마', 'bg': '#FADEDB'}
+    ] %}
+    {% set banner = distributor_banners|random %}
+    <div class="ad-banner distributor" style="background: {{ banner.bg }};">
+        <a href="{{ banner.url }}" target="_blank">
+            <img src="{{ banner.img }}" alt="{{ banner.alt }}">
+        </a>
+    </div>
+    {% include 'footer.html' %}
 
     <!-- bootstrap JS CDN-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
