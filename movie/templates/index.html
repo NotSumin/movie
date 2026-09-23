@@ -14,7 +14,7 @@
                         <div class="swiper-wrapper">
                             {% for movie in popular_movies %}
                             <div class="swiper-slide">
-                                <a href="#" class="movie-card">
+                                <a href="{{ url_for('movie.detail', movie_id=movie.id) }}" class="movie-card">
                                     <div class="movie-poster">
                                         {% if movie.poster_url %}
                                         <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
@@ -46,7 +46,7 @@
                         <div class="swiper-wrapper">
                             {% for movie in age_movies  %}
                             <div class="swiper-slide">
-                                <a href="#" class="movie-card">
+                                <a href="{{ url_for('movie.detail', movie_id=movie.id) }}" class="movie-card">
                                         <div class="movie-poster">
                                             {% if movie.poster_url %}
                                             <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
@@ -78,7 +78,7 @@
                         <div class="swiper-wrapper">
                             {% for movie in long_movies %}
                             <div class="swiper-slide">
-                                <a href="#" class="movie-card">
+                                <a href="{{ url_for('movie.detail', movie_id=movie.id) }}" class="movie-card">
                                     <div class="movie-poster">
                                         {% if movie.poster_url %}
                                         <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
@@ -110,7 +110,7 @@
                         <div class="swiper-wrapper">
                             {% for movie in short_movies %}
                             <div class="swiper-slide">
-                                <a href="#" class="movie-card">
+                                <a href="{{ url_for('movie.detail', movie_id=movie.id) }}" class="movie-card">
                                     <div class="movie-poster">
                                         {% if movie.poster_url %}
                                         <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">

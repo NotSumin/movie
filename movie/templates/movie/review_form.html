@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .review-form-wrap { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+  .review-form-title { font-size: 22px; font-weight: bold; margin-bottom: 20px; }
+  .review-form-title span { color: #777; font-size: 16px; font-weight: normal; margin-left: 8px; }
+
+  .form-row { margin-bottom: 20px; }
+  .form-row label { display: block; margin-bottom: 8px; font-weight: bold; }
+  .form-row select {
+    padding: 10px 14px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;
+  }
+  .form-row textarea {
+    width: 100%; box-sizing: border-box; min-height: 160px; padding: 14px;
+    border: 1px solid #ccc; border-radius: 4px; font-size: 15px; resize: vertical;
+  }
+  .form-error { color: #e60012; font-size: 13px; margin-top: 6px; }
+
+  .form-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .btn-submit, .btn-cancel {
+    padding: 12px 28px; border: none; border-radius: 4px; font-weight: bold;
+    font-size: 15px; cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  .btn-submit { background: #333; color: #fff; }
+  .btn-cancel { background: #eee; color: #333; }
+</style>
+
+<div class="review-form-wrap">
+  <h2 class="review-form-title">관람평 작성 <span>{{ movie.title }}</span></h2>
+
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="form-row">
+      {{ form.rating.label }}
+      {{ form.rating() }}
+      {% for error in form.rating.errors %}
+        <div class="form-error">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="form-row">
+      {{ form.content.label }}
+      {{ form.content(placeholder='영화에 대한 솔직한 관람평을 남겨주세요.') }}
+      {% for error in form.content.errors %}
+        <div class="form-error">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="form-actions">
+      <a class="btn-cancel" href="{{ url_for('movie.detail', movie_id=movie.id) }}">취소</a>
+      <button class="btn-submit" type="submit">등록</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

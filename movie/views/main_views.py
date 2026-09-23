@@ -33,4 +33,8 @@ def index():
         long_movies=long_movies,
         short_movies=short_movies
     )
-                           # question_list=question_list, page=page, kw=kw)
+
+# 마이페이지 임시 라우트
+@bp.route('/mypage')
+def mypage():
+    return render_template('mypage/mypage.html')

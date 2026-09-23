@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/question.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <h5 class="my-3 border-bottom pb-2">문의내용</h5>
+    <form method="post" novalidate>
+        {{ form.csrf_token }}
+        {% include 'form_errors.html' %}
+
+        <div class="question-field">
+          {{ form.title.label }}
+            {{ form.title(class='form-control') }}
+        </div>
+
+        <div class="question-field">
+            {{ form.content.label }}
+            {{ form.content(class='form-control') }}
+        </div>
+
+        <div class="question-field">
+            {{ form.image.label }}
+            {{ form.image(class='form-control') }}
+        </div>
+
+        {{ form.submit(class='signup-button') }}
+
+    </form>
+</div>
+
+
+
+
+{% endblock %}
