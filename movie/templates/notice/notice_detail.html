@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notice.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+    <div class="container">
+        <table class="notice-table table mt-5">
+            <thead>
+                <tr>
+                    <th class="notice-title">{{ notice.title }}</th>
+                </tr>
+                <tr class="table-light">
+                    <th class="text-end">등록일: {{ notice.create_date.strftime('%Y-%m-%d') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div style="min-height:400px;">
+                            {{ notice.content }}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table notice-table">
+            <tbody>
+                {% if next_notice %}
+                <tr>
+                    <th>다음글 <i class="fa-solid fa-angle-up"></i></th>
+                    <td>
+                        <a href="{{ url_for('notice.notice_detail', notice_id=next_notice.id) }}">
+                            {{ next_notice.title }}
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+
+                {% if prev_notice %}
+                <tr>
+                    <th>이전글 <i class="fa-solid fa-angle-down"></i></th>
+                    <td>
+                        <a href="{{ url_for('notice.notice_detail', notice_id=prev_notice.id) }}">
+                            {{ prev_notice.title }}
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <p class="text-center">
+            <a class="btn btn-dark" href="{{ url_for('notice.notice_list') }}">목록</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

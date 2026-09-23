@@ -43,3 +43,9 @@ class Review(db.Model):
     content = db.Column(db.Text, nullable=True)            # 관람평 내용
     created_at = db.Column(db.DateTime, nullable=False)
     updated_at = db.Column(db.DateTime, nullable=True)
+
+class Notice(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    create_date = db.Column(db.DateTime, nullable=False)

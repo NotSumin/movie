@@ -1,0 +1,117 @@
+/* swiper style */
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    /*background: #444;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* swiper style */
+
+/* 기본 Swiper 화살표 커스텀 */
+.swiper-button-next,
+.swiper-button-prev {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 20px;
+    color: #333;
+    background: transparent;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    background: #fff;
+    transition: 0.2s;
+}
+
+.swiper-button-prev {
+    left: 0 !important;
+    transform: translateX(-50%);
+}
+
+.swiper-button-next {
+    right: 0 !important;
+    transform: translateX(50%);
+}
+
+.swiper-button-next svg,
+.swiper-button-prev svg {
+    display: none;
+}
+
+.swiper-button-prev::before,
+.swiper-button-next::before {
+    color: inherit;
+}
+
+.swiper-button-prev::before {
+    content: "\f053";
+}
+
+.swiper-button-next::before {
+    content: "\f054";
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    color: #333;
+    transition: 0.2s;
+}
+
+.swiper-button-prev.swiper-button-disabled,
+.swiper-button-next.swiper-button-disabled {
+    opacity: 0;
+}
+
+/* 공통 */
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: 400;
+}
+
+
+/* 메인-섹션1 */
+.section-title h2 {
+    font-size:28px;
+    font-weight: 700;
+}
+.movie-section .section-inner {
+    position: relative;
+}
+.movie-section .movie-swiper {
+    width:100%;
+}
+.movie-section .movie-swiper .swiper-slide {
+    width: 180px;
+    height: 300px;
+}
+.movie-section .movie-swiper .swiper-slide img {
+    border-radius: 10px;
+    overflow: hidden;
+    width: 180px;
+    height:250px;
+    object-fit: cover;
+}
+.movie-info {
+    width:180px;
+}
+.movie-info h3 {
+    font-size: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
