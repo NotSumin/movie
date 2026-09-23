@@ -16,7 +16,7 @@ class AnswerForm(FlaskForm):
     submit = SubmitField('답변등록')
 
 class UserCreateForm(FlaskForm):
-    username = StringField('사용자 이름', validators=[DataRequired(), Length(min=3, max=25)])
+    username = StringField('아이디', validators=[DataRequired(), Length(min=3, max=25)])
     password1 = PasswordField('비밀번호', validators=[DataRequired(), EqualTo('password2', message='비밀번호가 일치하지 않습니다.')])
     password2 = PasswordField('비밀번호 확인', validators=[DataRequired()])
     email = EmailField('이메일', validators=[DataRequired(), Email()])
@@ -24,6 +24,6 @@ class UserCreateForm(FlaskForm):
     submit = SubmitField('저장하기')
 
 class UserLoginForm(FlaskForm):
-    username = StringField('사용자 이름', validators=[DataRequired(), Length(min=3, max=25)])
+    username = StringField('아이디', validators=[DataRequired(), Length(min=3, max=25)])
     password = PasswordField('비밀번호', validators=[DataRequired()])
     submit = SubmitField('로그인')

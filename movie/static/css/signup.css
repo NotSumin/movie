@@ -26,3 +26,22 @@
     width: 400px;
     height: 40px;
 }
+.btn-login {
+    width: calc(100% - 20px);
+    max-width:118px;
+    height: 118px;
+    margin-left:20px;
+    margin-top:28px;
+}
+.login-left {
+    width:68%;
+}
+.login-right {
+    width:32%;
+}
+.btn-login {
+    background-color:#e60012;
+    color:#fff;
+    border:none;
+    border-radius: 5px;
+}
