@@ -1,19 +1,36 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <h5 class="my-3 border-bottom pb-2">로그인</h5>
-    <form method="post" novalidate>
-        {{ form.csrf_token }}
-        {% include 'form_errors.html' %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card bg-light">
+                <div class="card-body p-4 p-sm-5">
+                    <h2 class="card-title text-center mb-4 fw-bold">로그인</h2>
+                    <form method="post" novalidate>
+                        {{ form.csrf_token }}
+                        {% include 'form_errors.html' %}
+                        <div class="d-flex">
+                            <div class="login-left">
+                            {{ form.username.label(class='mb-1') }}
+                            {{ form.username(class='form-control mb-3') }}
 
-        {{ form.username.label }}
-        {{ form.username(class='form-control mb-3') }}
+                            {{ form.password.label(class='mb-1') }}
+                            {{ form.password(class='form-control mb-3') }}
+                            </div>
+                            <div class="login-right">
+                                {{ form.submit(class='btn-login') }}
+                            </div>
+                        </div>
 
-        {{ form.password.label }}
-        {{ form.password(class='form-control mb-3') }}
-
-        {{ form.submit(class='btn btn-primary') }}
-    </form>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
