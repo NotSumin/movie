@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import StringField, TextAreaField, SubmitField, PasswordField, EmailField
 from wtforms.validators import DataRequired, Length, EqualTo, Email
 from flask_wtf.file import MultipleFileField, FileAllowed
@@ -25,3 +26,15 @@ class UserLoginForm(FlaskForm):
     username = StringField('사용자 이름', validators=[DataRequired(), Length(min=3, max=25)])
     password = PasswordField('비밀번호', validators=[DataRequired()])
     submit = SubmitField('로그인')
+
+class ReviewCreateForm(FlaskForm):
+    rating = SelectField(
+        '평점',
+        choices=[(str(i), f'{i}점') for i in range(10, 0, -1)],
+        validators=[DataRequired()],
+        coerce=int,
+    )
+    content = TextAreaField(
+        '관람평',
+        validators=[DataRequired('관람평 내용을 입력해주세요.'), Length(min=2, max=1000)],
+    )
