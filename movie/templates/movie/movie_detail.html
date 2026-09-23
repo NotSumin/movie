@@ -62,8 +62,8 @@
     .trailer-title { margin-top: 10px; font-size: 16px; font-weight: bold;}
     .trailer-link {position: relative; display: block;}
     .play-button {position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 0, 0, 0.45); display: flex; align-items: center;justify-content: center;}
-    .ad-banner { margin-top: 50px; }
-    .ad-banner.distributor {width: 100vw; margin-left: calc(50% - 50vw); padding: 0; background: #E4F2FF; color: #333; display: flex; justify-content: center; align-items: center; overflow: hidden;}
+    {#.ad-banner { margin-top: 50px; }#}
+    {#.ad-banner.distributor {width: 100vw; margin-left: calc(50% - 50vw); padding: 0; background: #E4F2FF; color: #333; display: flex; justify-content: center; align-items: center; overflow: hidden;}#}
     .play-button::after { content: ''; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 16px solid #ffffff; margin-left: 4px;}
 
 
@@ -210,11 +210,7 @@
             <img src="/static/img/banner.png" alt="광고">
         </a>
     </div>
-    <div class="ad-banner distributor" >
-        <a href="https://direct.samsungfire.com/promotion/lottecinema/index.html" target="_blank">
-            <img src="/static/img/distributorbanner.png" alt="배급사광고" >
-        </a>
-    </div>
+
     </div>
     <!--################################################################얘는 추후에 base.html 블럭 스크립트에 합류-->
     <script>
