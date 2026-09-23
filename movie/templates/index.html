@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="page-inner">
     <div class="container">
@@ -10,20 +14,18 @@
                         <div class="swiper-wrapper">
                             {% for movie in popular_movies %}
                             <div class="swiper-slide">
-                                <div class="swiper-slide">
-                                    <a href="#" class="movie-card">
-                                        <div class="movie-poster">
-                                            {% if movie.poster_url %}
-                                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
-                                            {% else %}
-                                            <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
-                                            {% endif %}
-                                        </div>
-                                        <div class="movie-info mt-2">
-                                            <h3>{{ movie.title }}</h3>
-                                        </div>
-                                    </a>
-                                </div>
+                                <a href="#" class="movie-card">
+                                    <div class="movie-poster">
+                                        {% if movie.poster_url %}
+                                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                                        {% else %}
+                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        {% endif %}
+                                    </div>
+                                    <div class="movie-info mt-2">
+                                        <h3>{{ movie.title }}</h3>
+                                    </div>
+                                </a>
                             </div>
                             {% endfor %}
                         </div>
@@ -44,8 +46,7 @@
                         <div class="swiper-wrapper">
                             {% for movie in age_movies  %}
                             <div class="swiper-slide">
-                                <div class="swiper-slide">
-                                    <a href="#" class="movie-card">
+                                <a href="#" class="movie-card">
                                         <div class="movie-poster">
                                             {% if movie.poster_url %}
                                             <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
@@ -57,7 +58,6 @@
                                             <h3>{{ movie.title }}</h3>
                                         </div>
                                     </a>
-                                </div>
                             </div>
                             {% endfor %}
                         </div>
@@ -78,20 +78,18 @@
                         <div class="swiper-wrapper">
                             {% for movie in long_movies %}
                             <div class="swiper-slide">
-                                <div class="swiper-slide">
-                                    <a href="#" class="movie-card">
-                                        <div class="movie-poster">
-                                            {% if movie.poster_url %}
-                                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
-                                            {% else %}
-                                            <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
-                                            {% endif %}
-                                        </div>
-                                        <div class="movie-info mt-2">
-                                            <h3>{{ movie.title }}</h3>
-                                        </div>
-                                    </a>
-                                </div>
+                                <a href="#" class="movie-card">
+                                    <div class="movie-poster">
+                                        {% if movie.poster_url %}
+                                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                                        {% else %}
+                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        {% endif %}
+                                    </div>
+                                    <div class="movie-info mt-2">
+                                        <h3>{{ movie.title }}</h3>
+                                    </div>
+                                </a>
                             </div>
                             {% endfor %}
                         </div>
@@ -112,20 +110,18 @@
                         <div class="swiper-wrapper">
                             {% for movie in short_movies %}
                             <div class="swiper-slide">
-                                <div class="swiper-slide">
-                                    <a href="#" class="movie-card">
-                                        <div class="movie-poster">
-                                            {% if movie.poster_url %}
-                                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
-                                            {% else %}
-                                            <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
-                                            {% endif %}
-                                        </div>
-                                        <div class="movie-info mt-2">
-                                            <h3>{{ movie.title }}</h3>
-                                        </div>
-                                    </a>
-                                </div>
+                                <a href="#" class="movie-card">
+                                    <div class="movie-poster">
+                                        {% if movie.poster_url %}
+                                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                                        {% else %}
+                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        {% endif %}
+                                    </div>
+                                    <div class="movie-info mt-2">
+                                        <h3>{{ movie.title }}</h3>
+                                    </div>
+                                </a>
                             </div>
                             {% endfor %}
                         </div>
