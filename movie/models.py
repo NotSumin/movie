@@ -1,3 +1,4 @@
+from datetime import datetime
 from movie import db
 
 class Admin(db.Model):
@@ -49,3 +50,19 @@ class Notice(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     create_date = db.Column(db.DateTime, nullable=False)
+
+class Question(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    title =db.Column(db.VARCHAR(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
+
+class Answer(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id', ondelete='CASCADE'), nullable=False)
+    question = db.relationship(Question, backref=db.backref('answers',cascade='all, delete-orphan'))
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)

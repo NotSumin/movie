@@ -26,3 +26,16 @@
     width: 400px;
     height: 40px;
 }
+
+.signup-button {
+    background-color: #e60012;
+    color: white;
+    margin-top: 30px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border-style: none;
+}
+.signup-button:hover, .signup-button:active {
+    background-color: #b8000f;
+    color: white;
+}
