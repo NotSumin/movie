@@ -1,5 +1,7 @@
 import functools
 
+from datetime import datetime
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, g
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -16,8 +18,10 @@ def signup():
         user = User.query.filter_by(username=form.username.data).first()
         if not user:
             user = User(username = form.username.data,
-                 password = generate_password_hash(form.password1.data),
-                 email = form.email.data)
+                password = generate_password_hash(form.password1.data),
+                email = form.email.data,
+                contact = form.contact.data,
+                created_at = datetime.now())
             db.session.add(user)
             db.session.commit()
             return redirect(url_for('main.index'))

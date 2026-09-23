@@ -1,0 +1,21 @@
+/*notice*/
+.notice-table {
+    border-top:1px solid #ddd;
+}
+.notice-table th, td {
+    height:60px;
+    vertical-align: middle;
+}
+.notice-table th.notice-title {
+    height:65px;
+}
+.page-link {
+    color:#333;
+}
+.page-link:hover {
+    --bs-pagination-hover-color: #333;
+}
+.active>.page-link, .page-link.active {
+    background-color: #333;
+    border-color:#333;
+}

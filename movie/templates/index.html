@@ -1,60 +1,159 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<div class="container">
-    <div class="row my-3" id="section1">
-        <div class="swiper s1mySwiper">
-          <div class="swiper-wrapper">
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-          </div>
-        </div>
-        <div class="swiper-button-next"></div>
-		<div class="swiper-button-prev"></div>
-    </div>
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
 
-    <div class="row my-3" id="section2">
-        <div class="swiper s2mySwiper">
-          <div class="swiper-wrapper">
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-              <div class="swiper-slide"><div class="ex"></div></div>
-          </div>
+{% block content %}
+<div class="page-inner">
+    <div class="container">
+        <div class="row my-5">
+            <div class="movie-section" id="section1">
+                <div class="section-inner">
+                    <div class="swiper movie-swiper">
+                        <div class="swiper-wrapper">
+                            {% for movie in popular_movies %}
+                            <div class="swiper-slide">
+                                <a href="#" class="movie-card">
+                                    <div class="movie-poster">
+                                        {% if movie.poster_url %}
+                                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                                        {% else %}
+                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        {% endif %}
+                                    </div>
+                                    <div class="movie-info mt-2">
+                                        <h3>{{ movie.title }}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
         </div>
-        <div class="swiper-button-next"></div>
-		<div class="swiper-button-prev"></div>
+
+        <div class="row my-5">
+            <div class="movie-section" id="section2">
+                <div class="section-title mb-3">
+                    <h2>지금 인기있는</h2>
+                </div>
+                <div class="section-inner">
+                    <div class="swiper movie-swiper">
+                        <div class="swiper-wrapper">
+                            {% for movie in age_movies  %}
+                            <div class="swiper-slide">
+                                <a href="#" class="movie-card">
+                                        <div class="movie-poster">
+                                            {% if movie.poster_url %}
+                                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                                            {% else %}
+                                            <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                            {% endif %}
+                                        </div>
+                                        <div class="movie-info mt-2">
+                                            <h3>{{ movie.title }}</h3>
+                                        </div>
+                                    </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-5">
+            <div class="movie-section" id="section3">
+                <div class="section-title mb-3">
+                    <h2>오직 부귀영화에서만!</h2>
+                </div>
+                <div class="section-inner">
+                    <div class="swiper movie-swiper">
+                        <div class="swiper-wrapper">
+                            {% for movie in long_movies %}
+                            <div class="swiper-slide">
+                                <a href="#" class="movie-card">
+                                    <div class="movie-poster">
+                                        {% if movie.poster_url %}
+                                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                                        {% else %}
+                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        {% endif %}
+                                    </div>
+                                    <div class="movie-info mt-2">
+                                        <h3>{{ movie.title }}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-5">
+            <div class="movie-section" id="section4">
+                <div class="section-title mb-3">
+                    <h2>감성을 채우는 예술</h2>
+                </div>
+                <div class="section-inner">
+                    <div class="swiper movie-swiper">
+                        <div class="swiper-wrapper">
+                            {% for movie in short_movies %}
+                            <div class="swiper-slide">
+                                <a href="#" class="movie-card">
+                                    <div class="movie-poster">
+                                        {% if movie.poster_url %}
+                                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                                        {% else %}
+                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        {% endif %}
+                                    </div>
+                                    <div class="movie-info mt-2">
+                                        <h3>{{ movie.title }}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block script %}
 <script>
-    var section1_swiper = new Swiper('.s1mySwiper', {
-        slidesPerView: "auto",
-        spaceBetween: 20,
-        navigation: {
-            nextEl: '#section1 .swiper-button-next',
-            prevEl: '#section1 .swiper-button-prev',
-        },
-    });
-    var section2_swiper = new Swiper('.s2mySwiper', {
-        slidesPerView: "auto",
-        spaceBetween: 20,
-        navigation: {
-            nextEl: '#section2 .swiper-button-next',
-            prevEl: '#section2 .swiper-button-prev',
-        },
+    document.addEventListener("DOMContentLoaded", function () {
+        const movieSwipers = document.querySelectorAll(".movie-swiper");
+        movieSwipers.forEach(function (swiperElement) {
+            new Swiper(swiperElement, {
+                slidesPerView: "auto",
+                spaceBetween: 16,
+                grabCursor: true,
+                speed: 500,
+                updateOnWindowResize: true,
+                watchOverflow: true,
+                navigation: {
+                    nextEl:swiperElement.parentElement.querySelector(".swiper-button-next"),
+                    prevEl:swiperElement.parentElement.querySelector(".swiper-button-prev")
+                }
+            });
+        });
     });
 </script>
 {% endblock %}
