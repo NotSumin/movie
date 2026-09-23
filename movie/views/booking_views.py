@@ -2,8 +2,15 @@ from flask import Blueprint, render_template
 
 from movie.models import Movie, Review
 
-bp = Blueprint('movie', __name__, url_prefix='/movie')
+bp = Blueprint('booking', __name__, url_prefix='/booking')
 
+
+@bp.route('/')
+def index():
+    # movies = Movie.query.order_by(Movie.created_at.desc()).all()
+    return render_template('booking/booking_main.html'
+                           # , movies=movies
+                           )
 
 @bp.route('/detail/<int:movie_id>')
 def detail(movie_id):

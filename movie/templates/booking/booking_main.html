@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/booking_main.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="bookingContainer" class="container">
+    <div class="booking-steps">
+        <div id="bookingStep1" class="booking-step">
+            <strong>01<br>상영시간</strong>
+        </div>
+        <div id="bookingStep2" class="booking-step">
+            <strong>02<br>인원/좌석</strong>
+        </div>
+        <div id="bookingStep3" class="booking-step">
+            <strong>03<br>결제</strong>
+        </div>
+        <div id="bookingStep4" class="booking-step">
+            <strong>04<br>결제완료</strong>
+        </div>
+    </div>
+    <div class="booking-search-theatres">
+        <div class="booking-search-title">영화관</div>
+        <div class="booking-search-theatres-list">
+            <div id="bookingLocationsList">
+                <ul>
+                    <li>MY 영화관(0)</li>
+                    <li>서울(21)</li>
+                    <li>경기/인천(39)</li>
+                    <li>충청/대전(12)</li>
+                    <li>전라/광주(11)</li>
+                    <li>경북/대구(14)</li>
+                    <li>경남/부산/울산(21)</li>
+                    <li>강원(5)</li>
+                    <li>제주(2)</li>
+                </ul>
+            </div>
+            <div id="bookingTheatresList">
+                <ul>
+                    <li>MY 영화관(0)</li>
+                    <li>서울(21)</li>
+                    <li>경기/인천(39)</li>
+                    <li>충청/대전(12)</li>
+                    <li>전라/광주(11)</li>
+                    <li>경북/대구(14)</li>
+                    <li>경남/부산/울산(21)</li>
+                    <li>강원(5)</li>
+                    <li>제주(2)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="booking-search-movies">
+        <div class="booking-search-title">영화 선택</div>
+        <div class="booking-search-movies-list">
+            <div class="booking-search-movies-filter">filter</div>
+            <div id="bookingMoviesList">
+                <ul>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
+                        <div class="movie-info">
+                            <div class="movie-title">
+                                <div class="movie-rating rating-all"></div>
+                                <p>Movie Title</p>
+                            </div>
+                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
+                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
+                        <div class="movie-info">
+                            <div class="movie-title">
+                                <div class="movie-rating rating-12"></div>
+                                <p>Movie Title</p>
+                            </div>
+                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
+                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
+                        <div class="movie-info">
+                            <div class="movie-title">
+                                <div class="movie-rating rating-15"></div>
+                                <p>Movie Title</p>
+                            </div>
+                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
+                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
+                        <div class="movie-info">
+                            <div class="movie-title">
+                                <div class="movie-rating rating-19"></div>
+                                <p>Movie Title</p>
+                            </div>
+                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
+                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
+                        <div class="movie-info">
+                            <div class="movie-title">
+                                <div class="movie-rating rating-15"></div>
+                                <p>Movie Title</p>
+                            </div>
+                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
+                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
+                        <div class="movie-info">
+                            <div class="movie-title">
+                                <div class="movie-rating rating-15"></div>
+                                <p>Movie Title</p>
+                            </div>
+                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
+                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
+                        <div class="movie-info">
+                            <div class="movie-title">
+                                <div class="movie-rating rating-15"></div>
+                                <p>Movie Title</p>
+                            </div>
+                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
+                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="booking-search-schedules">
+        <div class="booking-search-title">상영 일정</div>
+        <div id="bookingScheduleDatePicker" class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="booking-button">
+                        <p class="booking-month">9월</p>
+                        <p class="booking-date">23</p>
+                        <p class="booking-day">수</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">24</p>
+                        <p class="booking-day">목</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="booking-button">
+                        <p class="booking-month">9월</p>
+                        <p class="booking-date">23</p>
+                        <p class="booking-day">수</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">24</p>
+                        <p class="booking-day">목</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="booking-button">
+                        <p class="booking-month">9월</p>
+                        <p class="booking-date">23</p>
+                        <p class="booking-day">수</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">24</p>
+                        <p class="booking-day">목</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="booking-button">
+                        <p class="booking-month">9월</p>
+                        <p class="booking-date">23</p>
+                        <p class="booking-day">수</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">24</p>
+                        <p class="booking-day">목</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="booking-button">
+                        <p class="booking-month">9월</p>
+                        <p class="booking-date">23</p>
+                        <p class="booking-day">수</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">24</p>
+                        <p class="booking-day">목</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                    <div class="booking-button">
+                        <p class="booking-month"></p>
+                        <p class="booking-date">25</p>
+                        <p class="booking-day">금</p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    var sub_also_viewed = new Swiper('#bookingScheduleDatePicker', {
+        navigation: {
+            nextEl: '#bookingScheduleDatePicker .swiper-button-next',
+            prevEl: '#bookingScheduleDatePicker .swiper-button-prev'
+        },
+        spaceBetween: 10
+    });
+</script>
+
+{% endblock %}

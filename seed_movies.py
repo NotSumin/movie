@@ -22,7 +22,7 @@ movies_data = [
                         "37년 차 경력의 실버 인턴 기호가 입사하면서 벌어지는 세대 초월 오피스 라이프.",
         "poster_url": "",
         "runtime": 118,  # (추정)
-        "rating": "12세",  # (추정)
+        "rating": "12",  # (추정)
         "status": "상영중",
         "genres": ["코미디", "드라마"],
     },
@@ -32,7 +32,7 @@ movies_data = [
                         "부활하는 능력을 갖고 있다는 걸 알게 된 후 의문의 추격을 당하며 펼쳐지는 이야기.",
         "poster_url": "",
         "runtime": 110,  # (추정)
-        "rating": "15세",  # (추정)
+        "rating": "15",  # (추정)
         "status": "상영중",
         "genres": ["액션"],
     },
@@ -42,7 +42,7 @@ movies_data = [
                         "의혹과 배후를 추적하는 기자들과 형사의 이야기를 그린 미스터리 추적극.",
         "poster_url": "",
         "runtime": 132,  # (추정)
-        "rating": "15세",  # (추정)
+        "rating": "15",  # (추정)
         "status": "상영중",
         "genres": ["미스터리", "드라마"],
     },
@@ -53,7 +53,7 @@ movies_data = [
                         "복수의 한판을 벌이는 타짜 시리즈의 마지막 이야기.",
         "poster_url": "",
         "runtime": 140,  # (추정)
-        "rating": "15세",  # (추정)
+        "rating": "15",  # (추정)
         "status": "상영중",
         "genres": ["범죄", "드라마"],
     },
@@ -64,7 +64,7 @@ movies_data = [
                         "겪는 미지의 세계 속 여정을 그린 크리스토퍼 놀란 감독의 대서사시.",
         "poster_url": "",
         "runtime": 170,  # (추정)
-        "rating": "12세",  # (추정)
+        "rating": "12",  # (추정)
         "status": "상영중",
         "genres": ["액션", "어드벤처"],
     },
@@ -75,7 +75,7 @@ movies_data = [
                         "호러의 소재로 활용한 작품.",
         "poster_url": "",
         "runtime": 108,
-        "rating": "청소년관람불가",
+        "rating": "19",
         "status": "상영중",
         "genres": ["공포", "로맨스"],
     },
@@ -86,7 +86,7 @@ movies_data = [
                         "마지막 한 판을 벌인다.",
         "poster_url": "",
         "runtime": 185,
-        "rating": "12세",  # (추정)
+        "rating": "12",  # (추정)
         "status": "상영중",
         "genres": ["액션", "SF"],
     },
@@ -97,7 +97,7 @@ movies_data = [
                         "마주하는 이창동 감독 8년 만의 신작.",
         "poster_url": "",
         "runtime": 120,  # (추정)
-        "rating": "15세",  # (추정)
+        "rating": "15",  # (추정)
         "status": "상영중",
         "genres": ["드라마"],
     },
@@ -108,7 +108,7 @@ movies_data = [
                         "사투를 벌인다. 게임 '바이오하자드' 원작의 독립적 리부트작.",
         "poster_url": "",
         "runtime": 94,
-        "rating": "15세",  # (추정)
+        "rating": "15",  # (추정)
         "status": "상영중",
         "genres": ["공포"],
     },
@@ -118,7 +118,7 @@ movies_data = [
                         "아내 순애를 대신해 생애 처음 부엌에 들어서며 벌어지는 이야기.",
         "poster_url": "",
         "runtime": 80,  # (추정, 세로형 숏폼 극장 합본판)
-        "rating": "전체관람가",  # (추정)
+        "rating": "ALL",  # (추정)
         "status": "상영중",
         "genres": ["드라마", "가족"],
     },
@@ -129,7 +129,7 @@ movies_data = [
                         "통제하기 어려운 힘을 얻게 된 피터 파커가 새로운 위협에 맞선다.",
         "poster_url": "",
         "runtime": 144,
-        "rating": "12세",
+        "rating": "12",
         "status": "상영중",
         "genres": ["액션", "SF"],
     },
@@ -140,7 +140,7 @@ movies_data = [
                         "비밀을 파헤치고 거대한 사건에 맞서는 이야기를 그린 애니메이션 극장판.",
         "poster_url": "",
         "runtime": 90,  # (추정)
-        "rating": "전체관람가",  # (추정)
+        "rating": "ALL",  # (추정)
         "status": "상영중",
         "genres": ["애니메이션", "가족"],
     },
