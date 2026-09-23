@@ -1,0 +1,193 @@
+#bookingContainer {
+    width: 100%;
+    min-width: 1280px;
+    background: gray;
+    display: flex;
+    padding: 0;
+}
+#bookingContainer .booking-steps {
+    width: 10%;
+    min-width: 80px;
+    height: 700px;
+}
+#bookingContainer .booking-steps .booking-step {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-left: #333 1px solid;
+    border-right: #333 1px solid;
+    border-bottom: #333 1px solid;
+}
+#bookingContainer .booking-steps .booking-step:nth-of-type(1) {
+    border-top: #333 1px solid;
+}
+#bookingContainer .booking-steps .booking-step strong {
+    text-align: center;
+}
+#bookingContainer .booking-search-title {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #fff;
+    background-color: #000;
+}
+#bookingContainer .booking-search-theatres {
+    width: 25%;
+    min-width: 350px;
+    height: 800px;
+    background: yellow;
+}
+#bookingContainer .booking-search-theatres .booking-search-theatres-list {
+    display: flex;
+    height: calc(100% - 60px);
+}
+#bookingContainer .booking-search-theatres .booking-search-theatres-list>*{
+    width: 50%;
+    height: 100%;
+}
+#bookingContainer .booking-search-theatres .booking-search-theatres-list #bookingLocationsList {
+    background-color: #eee;
+}
+#bookingContainer .booking-search-theatres .booking-search-theatres-list #bookingTheatresList {
+    background-color: #fff;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-color: transparent transparent;;
+    scrollbar-width: thin;
+    transition: 0.3s;
+}
+#bookingContainer .booking-search-theatres .booking-search-theatres-list #bookingTheatresList:hover {
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+#bookingContainer .booking-search-theatres .booking-search-theatres-list ul li{
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+#bookingContainer .booking-search-movies {
+    width: 25%;
+    min-width: 350px;
+    height: 800px;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list {
+    width: 100%;
+    height: calc(100% - 60px);
+    background-color: #eee;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list .booking-search-movies-filter {
+    width: 100%;
+    height: 60px;
+    border-left: #ccc 1px solid;
+    border-right: #ccc 1px solid;
+    border-bottom: #ccc 1px solid;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList {
+    width: 100%;
+    height: calc(100% - 60px);
+    border-left: #ccc 1px solid;
+    border-right: #ccc 1px solid;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    overflow-y: auto;
+    scrollbar-color: transparent transparent;;
+    scrollbar-width: thin;
+    transition: 0.3s;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList:hover {
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul {
+    width: 100%;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    padding: 10px;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li img {
+    width: 70px;
+    height: 100px;
+    background-color: white;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info {
+    width: calc(100% - 70px);
+    height: 100px;
+    padding-left: 10px;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info p {
+    margin: 0;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info .movie-title {
+    font-weight: 700;
+    height: 40px;
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info .movie-title .movie-rating {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    color: #fff;
+    font-size: 16px;
+    margin-right: 4px;
+}
+#bookingMoviesList ul li .movie-info .movie-title .movie-rating.rating-all {
+    background: url("../img/rating_all.png");
+}
+#bookingMoviesList ul li .movie-info .movie-title .movie-rating.rating-12 {
+    background: url("../img/rating_12.png");
+}
+#bookingMoviesList ul li .movie-info .movie-title .movie-rating.rating-15 {
+    background: url("../img/rating_15.png");
+}
+#bookingMoviesList ul li .movie-info .movie-title .movie-rating.rating-19 {
+    background: url("../img/rating_19.png");
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info .movie-runtime {
+    font-weight: 700;
+    font-size: 12px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info .movie-runtime span {
+    font-size: 13px;
+    margin-right: 2px;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info .movie-release {
+    font-size: 12px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+#bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info .movie-release span {
+    font-size: 12px;
+    color: #888;
+    margin-right: 8px;
+}
+#bookingContainer .booking-search-schedules {
+    width: 40%;
+    min-width: 500px;
+    height: 800px;
+    background: blue;
+}
+#bookingContainer .booking-search-schedules #bookingScheduleDatePicker {
+    width: 100%;
+    height: 120px;
+    background-color: #fff;
+}
