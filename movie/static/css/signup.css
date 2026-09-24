@@ -39,22 +39,28 @@
     background-color: #b8000f;
     color: white;
 }
-.btn-login {
-    width: calc(100% - 20px);
-    max-width:118px;
-    height: 118px;
-    margin-left:20px;
-    margin-top:28px;
+
+/*로그인*/
+.page-bg {
+    width:100%;
+    background-color:#f2f2f2;
 }
 .login-left {
-    width:68%;
+    width: calc(100% - 111px);
 }
 .login-right {
-    width:32%;
+    width: 111px;
 }
-.btn-login {
+.login-btn {
+    width: calc(100% - 20px);
+    max-width: 91px;
+    height: 91px;
+    margin-left:20px;
     background-color:#e60012;
     color:#fff;
     border:none;
     border-radius: 5px;
+}
+.login-signup-btn {
+    font-size:13px;
 }
