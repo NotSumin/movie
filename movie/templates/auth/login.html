@@ -5,29 +5,34 @@
 {% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card bg-light">
-                <div class="card-body p-4 p-sm-5">
-                    <h2 class="card-title text-center mb-4 fw-bold">로그인</h2>
+<div class="page-bg py-4 my-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card-body p-3">
+                    <h5 class="my-3 pb-2">로그인</h5>
                     <form method="post" novalidate>
                         {{ form.csrf_token }}
                         {% include 'form_errors.html' %}
                         <div class="d-flex">
                             <div class="login-left">
-                            {{ form.username.label(class='mb-1') }}
-                            {{ form.username(class='form-control mb-3') }}
+                            {#{{ form.username.label(class='mb-1') }}#}
+                            {{ form.username(class='form-control mb-3', placeholder='아이디를 입력해주세요.') }}
 
-                            {{ form.password.label(class='mb-1') }}
-                            {{ form.password(class='form-control mb-3') }}
+                            {#{{ form.password.label(class='mb-1') }}#}
+                            {{ form.password(class='form-control mb-3', placeholder='비밀번호를 입력해주세요.') }}
                             </div>
                             <div class="login-right">
-                                {{ form.submit(class='btn-login') }}
+                                {{ form.submit(class='login-btn') }}
                             </div>
                         </div>
-
+                        <p class="login-signup-btn text-end"><a href="{{ url_for('auth.signup') }}">회원가입</a></p>
                     </form>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="card-body p-3 d-flex justify-content-center">
+                    <img src="/static/img/login_banner.png" alt="">
                 </div>
             </div>
         </div>
