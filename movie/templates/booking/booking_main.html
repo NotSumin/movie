@@ -20,33 +20,30 @@
             <strong>04<br>결제완료</strong>
         </div>
     </div>
-    <div class="booking-search-theatres">
+    <div class="booking-search-theaters">
         <div class="booking-search-title">영화관</div>
-        <div class="booking-search-theatres-list">
+        <div class="booking-search-theaters-list">
             <div id="bookingLocationsList">
                 <ul>
-                    <li>MY 영화관(0)</li>
-                    <li>서울(21)</li>
-                    <li>경기/인천(39)</li>
-                    <li>충청/대전(12)</li>
-                    <li>전라/광주(11)</li>
-                    <li>경북/대구(14)</li>
-                    <li>경남/부산/울산(21)</li>
-                    <li>강원(5)</li>
-                    <li>제주(2)</li>
+                    {% for region in regions %}
+                    {% if selected_region == region %}
+                    <li class="active-theater">{{ region }} ({{ theaters[region]|length }}) <span class="material-symbols-outlined">check_small</span></li>
+                    {% else %}
+                    <li>{{ region }} ({{ theaters[region]|length }})</li>
+                    {% endif %}
+                    {% endfor %}
                 </ul>
             </div>
-            <div id="bookingTheatresList">
+            <div id="bookingTheatersList">
                 <ul>
-                    <li>MY 영화관(0)</li>
-                    <li>서울(21)</li>
-                    <li>경기/인천(39)</li>
-                    <li>충청/대전(12)</li>
-                    <li>전라/광주(11)</li>
-                    <li>경북/대구(14)</li>
-                    <li>경남/부산/울산(21)</li>
-                    <li>강원(5)</li>
-                    <li>제주(2)</li>
+                    {% for theater in theaters[selected_region] %}
+                    {% if selected_theater == theater.name %}
+                    <li class="active-theater">{{ theater.name }} <span class="material-symbols-outlined">check_small</span></li>
+                    {% else %}
+                    <li>{{ theater.name }}</li>
+                    {% endif %}
+                    
+                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -142,196 +139,32 @@
         <div class="booking-search-title">상영 일정</div>
         <div id="bookingScheduleDatePicker" class="swiper">
             <div class="swiper-wrapper">
+                {% for week in datepicker %}
                 <div class="swiper-slide">
-                    <div class="booking-button">
-                        <p class="booking-month">9월</p>
-                        <p class="booking-date">23</p>
-                        <p class="booking-day">수</p>
+                    {% for i in week %}
+                    <div id="date_{{ i.full_date }}_{{ i.page_no }}" class="booking-button">
+                        <p class="booking-month">{{ i.month }}</p>
+                        {% if i.full_date == selected_date %}
+                        <p class="booking-date active-date">{{ i.date }}</p>
+                        {% else %}
+                        <p class="booking-date">{{ i.date }}</p>
+                        {% endif %}
+                        <p class="booking-day">{{ i.day }}</p>
                     </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">24</p>
-                        <p class="booking-day">목</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
+                    {% endfor %}
                 </div>
-                <div class="swiper-slide">
-                    <div class="booking-button">
-                        <p class="booking-month">9월</p>
-                        <p class="booking-date">23</p>
-                        <p class="booking-day">수</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">24</p>
-                        <p class="booking-day">목</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="booking-button">
-                        <p class="booking-month">9월</p>
-                        <p class="booking-date">23</p>
-                        <p class="booking-day">수</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">24</p>
-                        <p class="booking-day">목</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="booking-button">
-                        <p class="booking-month">9월</p>
-                        <p class="booking-date">23</p>
-                        <p class="booking-day">수</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">24</p>
-                        <p class="booking-day">목</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="booking-button">
-                        <p class="booking-month">9월</p>
-                        <p class="booking-date">23</p>
-                        <p class="booking-day">수</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">24</p>
-                        <p class="booking-day">목</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                    <div class="booking-button">
-                        <p class="booking-month"></p>
-                        <p class="booking-date">25</p>
-                        <p class="booking-day">금</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
         </div>
     </div>
+    <form action="{{ url_for('booking.index') }}" method="get" id="selectScheduleForm">
+        <input type="hidden" id="selected_region" name="selected_region" value="{{ selected_region or '' }}">
+        <input type="hidden" id="selected_theater" name="selected_theater" value="{{ selected_theater or '' }}">
+        <input type="hidden" id="selected_date" name="selected_date" value="{{ selected_date or '' }}">
+        <input type="hidden" id="selected_date_page" name="selected_date_page" value="{{ selected_date_page or '0' }}">
+    </form>
 </div>
 {% endblock %}
 
@@ -342,8 +175,52 @@
             nextEl: '#bookingScheduleDatePicker .swiper-button-next',
             prevEl: '#bookingScheduleDatePicker .swiper-button-prev'
         },
-        spaceBetween: 10
+        spaceBetween: 10,
+        initialSlide: "{{ selected_date_page }}"
     });
+
+    const regions = document.querySelectorAll("#bookingLocationsList li");
+    regions.forEach(region => {
+        region.addEventListener("click", function() {
+            // const url = '/booking/?id=42';
+            // fetch(url)
+            //     .then(response => {
+            //         if (!response.ok) {
+            //             throw new Error('Network response error');
+            //         }
+            //         return response.json(); // Parse JSON payload
+            //     })
+            //     .then(data => {
+            //         // Update only a specific element on the page
+            //         document.getElementById('result-container').innerText = data.message;
+            //         console.log(data.items);
+            //     })
+            //     .catch(error => {
+            //         console.error('Error fetching data:', error);
+            //     });
+            document.getElementById("selected_region").value = this.innerText.split(" (")[0];
+            document.getElementById("selected_theater").value = '';
+            document.getElementById("selectScheduleForm").submit();
+        });
+    });
+
+    const theaters = document.querySelectorAll("#bookingTheatersList li");
+    theaters.forEach(theater => {
+        theater.addEventListener("click", function() {
+            document.getElementById("selected_theater").value = this.innerHTML.split(" ")[0] != '' ? this.innerHTML.split(" ")[0] : this.innerHTML;
+            document.getElementById("selectScheduleForm").submit();
+        });
+    });
+
+    const dates = document.querySelectorAll(".booking-button");
+    dates.forEach(date => {
+        date.addEventListener("click", function() {
+            document.getElementById("selected_date").value = this.id.split("_")[1];
+            document.getElementById("selected_date_page").value = this.id.split("_")[2];
+            document.getElementById("selectScheduleForm").submit();
+        });
+    });
+    
 </script>
 
 {% endblock %}

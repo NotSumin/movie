@@ -37,24 +37,25 @@
     color: #fff;
     background-color: #000;
 }
-#bookingContainer .booking-search-theatres {
+#bookingContainer .booking-search-theaters {
     width: 25%;
     min-width: 350px;
     height: 800px;
     background: yellow;
 }
-#bookingContainer .booking-search-theatres .booking-search-theatres-list {
+#bookingContainer .booking-search-theaters .booking-search-theaters-list {
     display: flex;
     height: calc(100% - 60px);
 }
-#bookingContainer .booking-search-theatres .booking-search-theatres-list>*{
+#bookingContainer .booking-search-theaters .booking-search-theaters-list>*{
     width: 50%;
     height: 100%;
+    cursor: pointer;
 }
-#bookingContainer .booking-search-theatres .booking-search-theatres-list #bookingLocationsList {
+#bookingContainer .booking-search-theaters .booking-search-theaters-list #bookingLocationsList {
     background-color: #eee;
 }
-#bookingContainer .booking-search-theatres .booking-search-theatres-list #bookingTheatresList {
+#bookingContainer .booking-search-theaters .booking-search-theaters-list #bookingTheatersList {
     background-color: #fff;
     height: 100%;
     overflow-y: auto;
@@ -62,14 +63,28 @@
     scrollbar-width: thin;
     transition: 0.3s;
 }
-#bookingContainer .booking-search-theatres .booking-search-theatres-list #bookingTheatresList:hover {
+#bookingContainer .booking-search-theaters .booking-search-theaters-list #bookingTheatersList:hover {
     scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
-#bookingContainer .booking-search-theatres .booking-search-theatres-list ul li{
+#bookingContainer .booking-search-theaters .booking-search-theaters-list ul li {
     width: 100%;
     padding: 10px;
     font-size: 14px;
     font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: -1px;
+}
+#bookingContainer .booking-search-theaters .booking-search-theaters-list ul li.active-theater {
+    background-color: #fff;
+}
+#bookingContainer .booking-search-theaters .booking-search-theaters-list ul li.active-theater span {
+    color: #e60012;
+    width: 16px;
+    height: 16px;
+    position: relative;
+    bottom: 4px;
 }
 #bookingContainer .booking-search-movies {
     width: 25%;
@@ -190,4 +205,47 @@
     width: 100%;
     height: 120px;
     background-color: #fff;
+}
+#bookingScheduleDatePicker .swiper-button-next, #bookingScheduleDatePicker .swiper-button-prev {
+    color: #333;
+    height: 20px;
+    top: 60% !important;
+}
+
+#bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide {
+    display: flex;
+    justify-content: center;
+}
+#bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide .booking-button {
+    width: 13%;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+#bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide .booking-button > * {
+    width: 100%;
+    height: 30px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide .booking-button .booking-month {
+    font-weight: 700;
+    font-size: 10px;
+}
+#bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide .booking-button .booking-date {
+    font-weight: 700;
+}
+#bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide .booking-button .booking-date.active-date {
+    border-radius: 50%;
+    background-color: #000;
+    color: #fff;
+    width: 30px;
+}
+#bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide .booking-button .booking-day {
+    font-size: 12px;
 }
