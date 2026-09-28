@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 from movie.filter import korean_days
-from movie.models import Theater
+from movie.models import Theater, Auditorium, Schedule
 
+from sqlalchemy import func
 bp = Blueprint('booking', __name__, url_prefix='/booking')
 
 
@@ -13,8 +14,14 @@ def index():
 
     selected_region = request.args.get('selected_region', default='서울', type=str)
     selected_theater = request.args.get('selected_theater', default='', type=str)
+    selected_movie = request.args.get('selected_movie', default='', type=str)
     selected_date = request.args.get('selected_date', default=current_date.strftime("%Y-%m-%d"), type=str)
     selected_date_page = request.args.get('selected_date_page', default='0', type=str)
+
+    try:
+        datetime.strptime(selected_date, "%Y-%m-%d")
+    except ValueError:
+        selected_date = current_date.strftime("%Y-%m-%d")
 
     regions_query = Theater.query.with_entities(Theater.region).distinct().all()
     regions = []
@@ -56,41 +63,63 @@ def index():
             current_date = current_date + timedelta(days=1)
         datepicker.append(week)
 
+    queried_theater = Theater.query.filter_by(name=selected_theater).first()
+    queried_movies = {}
+    queried_schedules = {}
+    if queried_theater:
+        queried_movies = {
+            schedule.movie
+            for auditorium in queried_theater.auditoriums
+            for schedule in auditorium.schedules
+            if schedule.movie is not None
+        }
+        if selected_movie != '':
+            if selected_date == str(datetime.now().date()):
+                start_time = datetime.now()
+            else:
+                start_time = datetime.strptime(selected_date, "%Y-%m-%d")
+            end_time = datetime.combine(datetime.strptime(selected_date, "%Y-%m-%d"), time.max)
+            queried_schedules = Schedule.query.join(
+                Auditorium, Schedule.auditorium
+            ).filter(
+                Auditorium.theater_id == queried_theater.id,
+                Schedule.movie_id == selected_movie,
+                Schedule.showtime.between(start_time, end_time)
+            ).all()
+
+    movies = []
+    for movie in queried_movies:
+        movies.append({
+            'id': str(movie.id),
+            'title': movie.title,
+            'poster_url': movie.poster_url,
+            'rating': movie.rating,
+            'runtime': movie.runtime,
+            'created_at': movie.created_at.strftime("%Y-%m-%d"),
+        })
+    movies = sorted(movies, key=lambda x: x['title'])
+
+    schedules = []
+    for schedule in queried_schedules:
+        schedules.append({
+            'id': str(schedule.id),
+            'auditorium': schedule.auditorium.name,
+            'total_seats': schedule.auditorium.total_seats,
+            'showtime': schedule.showtime.strftime("%H:%M")
+        })
+    schedules = sorted(schedules, key=lambda x: x['showtime'])
+
     return render_template(
         'booking/booking_main.html',
         regions=regions,
         selected_region=selected_region,
         selected_theater=selected_theater,
-        theaters=theaters,
+        selected_movie=selected_movie,
         selected_date=selected_date,
         selected_date_page=selected_date_page,
-        datepicker=datepicker
+        datepicker=datepicker,
+        theaters=theaters,
+        movies=movies,
+        schedules=schedules
     )
 
-@bp.route('/detail/<int:movie_id>')
-def detail(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
-
-    reviews = Review.query.filter_by(movie_id=movie_id) \
-        .order_by(Review.created_at.desc()).all()
-    review_count = len(reviews)
-    avg_rating = round(sum(r.rating for r in reviews) / review_count, 1) if review_count else 0
-
-    # TODO: 실제 추천 로직으로 교체 (지금은 같은 상태의 최신 영화 3개)
-    recommended_movies = Movie.query.filter(Movie.id != movie_id) \
-        .order_by(Movie.created_at.desc()).limit(3).all()
-
-    return render_template(
-        'movie/movie_detail.html',
-        movie=movie,
-        reviews=reviews,
-        review_count=review_count,
-        avg_rating=avg_rating,
-        recommended_movies=recommended_movies,
-    )
-
-
-@bp.route('/list')
-def _list():
-    movies = Movie.query.order_by(Movie.created_at.desc()).all()
-    return render_template('movie/movie_list.html', movies=movies)
