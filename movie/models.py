@@ -26,6 +26,7 @@ class Movie(db.Model):
     director = db.Column(db.String(100),nullable=True)
     cast = db.Column(db.String(255),nullable=True)
     like_count = db.Column(db.Integer, default=0, nullable=False, server_default='0')
+    section = db.Column(db.String(20), nullable=True)
 
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,16 +1,3 @@
-# fetch_movies_tmdb.py
-# 프로젝트 루트(config.py, seed_movies.py와 같은 위치)에 두고 실행:
-#
-#   (Windows)  set TMDB_API_KEY=발급받은키
-#              python fetch_movies_tmdb.py
-#
-#   (Mac/Linux) export TMDB_API_KEY=발급받은키
-#               python fetch_movies_tmdb.py
-#
-# API 키를 코드에 직접 박지 않고 환경변수로 넘기는 방식입니다.
-# (환경변수 설정을 매번 하기 귀찮으면, 아래 TMDB_API_KEY = "" 에
-#  직접 키를 넣어도 동작은 합니다 — 단, 이 경우 절대 git에 커밋하지 마세요.)
-
 import os
 import requests
 
@@ -19,14 +6,10 @@ from movie.models import Movie, Genre
 
 app = create_app()
 
-TMDB_API_KEY = os.environ.get("TMDB_API_KEY", "")
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY", "9f7d17c5b4295b8147ae936221aaa104")
 BASE_URL = "https://api.themoviedb.org/3"
 IMAGE_BASE = "https://image.tmdb.org/t/p/w500"
 
-# DB에 이미 등록된 title과, TMDB에서 검색할 때 쓸 검색어를 따로 분리했습니다.
-# 재개봉판/한글 표기 때문에 검색이 안 되는 영화는 query만 영어 원제 등으로 바꿔주세요.
-# tmdb_id를 직접 지정하면 검색(search_movie) 없이 그 ID로 바로 상세정보를 가져옵니다.
-# 동명 영화(원작/리메이크 등)가 있어서 검색이 엉뚱한 걸 찾아올 때 사용하세요.
 movie_queries = [
     {"db_title": "인턴", "query": "인턴", "year": 2026, "tmdb_id": 607833},  # 여기에 정확한 ID 넣기
     {"db_title": "부활남: 더 레드", "query": "부활남", "year": 2026},
@@ -40,6 +23,24 @@ movie_queries = [
     {"db_title": "아버지의 집밥", "query": "아버지의 집밥", "year": 2026},
     {"db_title": "스파이더맨: 브랜드 뉴 데이", "query": "Spider-Man: Brand New Day", "year": 2026},
     {"db_title": "극장판 치이카와: 인어 섬의 비밀", "query": "치이카와", "year": 2026},
+
+    {"db_title": "알파(ALPHA)", "query": "알파", "year": None, "tmdb_id": 1284460},
+    {"db_title": "트루먼의 사랑", "query": "트루먼의 사랑", "year": None, "tmdb_id": 1384111},
+    {"db_title": "수련", "query": "수련", "year": None, "tmdb_id": 1330701},
+    {"db_title": "담요를 입은 사람", "query": "담요를 입은 사람", "year": None, "tmdb_id": 1251630},
+    {"db_title": "퓨리어스", "query": "퓨리어스", "year": None, "tmdb_id": 1280738},
+    {"db_title": "퍼펙트슛", "query": "퍼펙트슛", "year": None, "tmdb_id": 1356079},
+    {"db_title": "철들 무렵", "query": "철들 무렵", "year": None, "tmdb_id": 1532365},
+    {"db_title": "드로스테 저편의 우리들", "query": "드로스테 저편의 우리들", "year": None, "tmdb_id": 805627},
+    {"db_title": "사진의 얼굴", "query": "사진의 얼굴", "year": None, "tmdb_id": 1522680},
+    {"db_title": "빈집의 연인들", "query": "빈집의 연인들", "year": None, "tmdb_id": 1447630},
+    {"db_title": "지난 여름", "query": "지난 여름", "year": None, "tmdb_id": 1172563},
+    {"db_title": "싱 어게인", "query": "싱 어게인", "year": None, "tmdb_id": 1284016},
+    {"db_title": "어떻게 해야 했을까?", "query": "어떻게 해야 했을까", "year": None, "tmdb_id": 1188968},
+    {"db_title": "델마", "query": "델마", "year": None, "tmdb_id": 401898},
+    {"db_title": "캐리어를 끄는 소녀", "query": "캐리어를 끄는 소녀", "year": None, "tmdb_id": 1425837},
+    {"db_title": "파리의 사생활", "query": "파리의 사생활", "year": None, "tmdb_id": 1290432},
+    {"db_title": "산양들", "query": "산양들", "year": None, "tmdb_id": 1453301},
 ]
 
 
@@ -84,6 +85,42 @@ def get_kr_certification(tmdb_id):
     return None
 
 
+# ===== [번역 추가 1] 감독/배우 이름을 한글로 바꾸는 부분 =====
+_name_cache = {}
+
+
+def has_hangul(text):
+    return any("\uac00" <= ch <= "\ud7a3" for ch in text)
+
+
+def get_korean_name(person_id, fallback):
+    """인물 상세의 이름/also_known_as 에서 한글 이름을 찾고, 없으면 원래(영문) 이름을 그대로 씁니다."""
+    if person_id in _name_cache:
+        return _name_cache[person_id]
+
+    name = fallback
+    try:
+        res = requests.get(
+            f"{BASE_URL}/person/{person_id}",
+            params={"api_key": TMDB_API_KEY, "language": "ko-KR"},
+            timeout=10,
+        )
+        res.raise_for_status()
+        data = res.json()
+        if has_hangul(data.get("name", "")):
+            name = data["name"]
+        else:
+            for alias in data.get("also_known_as", []):
+                if has_hangul(alias):
+                    name = alias
+                    break
+    except requests.exceptions.RequestException:
+        pass  # 조회에 실패하면 영문 이름을 그대로 유지
+
+    _name_cache[person_id] = name
+    return name
+
+
 def get_credits(tmdb_id):
     res = requests.get(
         f"{BASE_URL}/movie/{tmdb_id}/credits",
@@ -93,14 +130,18 @@ def get_credits(tmdb_id):
     res.raise_for_status()
     data = res.json()
 
-    directors = [c["name"] for c in data.get("crew", []) if c.get("job") == "Director"]
+    directors = [
+        get_korean_name(c["id"], c["name"])
+        for c in data.get("crew", []) if c.get("job") == "Director"
+    ]
     director = ", ".join(directors) if directors else None
 
     # 출연진은 상위 5명(주연급)만
-    cast_list = [c["name"] for c in data.get("cast", [])[:5]]
+    cast_list = [get_korean_name(c["id"], c["name"]) for c in data.get("cast", [])[:5]]
     cast = ", ".join(cast_list) if cast_list else None
 
     return director, cast
+# ===== [번역 추가 1] 끝 =====
 
 
 def main():
@@ -143,6 +184,9 @@ def main():
 
             if detail.get("overview"):
                 movie.description = detail["overview"]
+            else:
+                # ===== [번역 추가 2] 한국어 줄거리가 없는 영화를 알려주는 부분 =====
+                print(f"[줄거리 한국어 없음] {db_title} → 직접 입력하거나 번역이 필요해요", flush=True)
             if detail.get("runtime"):
                 movie.runtime = detail["runtime"]
             if detail.get("poster_path"):
