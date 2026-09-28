@@ -1,13 +1,3 @@
-# seed_movies.py
-# 프로젝트 루트(movie 폴더와 같은 위치)에 두고 실행: python seed_movies.py
-#
-# poster_url은 저작권 있는 이미지라 비워뒀습니다.
-# 네이버 영화 / CGV / 롯데시네마 공식 페이지에서 포스터 이미지 링크를 복사해 채워주세요.
-#
-# 러닝타임에 '(추정)' 표시된 항목은 이 스크립트 작성 시점(2026-09-21) 기준
-# 공식 발표가 확인되지 않아 대략적인 값을 넣은 것입니다. 정확한 값은
-# 네이버 영화 등에서 확인 후 수정해주세요.
-
 from datetime import datetime
 
 from movie import create_app, db

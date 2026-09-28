@@ -146,9 +146,36 @@ body {
     height:100%;
     object-fit: cover;
 }
+#section1.movie-section .movie-poster {
+    position: relative;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+#section1.movie-section .movie-poster::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+    pointer-events: none;
+}
+#section1.movie-section .movie-card:hover .movie-poster::after {
+    background: rgba(0, 0, 0, 0.5);
+}
 #section1 .movie-des {
     width: 230px;
-    padding-bottom:0px;
+    top: 50%;
+    left: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    padding: 0 20px;
+    background-image: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+#section1.movie-section .movie-card:hover .movie-des {
+    opacity: 1;
 }
 #section1 .movie-des h3 {
     font-size: 17px;
