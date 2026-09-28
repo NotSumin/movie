@@ -53,85 +53,36 @@
         <div class="booking-search-movies-list">
             <div class="booking-search-movies-filter">filter</div>
             <div id="bookingMoviesList">
+                {% if movies|length > 0 %}
                 <ul>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
+                    {% for movie in movies %}
+                    <li id="movie_{{ movie.id }}" class="{% if selected_movie == movie.id %}active-movie{% endif %}">
+                        <img src="{{ movie.poster_url }}" alt="movie poster">
                         <div class="movie-info">
                             <div class="movie-title">
-                                <div class="movie-rating rating-all"></div>
-                                <p>Movie Title</p>
-                            </div>
-                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
-                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
-                        <div class="movie-info">
-                            <div class="movie-title">
+                                {% if movie.rating == "12" %}
                                 <div class="movie-rating rating-12"></div>
-                                <p>Movie Title</p>
-                            </div>
-                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
-                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
-                        <div class="movie-info">
-                            <div class="movie-title">
+                                {% elif movie.rating == "15" %}
                                 <div class="movie-rating rating-15"></div>
-                                <p>Movie Title</p>
-                            </div>
-                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
-                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
-                        <div class="movie-info">
-                            <div class="movie-title">
+                                {% elif movie.rating == "19" %}
                                 <div class="movie-rating rating-19"></div>
-                                <p>Movie Title</p>
+                                {% else %}
+                                <div class="movie-rating rating-all"></div>
+                                {% endif %}
+                                <p>{{ movie.title }}</p>
+                                {% if selected_movie == movie.id %}
+                                <span class="material-symbols-outlined">check_small</span>
+                                {% endif %}
                             </div>
-                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
-                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
+                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> {{ movie.runtime }}분</p>
+                            <p class="movie-release"><span>개봉일</span> {{ movie.created_at }}</p>
                         </div>
                     </li>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
-                        <div class="movie-info">
-                            <div class="movie-title">
-                                <div class="movie-rating rating-15"></div>
-                                <p>Movie Title</p>
-                            </div>
-                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
-                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
-                        <div class="movie-info">
-                            <div class="movie-title">
-                                <div class="movie-rating rating-15"></div>
-                                <p>Movie Title</p>
-                            </div>
-                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
-                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="movie poster">
-                        <div class="movie-info">
-                            <div class="movie-title">
-                                <div class="movie-rating rating-15"></div>
-                                <p>Movie Title</p>
-                            </div>
-                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> 60분</p>
-                            <p class="movie-release"><span>개봉일</span> 2026.09.23</p>
-                        </div>
-                    </li>
+                    {% endfor %}
                 </ul>
+                {% else %}
+                <div>Hi.</div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -158,10 +109,22 @@
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
         </div>
+        <div id="bookingSchedulesList">
+            {% for schedule in schedules %}
+            <div class="booking-schedule">
+                <p class="booking-schedule-time">{{ schedule.showtime }}</p>
+                <div class="booking-schedule-seats">
+                    <p><span>120</span>/<span>{{ schedule.total_seats }}</span></p>
+                    <p>{{ schedule.auditorium }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
     <form action="{{ url_for('booking.index') }}" method="get" id="selectScheduleForm">
         <input type="hidden" id="selected_region" name="selected_region" value="{{ selected_region or '' }}">
         <input type="hidden" id="selected_theater" name="selected_theater" value="{{ selected_theater or '' }}">
+        <input type="hidden" id="selected_movie" name="selected_movie" value="{{ selected_movie or '' }}">
         <input type="hidden" id="selected_date" name="selected_date" value="{{ selected_date or '' }}">
         <input type="hidden" id="selected_date_page" name="selected_date_page" value="{{ selected_date_page or '0' }}">
     </form>
@@ -170,7 +133,7 @@
 
 {% block script %}
 <script>
-    var sub_also_viewed = new Swiper('#bookingScheduleDatePicker', {
+    let sub_also_viewed = new Swiper('#bookingScheduleDatePicker', {
         navigation: {
             nextEl: '#bookingScheduleDatePicker .swiper-button-next',
             prevEl: '#bookingScheduleDatePicker .swiper-button-prev'
@@ -200,6 +163,7 @@
             //     });
             document.getElementById("selected_region").value = this.innerText.split(" (")[0];
             document.getElementById("selected_theater").value = '';
+            document.getElementById("selected_movie").value = '';
             document.getElementById("selectScheduleForm").submit();
         });
     });
@@ -208,6 +172,7 @@
     theaters.forEach(theater => {
         theater.addEventListener("click", function() {
             document.getElementById("selected_theater").value = this.innerHTML.split(" ")[0] != '' ? this.innerHTML.split(" ")[0] : this.innerHTML;
+            document.getElementById("selected_movie").value = '';
             document.getElementById("selectScheduleForm").submit();
         });
     });
@@ -217,6 +182,14 @@
         date.addEventListener("click", function() {
             document.getElementById("selected_date").value = this.id.split("_")[1];
             document.getElementById("selected_date_page").value = this.id.split("_")[2];
+            document.getElementById("selectScheduleForm").submit();
+        });
+    });
+
+    const movies = document.querySelectorAll("#bookingMoviesList li");
+    movies.forEach(movie => {
+        movie.addEventListener("click", function() {
+            document.getElementById("selected_movie").value = this.id.split("_")[1];
             document.getElementById("selectScheduleForm").submit();
         });
     });
