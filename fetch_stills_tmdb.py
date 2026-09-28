@@ -1,12 +1,3 @@
-# fetch_stills_tmdb.py
-# 프로젝트 루트에서 실행:
-#   set TMDB_API_KEY=발급받은_키   (같은 터미널 탭에서)
-#   python fetch_stills_tmdb.py
-#
-# fetch_movies_tmdb.py의 movie_queries를 그대로 재사용합니다.
-# 동명 영화 등으로 잘못 매칭될 경우, fetch_movies_tmdb.py에서 확인한
-# tmdb_id를 아래 movie_queries에도 똑같이 넣어주세요.
-
 import os
 import requests
 
@@ -15,14 +6,12 @@ from movie.models import Movie, Still
 
 app = create_app()
 
-TMDB_API_KEY = os.environ.get("TMDB_API_KEY", "")
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY", "9f7d17c5b4295b8147ae936221aaa104")
 BASE_URL = "https://api.themoviedb.org/3"
 IMAGE_BASE = "https://image.tmdb.org/t/p/w780"
 
 MAX_STILLS_PER_MOVIE = 40  # 원하는 최대 장수 (TMDB에 그만큼 없으면 있는 만큼만)
 
-# fetch_movies_tmdb.py의 movie_queries와 동일하게 맞춰주세요.
-# (특히 tmdb_id 값 — 동명 영화 잘못 매칭 방지용)
 movie_queries = [
     {"db_title": "인턴", "query": "인턴", "year": 2026, "tmdb_id": 607833},
     {"db_title": "부활남: 더 레드", "query": "부활남", "year": 2026, "tmdb_id": None},
@@ -36,6 +25,24 @@ movie_queries = [
     {"db_title": "아버지의 집밥", "query": "아버지의 집밥", "year": 2026, "tmdb_id": None},
     {"db_title": "스파이더맨: 브랜드 뉴 데이", "query": "Spider-Man: Brand New Day", "year": 2026, "tmdb_id": None},
     {"db_title": "극장판 치이카와: 인어 섬의 비밀", "query": "치이카와", "year": 2026, "tmdb_id": None},
+
+    {"db_title": "알파(ALPHA)", "query": "알파", "year": None, "tmdb_id": 1284460},
+    {"db_title": "트루먼의 사랑", "query": "트루먼의 사랑", "year": None, "tmdb_id": 1384111},
+    {"db_title": "수련", "query": "수련", "year": None, "tmdb_id": 1330701},
+    {"db_title": "담요를 입은 사람", "query": "담요를 입은 사람", "year": None, "tmdb_id": 1251630},
+    {"db_title": "퓨리어스", "query": "퓨리어스", "year": None, "tmdb_id": 1280738},
+    {"db_title": "퍼펙트슛", "query": "퍼펙트슛", "year": None, "tmdb_id": 1356079},
+    {"db_title": "철들 무렵", "query": "철들 무렵", "year": None, "tmdb_id": 1532365},
+    {"db_title": "드로스테 저편의 우리들", "query": "드로스테 저편의 우리들", "year": None, "tmdb_id": 805627},
+    {"db_title": "사진의 얼굴", "query": "사진의 얼굴", "year": None, "tmdb_id": 1522680},
+    {"db_title": "빈집의 연인들", "query": "빈집의 연인들", "year": None, "tmdb_id": 1447630},
+    {"db_title": "지난 여름", "query": "지난 여름", "year": None, "tmdb_id": 1172563},
+    {"db_title": "싱 어게인", "query": "싱 어게인", "year": None, "tmdb_id": 1284016},
+    {"db_title": "어떻게 해야 했을까?", "query": "어떻게 해야 했을까", "year": None, "tmdb_id": 1188968},
+    {"db_title": "델마", "query": "델마", "year": None, "tmdb_id": 401898},
+    {"db_title": "캐리어를 끄는 소녀", "query": "캐리어를 끄는 소녀", "year": None, "tmdb_id": 1425837},
+    {"db_title": "파리의 사생활", "query": "파리의 사생활", "year": None, "tmdb_id": 1290432},
+    {"db_title": "산양들", "query": "산양들", "year": None, "tmdb_id": 1453301},
 ]
 
 

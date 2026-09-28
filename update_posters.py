@@ -1,10 +1,3 @@
-# update_posters.py
-# 프로젝트 루트(config.py, seed_movies.py와 같은 위치)에 두고 실행:
-#   python update_posters.py
-#
-# 아래 posters 딕셔너리에 title별로 실제 포스터 이미지 URL만 채워 넣으면 됨.
-# 값이 빈 문자열("")인 영화는 건너뜀.
-
 from movie import create_app, db
 from movie.models import Movie
 

@@ -8,13 +8,18 @@ bp = Blueprint('main', __name__, url_prefix='/')
 
 @bp.route('/')
 def index():
-    popular_movies = Movie.query.filter(Movie.status == "상영중").all()
+    # 기존 12편은 section 값이 없음(None), 새로 추가한 17편은 'exclusive' / 'art'
+    popular_movies = Movie.query.filter(Movie.status == "상영중", Movie.section.is_(None)).all()
 
-    desc_movies = Movie.query.order_by(Movie.id.desc()).all()
+    desc_movies = Movie.query.filter(Movie.section.is_(None)).order_by(Movie.id.desc()).all()
 
-    rand_movies = Movie.query.order_by(db.func.random()).all()
+    # "오직 부귀영화에서만!" -> 새 영화 9편 (매번 순서 랜덤)
+    rand_movies = Movie.query.filter_by(section='exclusive') \
+        .order_by(db.func.random()).all()
 
-    asc_movies = Movie.query.order_by(Movie.id.asc()).all()
+    # "감성을 채우는 예술" -> 새 영화 8편
+    asc_movies = Movie.query.filter_by(section='art') \
+        .order_by(Movie.id.asc()).all()
 
     return render_template(
         "index.html",
