@@ -1,3 +1,7 @@
+ul {
+    margin: 0;
+}
+
 #bookingContainer {
     width: 100%;
     min-width: 1280px;
@@ -59,7 +63,7 @@
     background-color: #fff;
     height: 100%;
     overflow-y: auto;
-    scrollbar-color: transparent transparent;;
+    scrollbar-color: transparent transparent;
     scrollbar-width: thin;
     transition: 0.3s;
 }
@@ -113,7 +117,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     overflow-y: auto;
-    scrollbar-color: transparent transparent;;
+    scrollbar-color: transparent transparent;
     scrollbar-width: thin;
     transition: 0.3s;
 }
@@ -128,6 +132,7 @@
     height: 120px;
     display: flex;
     padding: 10px;
+    cursor: pointer;
 }
 #bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li img {
     width: 70px;
@@ -144,6 +149,7 @@
 }
 #bookingContainer .booking-search-movies .booking-search-movies-list #bookingMoviesList ul li .movie-info .movie-title {
     font-weight: 700;
+    width: 100%;
     height: 40px;
     padding-top: 10px;
     display: flex;
@@ -159,6 +165,17 @@
     color: #fff;
     font-size: 16px;
     margin-right: 4px;
+}
+#bookingMoviesList ul li .movie-info .movie-title > p {
+    width: calc(100% - 42px);
+}
+#bookingMoviesList ul li .movie-info .movie-title>span {
+    color: #e60012;
+    width: 14px;
+    height: 16px;
+    position: relative;
+    right: 0;
+    bottom: 4px;
 }
 #bookingMoviesList ul li .movie-info .movie-title .movie-rating.rating-all {
     background: url("../img/rating_all.png");
@@ -195,23 +212,27 @@
     color: #888;
     margin-right: 8px;
 }
+#bookingMoviesList ul li.active-movie {
+    background-color: #fff;
+}
+
 #bookingContainer .booking-search-schedules {
     width: 40%;
     min-width: 500px;
     height: 800px;
-    background: blue;
+    background: #fff;
 }
 #bookingContainer .booking-search-schedules #bookingScheduleDatePicker {
     width: 100%;
     height: 120px;
     background-color: #fff;
+    border-bottom: #ccc 1px solid;
 }
 #bookingScheduleDatePicker .swiper-button-next, #bookingScheduleDatePicker .swiper-button-prev {
     color: #333;
     height: 20px;
     top: 60% !important;
 }
-
 #bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide {
     display: flex;
     justify-content: center;
@@ -248,4 +269,39 @@
 }
 #bookingContainer .booking-search-schedules #bookingScheduleDatePicker .swiper-slide .booking-button .booking-day {
     font-size: 12px;
+}
+#bookingContainer .booking-search-schedules #bookingSchedulesList {
+    width: 100%;
+    height: calc(100% - 120px);
+    padding: 20px 15px;
+    display: flex;
+}
+#bookingContainer .booking-search-schedules #bookingSchedulesList .booking-schedule {
+    width: 100px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: #ccc 1px solid;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+#bookingContainer .booking-search-schedules #bookingSchedulesList .booking-schedule .booking-schedule-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    font-weight: 700;
+    margin: 0;
+}
+#bookingContainer .booking-search-schedules #bookingSchedulesList .booking-schedule .booking-schedule-seats {
+    width: calc(100% - 10px);
+    height: 16px;
+    display: flex;
+    justify-content: space-between;;
+    align-items: center;
+    font-size: 12px;
+    margin-top: 10px;
 }
