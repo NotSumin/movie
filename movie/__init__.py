@@ -30,7 +30,7 @@ def create_app():
     from . import models
 
     # 블루프린트 등록
-    from .views import main_views, auth_views, movie_views, question_views, notice_views, answer_views, booking_views
+    from .views import main_views, auth_views, movie_views, question_views, notice_views, answer_views, booking_views, mypage_views
     app.register_blueprint(main_views.bp)
     app.register_blueprint(auth_views.bp)
     app.register_blueprint(movie_views.bp)
@@ -38,6 +38,7 @@ def create_app():
     app.register_blueprint(question_views.bp)
     app.register_blueprint(answer_views.bp)
     app.register_blueprint(booking_views.bp)
+    app.register_blueprint(mypage_views.bp)
 
     # 필터 등록
     from .filter import format_datetime

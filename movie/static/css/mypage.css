@@ -1,1 +1,600 @@
-/*mypage*/
+/* 전체 */
+* {
+    box-sizing: border-box;
+}
+
+.reservation-info {
+    font-size: 15px;
+}
+
+
+/* =========================================
+   예매내역 전체
+========================================= */
+
+.reservation-list {
+    position: relative;
+    background: #f8f9fa;
+    padding-top: 14px;
+}
+
+.reservation-list::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 157px;
+    width: 1px;
+    height: 14px;
+    background-color: #ddd;
+}
+
+
+/* =========================================
+   예매 하나
+========================================= */
+
+.reservation-item {
+    display: grid;
+    grid-template-columns: 140px 35px minmax(0, 1fr);
+    position: relative;
+    min-height: 90px;
+}
+
+
+/* 날짜 */
+
+.reservation-date {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+    padding: 15px;
+}
+
+
+/* =========================================
+   타임라인
+========================================= */
+
+.timeline {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #ddd;
+}
+
+
+/* 원 */
+
+.timeline-dot {
+    position: relative;
+    z-index: 2;
+
+    width: 16px;
+    height: 16px;
+
+    margin-top: 16px;
+
+    border: 1px solid #ccc;
+    border-radius: 50%;
+
+    background-color: white;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   오른쪽 영역
+========================================= */
+
+.reservation-content {
+    min-width: 0;
+    padding-left: 15px;
+    padding-bottom: 20px;
+    padding-right:15px;
+}
+
+
+/* Bootstrap accordion */
+
+.reservation-content .accordion-item {
+    border: 0;
+    background: transparent;
+}
+
+.reservation-header {
+    padding: 14px 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+
+    /* 긴 영화 제목 때문에 영역이 늘어나지 않도록 */
+    min-width: 0;
+}
+
+.reservation-header::after {
+    margin-left: 20px;
+    flex-shrink: 0;
+}
+
+.accordion-header {
+    padding-right: 30px;
+}
+
+.accordion-body {
+    padding: 0;
+}
+
+.accordion-button:not(.collapsed) {
+    --bs-accordion-active-color: #333;
+}
+
+
+/* =========================================
+   영화 / 가격 / 예매번호
+========================================= */
+
+.reservation-summary {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+
+    gap: 15px;
+}
+
+
+/* 영화 제목 */
+
+.movie-title {
+    font-size: 15px;
+    font-weight: 700;
+
+    min-width: 0;
+
+    /* 긴 영화명 처리 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* 가격 */
+
+.reservation-price {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* 예매번호 */
+
+.reservation-number {
+    font-size: 13px;
+    color: #999;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   상세 영역
+========================================= */
+
+.reservation-detail {
+    border: 1px solid #e5e5e5;
+
+    padding: 14px;
+
+    background: white;
+
+    /* 기존 700px 대신 반응형 */
+    width: 700px;
+    max-width: 100%;
+}
+
+
+/* =========================================
+   영화 정보
+========================================= */
+
+.movie-info {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+
+    min-width: 0;
+}
+
+
+/* 포스터 */
+
+.movie-poster {
+    width: 100px;
+    height: 130px;
+
+    object-fit: cover;
+
+    flex-shrink: 0;
+}
+
+
+/* 영화 상세 */
+
+.movie-detail {
+    flex: 1;
+    min-width: 0;
+
+    font-size: 13px;
+}
+
+
+/* 영화 상세 한 줄 */
+
+.movie-detail > div {
+    display: flex;
+    margin-bottom: 6px;
+
+    min-width: 0;
+}
+
+
+/* 왼쪽 항목 */
+
+.movie-detail span {
+    width: 65px;
+
+    color: #555;
+
+    flex-shrink: 0;
+}
+
+
+/* 오른쪽 값 */
+
+.movie-detail strong {
+    font-weight: 400;
+    color: #555;
+
+    min-width: 0;
+
+    word-break: break-word;
+}
+
+
+/* 예매취소 버튼 */
+
+.reservation-cancel-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   구분선
+========================================= */
+
+.reservation-detail hr {
+    margin: 15px 0;
+    border-color: #999;
+}
+
+
+/* =========================================
+   결제일
+========================================= */
+
+.payment-date {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.payment-date span {
+    margin-left: 10px;
+    color: #999;
+}
+
+
+/* =========================================
+   결제 정보
+========================================= */
+
+.payment-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    font-size: 13px;
+}
+
+.payment-row > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    min-width: 0;
+}
+
+.payment-row span {
+    color: #555;
+    white-space: nowrap;
+}
+
+.payment-row strong {
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   취소내역 테이블
+========================================= */
+
+.mypage-table {
+    width: 100%;
+    border-top: 1px solid #ddd;
+}
+
+.mypage-table th,
+.mypage-table td {
+    height: 60px;
+    vertical-align: middle;
+}
+
+
+/* =========================================
+   태블릿
+   768px 이하
+========================================= */
+
+@media (max-width: 767.98px) {
+
+    /* 날짜 / 타임라인 / 내용 */
+    .reservation-item {
+        grid-template-columns: 100px 30px minmax(0, 1fr);
+    }
+
+    .reservation-list::before {
+        left: 115px;
+    }
+
+
+    /* 날짜 */
+    .reservation-date {
+        font-size: 12px;
+        padding: 15px 8px 15px 5px;
+    }
+
+
+    /* 오른쪽 */
+    .reservation-content {
+        padding-left: 10px;
+    }
+
+
+    /* 영화 / 가격 / 번호 */
+    .reservation-summary {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .movie-title {
+        max-width: 100%;
+    }
+
+    .reservation-price {
+        font-size: 13px;
+    }
+
+    .reservation-number {
+        font-size: 11px;
+    }
+
+
+    /* 상세 */
+    .reservation-detail {
+        width: 100%;
+    }
+
+
+    /* 결제정보 */
+    .payment-row {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 20px 40px;
+    }
+
+
+    /* 테이블 */
+    .mypage-table {
+        min-width: 700px;
+    }
+}
+
+
+/* =========================================
+   모바일
+   576px 이하
+========================================= */
+
+@media (max-width: 575.98px) {
+
+    /* 안내문 */
+    .reservation-info {
+        font-size: 12px;
+    }
+
+
+    /* 예매 리스트 */
+    .reservation-list {
+        padding-top: 10px;
+    }
+
+
+    /* 날짜 / 타임라인 / 내용 */
+    .reservation-item {
+        grid-template-columns: 80px 25px minmax(0, 1fr);
+    }
+
+
+    .reservation-list::before {
+        left: 92px;
+    }
+
+
+    /* 날짜 */
+    .reservation-date {
+        font-size: 10px;
+        padding: 15px 5px 15px 0;
+    }
+
+
+    /* 타임라인 */
+    .timeline-dot {
+        width: 12px;
+        height: 12px;
+        margin-top: 17px;
+    }
+
+
+    /* 오른쪽 */
+    .reservation-content {
+        padding-left: 8px;
+        padding-bottom: 15px;
+    }
+
+
+    /* Accordion */
+    .reservation-header {
+        padding: 12px 0 !important;
+    }
+
+    .accordion-header {
+        padding-right: 5px;
+    }
+
+
+    /* 영화 제목 */
+    .movie-title {
+        font-size: 13px;
+
+        /*
+         * 모바일에서는 영화 제목을 한 줄로 유지
+         * 너무 길면 ... 처리
+         */
+        max-width: calc(100% - 10px);
+    }
+
+
+    /* 가격 */
+    .reservation-price {
+        font-size: 12px;
+    }
+
+
+    /* 예매번호 */
+    .reservation-number {
+        font-size: 10px;
+        width: 100%;
+    }
+
+
+    /* 상세 */
+    .reservation-detail {
+        padding: 10px;
+    }
+
+
+    /* 영화 정보 */
+    .movie-info {
+        gap: 10px;
+
+        flex-wrap: wrap;
+    }
+
+
+    /* 포스터 */
+    .movie-poster {
+        width: 70px;
+        height: 100px;
+    }
+
+
+    /* 영화 상세 */
+    .movie-detail {
+        font-size: 11px;
+
+        flex: 1;
+        min-width: calc(100% - 80px);
+    }
+
+
+    .movie-detail > div {
+        margin-bottom: 5px;
+    }
+
+
+    .movie-detail span {
+        width: 55px;
+    }
+
+
+    /* 거래번호 등 긴 텍스트 */
+    .movie-detail strong {
+        word-break: break-all;
+    }
+
+
+    /* 예매취소 */
+    .reservation-cancel-btn {
+        margin-left: auto;
+        margin-top: 5px;
+    }
+
+
+    /* 결제일 */
+    .payment-date {
+        font-size: 11px;
+    }
+
+    .payment-date span {
+        margin-left: 5px;
+    }
+
+
+    /* 결제정보 */
+    .payment-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .payment-row strong {
+        font-size: 11px;
+    }
+
+    .payment-row > div {
+        min-width: 0;
+    }
+
+
+    /* 취소내역 */
+    .mypage-table {
+        min-width: 650px;
+    }
+}

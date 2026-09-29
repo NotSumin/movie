@@ -18,6 +18,9 @@
         <ul class="main-nav-list main-nav-list-end">
             {% if g.user %}
             <li>
+                <a href="{{ url_for('mypage.mypage') }}">마이페이지</a>
+            </li>
+            <li>
                 <a href="{{ url_for('auth.logout') }}">{{ g.user.username }} (로그아웃)</a>
             </li>
             {% else %}
