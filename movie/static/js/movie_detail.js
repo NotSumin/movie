@@ -20,9 +20,55 @@ function openTrailer(url) {
     );
 }
 
+var mainTrailerBtn = document.getElementById('mainTrailerBtn');
+if (mainTrailerBtn) {
+    mainTrailerBtn.addEventListener('click', function () {
+        openTrailer(mainTrailerBtn.dataset.trailerUrl);
+    });
+}
+
 // ----- 관람평 작성 후 돌아왔을 때 관람평 탭 자동 열기 -----
 if (window.location.hash === '#tab-review') {
     document.querySelector('.tab-btn[data-tab="review"]').click();
+}
+
+// ----- 관람평 페이지네이션 -----
+var REVIEWS_PER_PAGE = 4;
+var reviewList = document.querySelector('.review-list');
+var reviewPagination = document.getElementById('reviewPagination');
+
+if (reviewList && reviewPagination) {
+    var reviewItems = reviewList.querySelectorAll('.review-item');
+    var reviewPageCount = Math.ceil(reviewItems.length / REVIEWS_PER_PAGE);
+
+    function showReviewPage(page) {
+        reviewItems.forEach(function (item, index) {
+            var itemPage = Math.floor(index / REVIEWS_PER_PAGE) + 1;
+            item.classList.toggle('review-hidden', itemPage !== page);
+        });
+        reviewPagination.querySelectorAll('.review-page-btn').forEach(function (btn) {
+            btn.classList.toggle('active', Number(btn.dataset.page) === page);
+        });
+    }
+
+    if (reviewPageCount > 1) {
+        for (var i = 1; i <= reviewPageCount; i++) {
+            var pageBtn = document.createElement('button');
+            pageBtn.type = 'button';
+            pageBtn.className = 'review-page-btn';
+            pageBtn.textContent = i;
+            pageBtn.dataset.page = i;
+            reviewPagination.appendChild(pageBtn);
+        }
+
+        reviewPagination.addEventListener('click', function (e) {
+            if (e.target.classList.contains('review-page-btn')) {
+                showReviewPage(Number(e.target.dataset.page));
+            }
+        });
+    }
+
+    showReviewPage(1);
 }
 
 // ----- 트레일러 슬라이더 -----
@@ -65,6 +111,27 @@ if (stillMoreBtn) {
             img.classList.remove('still-hidden');
         });
         stillMoreBtn.style.display = 'none';
+    });
+}
+
+// ----- 스틸컷 원본 보기 -----
+var stillGallery = document.getElementById('stillGallery');
+var stillLightbox = document.getElementById('stillLightbox');
+var stillLightboxImg = document.getElementById('stillLightboxImg');
+
+if (stillGallery && stillLightbox) {
+    stillGallery.addEventListener('click', function (e) {
+        if (e.target.tagName === 'IMG') {
+            stillLightboxImg.src = e.target.src;
+            stillLightbox.classList.add('show');
+        }
+    });
+
+    stillLightbox.addEventListener('click', function (e) {
+        if (e.target === stillLightbox) {
+            stillLightbox.classList.remove('show');
+            stillLightboxImg.src = '';
+        }
     });
 }
 
