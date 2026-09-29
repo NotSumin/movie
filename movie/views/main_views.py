@@ -9,17 +9,17 @@ bp = Blueprint('main', __name__, url_prefix='/')
 @bp.route('/')
 def index():
     # 기존 12편은 section 값이 없음(None), 새로 추가한 17편은 'exclusive' / 'art'
-    popular_movies = Movie.query.filter(Movie.status == "상영중", Movie.section.is_(None)).all()
+    popular_movies = Movie.query.filter(Movie.status == "상영중", Movie.section.is_(None)).limit(12).all()
 
-    desc_movies = Movie.query.filter(Movie.section.is_(None)).order_by(Movie.id.desc()).all()
+    desc_movies = Movie.query.filter(Movie.section.is_(None)).order_by(Movie.id.desc()).limit(12).all()
 
     # "오직 부귀영화에서만!" -> 새 영화 9편 (매번 순서 랜덤)
     rand_movies = Movie.query.filter_by(section='exclusive') \
-        .order_by(db.func.random()).all()
+        .order_by(db.func.random()).limit(12).all()
 
     # "감성을 채우는 예술" -> 새 영화 8편
     asc_movies = Movie.query.filter_by(section='art') \
-        .order_by(Movie.id.asc()).all()
+        .order_by(Movie.id.asc()).limit(12).all()
 
     return render_template(
         "index.html",
@@ -28,8 +28,3 @@ def index():
         rand_movies=rand_movies,
         asc_movies=asc_movies
     )
-
-# 마이페이지 임시 라우트
-@bp.route('/mypage')
-def mypage():
-    return render_template('mypage/mypage.html')
