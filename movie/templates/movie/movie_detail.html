@@ -27,7 +27,7 @@
       </div>
       <br>
       <div class="score-row">
-          <span class="tag trailer-tag" onclick="openTrailer('{{url_for('movie.trailer', movie_id=movie.id)}}')">
+          <span class="tag trailer-tag" id="mainTrailerBtn" data-trailer-url="{{ url_for('movie.trailer', movie_id=movie.id) }}">
               ▶ 예고편 재생
           </span>
           <span class="tag rating-tag" id="likeTag" data-movie-id="{{ movie.id }}">
@@ -92,6 +92,7 @@
           </div>
         {% endfor %}
       </div>
+      <div class="review-pagination" id="reviewPagination"></div>
     {% else %}
       <p class="review-empty">작성된 관람평이 없습니다.</p>
     {% endif %}
@@ -139,6 +140,9 @@
     {% if movie.stills|length > 9 %}
       <button class="btn-more" id="stillMoreBtn" type="button">더보기 ▽</button>
     {% endif %}
+    </div>
+    <div class="still-lightbox" id="stillLightbox">
+      <img id="stillLightboxImg" src="" alt="">
     </div>
 
     <div class="ad-banner">
