@@ -680,62 +680,110 @@ with (app.app_context()):
         {
             'auditorium': auditorium1_db,
             'movie_id': 1,
-            'showtime': showtimes[0]
+            'showtime': showtimes[0],
+            'adult_price': 15000,
+            'child_price': 11000,
+            'senior_price': 9000,
+            'disabled_price': 7000
         },
         {
             'auditorium': auditorium1_db,
             'movie_id': 2,
-            'showtime': showtimes[1]
+            'showtime': showtimes[1],
+            'adult_price': 13000,
+            'child_price': 11000,
+            'senior_price': 9000,
+            'disabled_price': 8000
         },
         {
             'auditorium': auditorium2_db,
             'movie_id': 3,
-            'showtime': showtimes[2]
+            'showtime': showtimes[2],
+            'adult_price': 13000,
+            'child_price': 11000,
+            'senior_price': 9000,
+            'disabled_price': 8000
         },
         {
             'auditorium': auditorium2_db,
             'movie_id': 4,
-            'showtime': showtimes[3]
+            'showtime': showtimes[3],
+            'adult_price': 16000,
+            'child_price': 12000,
+            'senior_price': 8000,
+            'disabled_price': 7000
         },
         {
             'auditorium': auditorium3_db,
             'movie_id': 5,
-            'showtime': showtimes[4]
+            'showtime': showtimes[4],
+            'adult_price': 12000,
+            'child_price': 9000,
+            'senior_price': 7000,
+            'disabled_price': 5000
         },
         {
             'auditorium': auditorium3_db,
             'movie_id': 6,
-            'showtime': showtimes[5]
+            'showtime': showtimes[5],
+            'adult_price': 13500,
+            'child_price': 10000,
+            'senior_price': 8500,
+            'disabled_price': 6000
         },
         {
             'auditorium': auditorium4_db,
             'movie_id': 7,
-            'showtime': showtimes[6]
+            'showtime': showtimes[6],
+            'adult_price': 11500,
+            'child_price': 95000,
+            'senior_price': 8000,
+            'disabled_price': 6500
         },
         {
             'auditorium': auditorium4_db,
             'movie_id': 8,
-            'showtime': showtimes[7]
+            'showtime': showtimes[7],
+            'adult_price': 15000,
+            'child_price': 12000,
+            'senior_price': 8000,
+            'disabled_price': 5000
         },
         {
             'auditorium': auditorium5_db,
             'movie_id': 9,
-            'showtime': showtimes[8]
+            'showtime': showtimes[8],
+            'adult_price': 10000,
+            'child_price': 8000,
+            'senior_price': 6000,
+            'disabled_price': 4000
         },
         {
             'auditorium': auditorium5_db,
             'movie_id': 10,
-            'showtime': showtimes[9]
+            'showtime': showtimes[9],
+            'adult_price': 9000,
+            'child_price': 7500,
+            'senior_price': 6000,
+            'disabled_price': 5000
         },
         {
             'auditorium': auditorium6_db,
             'movie_id': 11,
-            'showtime': showtimes[10]
+            'showtime': showtimes[10],
+            'adult_price': 22000,
+            'child_price': 16000,
+            'senior_price': 15000,
+            'disabled_price': 10000
         },
         {
             'auditorium': auditorium6_db,
             'movie_id': 12,
-            'showtime': showtimes[11]
+            'showtime': showtimes[11],
+            'adult_price': 6000,
+            'child_price': 3000,
+            'senior_price': 1000,
+            'disabled_price': 500
         },
     ]
 
@@ -743,12 +791,15 @@ with (app.app_context()):
         for auditorium in schedule_details['auditorium']:
             for i in range(35):
                 for showtime in schedule_details['showtime']:
-                    schedule = Schedule(
+                    schedules.append(Schedule(
                         movie_id=schedule_details['movie_id'],
                         auditorium_id=auditorium.id,
-                        showtime=datetime.combine(date.today()+timedelta(days=i), showtime)
-                    )
-                    schedules.append(schedule)
+                        showtime=datetime.combine(date.today()+timedelta(days=i), showtime),
+                        adult_price=schedule_details['adult_price'],
+                        child_price=schedule_details['child_price'],
+                        senior_price=schedule_details['senior_price'],
+                        disabled_price=schedule_details['disabled_price']
+                    ))
     db.session.add_all(schedules)
     db.session.commit()
 
