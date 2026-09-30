@@ -15,14 +15,16 @@ a {
 
 ul {
     list-style: none;
+    padding-inline: 0;
 }
 
 /* 내비게이션 바 */
 
 #mainNav {
     width: 100%;
+    min-width: 800px;
     height: 80px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     padding: 20px 40px;
@@ -105,7 +107,6 @@ ul {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding-inline: 0;
 }
 .main-nav-list-dropdown-customer:hover div ul li {
     width: 100%;

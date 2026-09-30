@@ -10,35 +10,17 @@ bp = Blueprint('booking', __name__, url_prefix='/booking')
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-    current_date=datetime.now()
-
-    selected_region = request.args.get('selected_region', default='서울', type=str)
-    selected_theater = request.args.get('selected_theater', default='', type=str)
-    selected_movie = request.args.get('selected_movie', default='', type=str)
-    selected_date = request.args.get('selected_date', default=current_date.strftime("%Y-%m-%d"), type=str)
-    selected_date_page = request.args.get('selected_date_page', default='0', type=str)
-
-    try:
-        datetime.strptime(selected_date, "%Y-%m-%d")
-    except ValueError:
-        selected_date = current_date.strftime("%Y-%m-%d")
-
-    regions_query = Theater.query.with_entities(Theater.region).distinct().all()
+    regions_query = Theater.query.with_entities(Theater.region, func.count(Theater.region)).group_by(Theater.region).order_by(Theater.id).all()
     regions = []
     for region in regions_query:
-        regions.append(region[0])
+        regions.append({
+            'name': region[0],
+            'theater_count': region[1]
+        })
+    theaters = get_theaters('서울')
 
-    theaters = {}
-    for region in regions:
-        sub_theaters = []
-        theaters_query = Theater.query.filter_by(region=region).all()
-        for theater in theaters_query:
-            sub_theaters.append({
-                'id': theater.id,
-                'name': theater.name
-            })
-        theaters[region] = sub_theaters
-    
+    import holidays
+    current_date = datetime.now()
     datepicker = []
     months = []
     for i in range(5):
@@ -49,23 +31,45 @@ def index():
                 'date': current_date.strftime("%d"),
                 'day': korean_days(current_date.strftime("%A")),
                 'full_date': current_date.strftime("%Y-%m-%d"),
-                'page_no': i
+                'is_red': True if current_date.date() in holidays.KR(years=current_date.year).keys() or korean_days(current_date.strftime("%A")) in ['토', '일'] else False
             }
-
             if i == 0 and j == 0:
                 date['day'] = '오늘'
-            
             if current_date.strftime("%m") not in months:
                 date['month'] = f'{current_date.strftime("%m")}월'
                 months.append(current_date.strftime("%m"))
-
             week.append(date)
             current_date = current_date + timedelta(days=1)
         datepicker.append(week)
 
-    queried_theater = Theater.query.filter_by(name=selected_theater).first()
+    return render_template(
+        'booking/booking_main.html',
+        regions=regions,
+        datepicker=datepicker,
+        theaters=theaters
+    )
+
+
+@bp.route('/theaters/<path:region>')
+def get_theaters(region):
+    theaters = []
+    theaters_query = Theater.query.filter_by(region=region).all()
+    for theater in theaters_query:
+        theaters.append({
+            'id': theater.id,
+            'name': theater.name
+        })
+
+    return theaters
+
+
+@bp.route('/movies/<int:theater_id>')
+def get_movies(theater_id):
+    if theater_id is None:
+        return []
+
+    queried_theater = Theater.query.filter_by(id=theater_id).first()
     queried_movies = {}
-    queried_schedules = {}
     if queried_theater:
         queried_movies = {
             schedule.movie
@@ -73,19 +77,6 @@ def index():
             for schedule in auditorium.schedules
             if schedule.movie is not None
         }
-        if selected_movie != '':
-            if selected_date == str(datetime.now().date()):
-                start_time = datetime.now()
-            else:
-                start_time = datetime.strptime(selected_date, "%Y-%m-%d")
-            end_time = datetime.combine(datetime.strptime(selected_date, "%Y-%m-%d"), time.max)
-            queried_schedules = Schedule.query.join(
-                Auditorium, Schedule.auditorium
-            ).filter(
-                Auditorium.theater_id == queried_theater.id,
-                Schedule.movie_id == selected_movie,
-                Schedule.showtime.between(start_time, end_time)
-            ).all()
 
     movies = []
     for movie in queried_movies:
@@ -99,6 +90,40 @@ def index():
         })
     movies = sorted(movies, key=lambda x: x['title'])
 
+    return movies
+
+
+@bp.route('/schedules/<int:theater_id>/<int:movie_id>/<path:selected_date>')
+def get_schedules(theater_id, movie_id, selected_date):
+    if theater_id is None or movie_id is None or selected_date is None:
+        return []
+    current_date = datetime.now()
+
+    try:
+        datetime.strptime(selected_date, "%Y-%m-%d")
+    except ValueError:
+        selected_date = current_date.strftime("%Y-%m-%d")
+    if datetime.strptime(selected_date, "%Y-%m-%d") < current_date:
+        selected_date = current_date.strftime("%Y-%m-%d")
+    theaters = []
+
+    queried_theater = Theater.query.filter_by(id=theater_id).first()
+    queried_schedules = {}
+    if queried_theater:
+        if movie_id != '':
+            if selected_date == str(datetime.now().date()):
+                start_time = datetime.now()
+            else:
+                start_time = datetime.strptime(selected_date, "%Y-%m-%d")
+            end_time = datetime.combine(datetime.strptime(selected_date, "%Y-%m-%d"), time.max)
+            queried_schedules = Schedule.query.join(
+                Auditorium, Schedule.auditorium
+            ).filter(
+                Auditorium.theater_id == queried_theater.id,
+                Schedule.movie_id == movie_id,
+                Schedule.showtime.between(start_time, end_time)
+            ).all()
+
     schedules = []
     for schedule in queried_schedules:
         schedules.append({
@@ -109,17 +134,4 @@ def index():
         })
     schedules = sorted(schedules, key=lambda x: x['showtime'])
 
-    return render_template(
-        'booking/booking_main.html',
-        regions=regions,
-        selected_region=selected_region,
-        selected_theater=selected_theater,
-        selected_movie=selected_movie,
-        selected_date=selected_date,
-        selected_date_page=selected_date_page,
-        datepicker=datepicker,
-        theaters=theaters,
-        movies=movies,
-        schedules=schedules
-    )
-
+    return schedules
