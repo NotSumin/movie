@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 def format_datetime(value, fmt='%Y년 %m월 %d일 %p %I:%M'):
     return value.strftime(fmt)
 
@@ -12,3 +13,9 @@ def korean_days(day):
         'Sunday': '일'
     }
     return days[day]
+=======
+def format_datetime(value, fmt='%Y년 %m월 %d일 %H:%M'):
+    if value is None:
+        return ""
+    return value.strftime(fmt)
+>>>>>>> Stashed changes
