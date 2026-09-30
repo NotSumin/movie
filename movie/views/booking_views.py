@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 from datetime import datetime, timedelta, time
 
 from movie.filter import korean_days
@@ -10,6 +10,11 @@ bp = Blueprint('booking', __name__, url_prefix='/booking')
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
+    try:
+        if request.method == 'POST':
+            return redirect(url_for('booking.seats', schedule_id=int(request.form.get('selected_schedule'))))
+    except:
+        print(request.form.get('selected_schedule'))
     regions_query = Theater.query.with_entities(Theater.region, func.count(Theater.region)).group_by(Theater.region).order_by(Theater.id).all()
     regions = []
     for region in regions_query:
@@ -135,3 +140,33 @@ def get_schedules(theater_id, movie_id, selected_date):
     schedules = sorted(schedules, key=lambda x: x['showtime'])
 
     return schedules
+
+
+@bp.route('/seats/<int:schedule_id>')
+def seats(schedule_id):
+    if schedule_id is None:
+        return redirect(url_for('booking.index'))
+
+    queried_schedule = Schedule.query.filter_by(id=schedule_id).first()
+    showtime_date = f'{queried_schedule.showtime.strftime("%Y.%m.%d")} ({korean_days(queried_schedule.showtime.strftime("%A"))})'
+    end_time = queried_schedule.showtime + timedelta(minutes=queried_schedule.movie.runtime)
+    showtime_time = f'{queried_schedule.showtime.strftime("%H:%M")} ~ {end_time.strftime("%H:%M")}'
+    auditorium = f'{queried_schedule.auditorium.theater.name} {queried_schedule.auditorium.name}'
+    schedule = {
+        'id': queried_schedule.id,
+        'title': queried_schedule.movie.title,
+        'poster_url': queried_schedule.movie.poster_url,
+        'rating': queried_schedule.movie.rating.lower(),
+        'showtime_date': showtime_date,
+        'showtime_time': showtime_time,
+        'auditorium': auditorium,
+        'seat_layout': queried_schedule.auditorium.seat_layout,
+        'adult_price': queried_schedule.adult_price,
+        'child_price': queried_schedule.child_price,
+        'senior_price': queried_schedule.senior_price,
+        'disabled_price': queried_schedule.disabled_price
+    }
+
+    return render_template(
+        'booking/booking_seat.html', schedule=schedule
+    )
