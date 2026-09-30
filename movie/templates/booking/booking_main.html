@@ -62,7 +62,7 @@
                     <div id="date_{{ i.full_date }}"
                          class="booking-button
                             {% if i.is_red %}booking-holiday{% endif %}
-                            {% if i == week[0] %}active-date{% endif %}">
+                            {% if i == week[0] and week == datepicker[0] %}active-date{% endif %}">
                         <p class="booking-month">{{ i.month }}</p>
                         <p class="booking-date">{{ i.date }}</p>
                         <p class="booking-day">{{ i.day }}</p>
@@ -80,13 +80,16 @@
                 <p>현재 선택하신 날짜의<br>상영 시간표를 준비하고 있습니다.</p>
             </div>
         </div>
+        <div class="booking-confirm">
+            <button id="bookingConfirmBtn" form="selectScheduleForm" type="submit" disabled>인원/좌석 선택</button>
+        </div>
     </div>
-    <form action="{{ url_for('booking.index') }}" method="get" id="selectScheduleForm">
-        <input type="hidden" id="selected_region" name="selected_region" value="{{ selected_region or '' }}">
-        <input type="hidden" id="selected_theater" name="selected_theater" value="{{ selected_theater or '' }}">
-        <input type="hidden" id="selected_movie" name="selected_movie" value="{{ selected_movie or '' }}">
-        <input type="hidden" id="selected_date" name="selected_date" value="{{ selected_date or '' }}">
-        <input type="hidden" id="selected_schedule" name="selected_schedule" value="{{ selected_schedule or '' }}">
+    <form action="{{ url_for('booking.index') }}" method="post" id="selectScheduleForm">
+        <input type="hidden" id="selected_region" name="selected_region" value="" required>
+        <input type="hidden" id="selected_theater" name="selected_theater" value="" required>
+        <input type="hidden" id="selected_movie" name="selected_movie" value="" required>
+        <input type="hidden" id="selected_date" name="selected_date" value="" required>
+        <input type="hidden" id="selected_schedule" name="selected_schedule" value="" required>
     </form>
 </div>
 {% endblock %}
@@ -143,6 +146,8 @@
             document.getElementById("selected_theater").value = '';
             document.getElementById("selected_movie").value = '';
             document.getElementById("selected_schedule").value = '';
+            const bookingConfirmBtn = document.getElementById('bookingConfirmBtn');
+            bookingConfirmBtn.disabled = true;
 
             const activeRegion = document.querySelector('#bookingLocationsList .active-theater');
             if (activeRegion) activeRegion.classList.remove('active-theater');
@@ -212,6 +217,8 @@
             document.getElementById("selected_theater").value = this.id.split("_")[1];
             document.getElementById("selected_movie").value = '';
             document.getElementById("selected_schedule").value = '';
+            const bookingConfirmBtn = document.getElementById('bookingConfirmBtn');
+            bookingConfirmBtn.disabled = true;
 
             const activeTheater = document.querySelector('#bookingTheatersList .active-theater');
             if (activeTheater) activeTheater.classList.remove('active-theater');
@@ -260,13 +267,14 @@
                     }
                     data.forEach(schedule => {
                         const scheduleDiv = document.createElement('div');
-                        scheduleDiv.id = `schedule${ schedule.id }`;
+                        scheduleDiv.id = `schedule_${ schedule.id }`;
                         scheduleDiv.classList.add('booking-schedule');
                         scheduleDiv.innerHTML = `<p class="booking-schedule-time">${ schedule.showtime }</p>
                             <div class="booking-schedule-seats">
                                 <p><span>120</span>/<span>${ schedule.total_seats }</span></p>
                                 <p>${ schedule.auditorium }</p>
                             </div>`;
+                        scheduleDiv.addEventListener("click", enableConfirm);
                         bookingSchedulesList.appendChild(scheduleDiv);
                     });
                 })
@@ -287,7 +295,30 @@
             this.classList.add('active-date');
         }
         document.getElementById("selected_schedule").value = '';
+        const bookingConfirmBtn = document.getElementById('bookingConfirmBtn');
+        bookingConfirmBtn.disabled = true;
     }
+
+    async function enableConfirm() {
+        selected_region = document.getElementById("selected_region").value;
+        selected_theater = document.getElementById("selected_theater").value;
+        selected_movie = document.getElementById("selected_movie").value;
+        selected_date = document.getElementById("selected_date").value;
+        document.getElementById("selected_schedule").value = this.id.split("_")[1];
+        selected_schedule = document.getElementById("selected_schedule").value;
+
+        const activeSchedule = document.querySelector('#bookingSchedulesList .active-schedule');
+        if (activeSchedule) activeSchedule.classList.remove('active-schedule');
+        this.classList.add('active-schedule');
+
+        const bookingConfirmBtn = document.getElementById('bookingConfirmBtn');
+        if (selected_region && selected_theater && selected_movie && selected_date && selected_schedule) {
+            bookingConfirmBtn.disabled = false;
+            bookingConfirmBtn.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+    }
+
+
 
     window.addEventListener("load", function() {
         fetch(`/booking/theaters/서울`)
@@ -327,13 +358,6 @@
     dates.forEach(date => {
         date.addEventListener("click", loadSchedules);
     });
-
-    {#schedules.forEach(schedule => {#}
-    {#    schedule.addEventListener("click", function() {#}
-    {#        document.getElementById("selected_schedule").value = this.id.split("_")[1];#}
-    {#        document.getElementById("selectScheduleForm").submit();#}
-    {#    });#}
     
 </script>
-
 {% endblock %}
