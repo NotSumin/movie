@@ -7,7 +7,7 @@
 {% block content %}
 <div id="bookingContainer" class="container">
     <div class="booking-steps">
-        <div id="bookingStep1" class="booking-step">
+        <div id="bookingStep1" class="booking-step active-step">
             <strong>01<br>상영시간</strong>
         </div>
         <div id="bookingStep2" class="booking-step">
@@ -26,24 +26,16 @@
             <div id="bookingLocationsList">
                 <ul>
                     {% for region in regions %}
-                    {% if selected_region == region %}
-                    <li class="active-theater">{{ region }} ({{ theaters[region]|length }}) <span class="material-symbols-outlined">check_small</span></li>
+                    {% if region.name == '서울' %}
+                    <li class="active-theater">{{ region.name }} ({{ region.theater_count }}) <span class="material-symbols-outlined">check_small</span></li>
                     {% else %}
-                    <li>{{ region }} ({{ theaters[region]|length }})</li>
+                    <li>{{ region.name }} ({{ region.theater_count }}) <span class="material-symbols-outlined">check_small</span></li>
                     {% endif %}
                     {% endfor %}
                 </ul>
             </div>
             <div id="bookingTheatersList">
                 <ul>
-                    {% for theater in theaters[selected_region] %}
-                    {% if selected_theater == theater.name %}
-                    <li class="active-theater">{{ theater.name }} <span class="material-symbols-outlined">check_small</span></li>
-                    {% else %}
-                    <li>{{ theater.name }}</li>
-                    {% endif %}
-                    
-                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -51,38 +43,12 @@
     <div class="booking-search-movies">
         <div class="booking-search-title">영화 선택</div>
         <div class="booking-search-movies-list">
-            <div class="booking-search-movies-filter">filter</div>
+{#            <div class="booking-search-movies-filter">filter</div>#}
             <div id="bookingMoviesList">
-                {% if movies|length > 0 %}
-                <ul>
-                    {% for movie in movies %}
-                    <li id="movie_{{ movie.id }}" class="{% if selected_movie == movie.id %}active-movie{% endif %}">
-                        <img src="{{ movie.poster_url }}" alt="movie poster">
-                        <div class="movie-info">
-                            <div class="movie-title">
-                                {% if movie.rating == "12" %}
-                                <div class="movie-rating rating-12"></div>
-                                {% elif movie.rating == "15" %}
-                                <div class="movie-rating rating-15"></div>
-                                {% elif movie.rating == "19" %}
-                                <div class="movie-rating rating-19"></div>
-                                {% else %}
-                                <div class="movie-rating rating-all"></div>
-                                {% endif %}
-                                <p>{{ movie.title }}</p>
-                                {% if selected_movie == movie.id %}
-                                <span class="material-symbols-outlined">check_small</span>
-                                {% endif %}
-                            </div>
-                            <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> {{ movie.runtime }}분</p>
-                            <p class="movie-release"><span>개봉일</span> {{ movie.created_at }}</p>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <div>Hi.</div>
-                {% endif %}
+                <div class="booking-movies-none">
+                    <span class="material-symbols-outlined">movie_off</span>
+                    <p>영화관을 선택해 주시기 바랍니다.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -93,13 +59,12 @@
                 {% for week in datepicker %}
                 <div class="swiper-slide">
                     {% for i in week %}
-                    <div id="date_{{ i.full_date }}_{{ i.page_no }}" class="booking-button">
+                    <div id="date_{{ i.full_date }}"
+                         class="booking-button
+                            {% if i.is_red %}booking-holiday{% endif %}
+                            {% if i == week[0] %}active-date{% endif %}">
                         <p class="booking-month">{{ i.month }}</p>
-                        {% if i.full_date == selected_date %}
-                        <p class="booking-date active-date">{{ i.date }}</p>
-                        {% else %}
                         <p class="booking-date">{{ i.date }}</p>
-                        {% endif %}
                         <p class="booking-day">{{ i.day }}</p>
                     </div>
                     {% endfor %}
@@ -110,15 +75,10 @@
             <div class="swiper-button-prev"></div>
         </div>
         <div id="bookingSchedulesList">
-            {% for schedule in schedules %}
-            <div class="booking-schedule">
-                <p class="booking-schedule-time">{{ schedule.showtime }}</p>
-                <div class="booking-schedule-seats">
-                    <p><span>120</span>/<span>{{ schedule.total_seats }}</span></p>
-                    <p>{{ schedule.auditorium }}</p>
-                </div>
+            <div class="booking-schedules-none">
+                <span class="material-symbols-outlined">calendar_check</span>
+                <p>현재 선택하신 날짜의<br>상영 시간표를 준비하고 있습니다.</p>
             </div>
-            {% endfor %}
         </div>
     </div>
     <form action="{{ url_for('booking.index') }}" method="get" id="selectScheduleForm">
@@ -126,7 +86,7 @@
         <input type="hidden" id="selected_theater" name="selected_theater" value="{{ selected_theater or '' }}">
         <input type="hidden" id="selected_movie" name="selected_movie" value="{{ selected_movie or '' }}">
         <input type="hidden" id="selected_date" name="selected_date" value="{{ selected_date or '' }}">
-        <input type="hidden" id="selected_date_page" name="selected_date_page" value="{{ selected_date_page or '0' }}">
+        <input type="hidden" id="selected_schedule" name="selected_schedule" value="{{ selected_schedule or '' }}">
     </form>
 </div>
 {% endblock %}
@@ -138,61 +98,241 @@
             nextEl: '#bookingScheduleDatePicker .swiper-button-next',
             prevEl: '#bookingScheduleDatePicker .swiper-button-prev'
         },
-        spaceBetween: 10,
-        initialSlide: "{{ selected_date_page }}"
+        spaceBetween: 10
     });
 
     const regions = document.querySelectorAll("#bookingLocationsList li");
-    regions.forEach(region => {
-        region.addEventListener("click", function() {
-            // const url = '/booking/?id=42';
-            // fetch(url)
-            //     .then(response => {
-            //         if (!response.ok) {
-            //             throw new Error('Network response error');
-            //         }
-            //         return response.json(); // Parse JSON payload
-            //     })
-            //     .then(data => {
-            //         // Update only a specific element on the page
-            //         document.getElementById('result-container').innerText = data.message;
-            //         console.log(data.items);
-            //     })
-            //     .catch(error => {
-            //         console.error('Error fetching data:', error);
-            //     });
+    const theaters = document.querySelectorAll("#bookingTheatersList li");
+    const dates = document.querySelectorAll(".booking-button");
+    const movies = document.querySelectorAll("#bookingMoviesList li");
+    const schedules = document.querySelectorAll("#bookingSchedulesList .booking-schedule");
+    let selected_region = document.getElementById("selected_region").value;
+    let selected_theater = document.getElementById("selected_theater").value;
+    let selected_movie = document.getElementById("selected_movie").value;
+    let selected_date = document.getElementById("selected_date").value;
+    let selected_schedule = document.getElementById("selected_schedule").value;
+
+    async function loadTheaters() {
+        selected_region = document.getElementById("selected_region").value;
+
+        if (selected_region != this.innerText.split(" (")[0]) {
+            fetch(`/booking/theaters/${this.innerText.split(" (")[0]}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const bookingTheatersList = document.querySelector("#bookingTheatersList ul");
+                    bookingTheatersList.innerHTML = '';
+
+                    data.forEach(theater => {
+                        const li = document.createElement('li');
+                        li.id = `theater_${ theater.id }`;
+                        li.innerHTML = `${ theater.name } <span class="material-symbols-outlined">check_small</span>`;
+                        li.addEventListener("click", loadMovies);
+                        bookingTheatersList.appendChild(li);
+                    })
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+
             document.getElementById("selected_region").value = this.innerText.split(" (")[0];
             document.getElementById("selected_theater").value = '';
             document.getElementById("selected_movie").value = '';
-            document.getElementById("selectScheduleForm").submit();
-        });
-    });
+            document.getElementById("selected_schedule").value = '';
 
-    const theaters = document.querySelectorAll("#bookingTheatersList li");
-    theaters.forEach(theater => {
-        theater.addEventListener("click", function() {
-            document.getElementById("selected_theater").value = this.innerHTML.split(" ")[0] != '' ? this.innerHTML.split(" ")[0] : this.innerHTML;
+            const activeRegion = document.querySelector('#bookingLocationsList .active-theater');
+            if (activeRegion) activeRegion.classList.remove('active-theater');
+            this.classList.add('active-theater');
+
+            const bookingMoviesList = document.querySelector("#bookingMoviesList");
+            bookingMoviesList.innerHTML = `<div class="booking-movies-none">
+                <span class="material-symbols-outlined">movie_off</span>
+                <p>영화관을 선택해 주시기 바랍니다.</p>
+            </div>`;
+
+            const bookingSchedulesList = document.querySelector("#bookingSchedulesList");
+            bookingSchedulesList.innerHTML = `<div class="booking-schedules-none">
+                <span class="material-symbols-outlined">calendar_check</span>
+                <p>현재 선택하신 날짜의<br>상영 시간표를 준비하고 있습니다.</p>
+            </div>`;
+        }
+    }
+
+    async function loadMovies() {
+        if (document.getElementById("selected_region").value == '') document.getElementById("selected_region").value = '서울';
+        selected_region = document.getElementById("selected_region").value;
+        selected_theater = document.getElementById("selected_theater").value;
+
+        if (selected_theater != this.id.split("_")[1]) {
+            fetch(`/booking/movies/${this.id.split("_")[1]}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const bookingMoviesList = document.querySelector("#bookingMoviesList");
+                    bookingMoviesList.innerHTML = '';
+
+                    if (data.length === 0) {
+                        bookingMoviesList.innerHTML = `<div class="booking-movies-none">
+                            <span class="material-symbols-outlined">movie_off</span>
+                            <p>영화관을 선택해 주시기 바랍니다.</p>
+                        </div>`;
+                        return;
+                    }
+                    const ul = document.createElement('ul');
+                    data.forEach(movie => {
+                        const li = document.createElement('li');
+                        li.id = `movie_${ movie.id }`;
+                        li.innerHTML = `<img src="${ movie.poster_url }" alt="movie poster">
+                            <div class="movie-info">
+                                <div class="movie-title">
+                                    <div class="movie-rating rating-${ String(movie.rating).toLowerCase() }"></div>
+                                    <p>${ movie.title }</p>
+                                    <span class="material-symbols-outlined">check_small</span>
+                                </div>
+                                <p class="movie-runtime"><span class="material-symbols-outlined">schedule</span> ${ movie.runtime }분</p>
+                                <p class="movie-release"><span>개봉일</span> ${ movie.created_at }</p>
+                            </div>`;
+                        li.addEventListener("click", loadSchedules);
+                        ul.appendChild(li);
+                    });
+                    bookingMoviesList.appendChild(ul);
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+
+            document.getElementById("selected_theater").value = this.id.split("_")[1];
             document.getElementById("selected_movie").value = '';
-            document.getElementById("selectScheduleForm").submit();
-        });
-    });
+            document.getElementById("selected_schedule").value = '';
 
-    const dates = document.querySelectorAll(".booking-button");
-    dates.forEach(date => {
-        date.addEventListener("click", function() {
-            document.getElementById("selected_date").value = this.id.split("_")[1];
-            document.getElementById("selected_date_page").value = this.id.split("_")[2];
-            document.getElementById("selectScheduleForm").submit();
-        });
-    });
+            const activeTheater = document.querySelector('#bookingTheatersList .active-theater');
+            if (activeTheater) activeTheater.classList.remove('active-theater');
+            this.classList.add('active-theater');
 
-    const movies = document.querySelectorAll("#bookingMoviesList li");
-    movies.forEach(movie => {
-        movie.addEventListener("click", function() {
+            const bookingSchedulesList = document.querySelector("#bookingSchedulesList");
+            bookingSchedulesList.innerHTML = `<div class="booking-schedules-none">
+                <span class="material-symbols-outlined">calendar_check</span>
+                <p>현재 선택하신 날짜의<br>상영 시간표를 준비하고 있습니다.</p>
+            </div>`;
+        }
+    }
+
+    async function loadSchedules() {
+        let change_type = 'movie';
+        if (this.id.split("_")[0] == 'date') change_type = 'date';
+
+        selected_region = document.getElementById("selected_region").value;
+        selected_theater = document.getElementById("selected_theater").value;
+        selected_movie = document.getElementById("selected_movie").value;
+        selected_date = document.getElementById("selected_date").value;
+
+        let fetch_url = '';
+        if (change_type == 'movie') fetch_url = `/booking/schedules/${selected_theater || '0'}/${this.id.split("_")[1]}/${selected_date || '0'}`
+        else fetch_url = `/booking/schedules/${selected_theater || '0'}/${selected_movie || '0'}/${this.id.split("_")[1]}`
+
+        if ((change_type == 'movie' && selected_movie != this.id.split("_")[1]) ||
+            (change_type == 'date' && selected_date != this.id.split("_")[1])) {
+            fetch(fetch_url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const bookingSchedulesList = document.querySelector("#bookingSchedulesList");
+                    bookingSchedulesList.innerHTML = '';
+
+                    if (data.length === 0) {
+                        bookingSchedulesList.innerHTML = `<div class="booking-schedules-none">
+                            <span class="material-symbols-outlined">calendar_check</span>
+                            <p>현재 선택하신 날짜의<br>상영 시간표를 준비하고 있습니다.</p>
+                        </div>`;
+                        return;
+                    }
+                    data.forEach(schedule => {
+                        const scheduleDiv = document.createElement('div');
+                        scheduleDiv.id = `schedule${ schedule.id }`;
+                        scheduleDiv.classList.add('booking-schedule');
+                        scheduleDiv.innerHTML = `<p class="booking-schedule-time">${ schedule.showtime }</p>
+                            <div class="booking-schedule-seats">
+                                <p><span>120</span>/<span>${ schedule.total_seats }</span></p>
+                                <p>${ schedule.auditorium }</p>
+                            </div>`;
+                        bookingSchedulesList.appendChild(scheduleDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+        }
+        if (change_type == 'movie') {
             document.getElementById("selected_movie").value = this.id.split("_")[1];
-            document.getElementById("selectScheduleForm").submit();
-        });
+            const activeMovie = document.querySelector('#bookingMoviesList .active-movie');
+            if (activeMovie) activeMovie.classList.remove('active-movie');
+            this.classList.add('active-movie');
+        }
+        else {
+            document.getElementById("selected_date").value = this.id.split("_")[1];
+            const activeDate = document.querySelector('#bookingScheduleDatePicker .active-date');
+            if (activeDate) activeDate.classList.remove('active-date');
+            this.classList.add('active-date');
+        }
+        document.getElementById("selected_schedule").value = '';
+    }
+
+    window.addEventListener("load", function() {
+        fetch(`/booking/theaters/서울`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const bookingTheatersList = document.querySelector("#bookingTheatersList ul");
+                bookingTheatersList.innerHTML = '';
+
+                data.forEach(theater => {
+                    const li = document.createElement('li');
+                    li.id = `theater_${ theater.id }`;
+                    li.innerHTML = `${ theater.name } <span class="material-symbols-outlined">check_small</span>`;
+                    li.addEventListener("click", loadMovies);
+                    bookingTheatersList.appendChild(li);
+                })
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+
+        document.getElementById("selected_region").value = '서울';
+        document.getElementById("selected_theater").value = '';
+        document.getElementById("selected_movie").value = '';
+        document.getElementById("selected_date").value = new Date().toISOString().split('T')[0];
+        document.getElementById("selected_schedule").value = '';
     });
+
+    regions.forEach(region => {
+        region.addEventListener("click", loadTheaters);
+    });
+
+    dates.forEach(date => {
+        date.addEventListener("click", loadSchedules);
+    });
+
+    {#schedules.forEach(schedule => {#}
+    {#    schedule.addEventListener("click", function() {#}
+    {#        document.getElementById("selected_schedule").value = this.id.split("_")[1];#}
+    {#        document.getElementById("selectScheduleForm").submit();#}
+    {#    });#}
     
 </script>
 
