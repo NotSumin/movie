@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/booking_seat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="bookingContainer" class="container">
+    <div class="booking-steps">
+        <a href="{{ url_for('booking.index') }}">
+        <div id="bookingStep1" class="booking-step previous-step">
+            <strong>01<br>상영시간</strong>
+        </div>
+        </a>
+        <div id="bookingStep2" class="booking-step active-step">
+            <strong>02<br>인원/좌석</strong>
+        </div>
+        <div id="bookingStep3" class="booking-step">
+            <strong>03<br>결제</strong>
+        </div>
+        <div id="bookingStep4" class="booking-step">
+            <strong>04<br>결제완료</strong>
+        </div>
+    </div>
+    <div class="booking-seat-selection">
+        <div class="booking-search-title"><p>인원/좌석 선택</p><span>인원은 최대 8명까지 선택 가능합니다.</span></div>
+        <div class="booking-ticket-details">
+            <div class="booking-movie-info">
+                <img src="{{ schedule.poster_url }}" alt="movie poster">
+                <div class="movie-info">
+                    <div class="movie-title">
+                        <div class="movie-rating rating-{{ schedule.rating }}"></div>
+                        <p>{{ schedule.title }}</p>
+                    </div>
+                    <p class="movie-schedule">
+                        <span class="movie-date">{{ schedule.showtime_date }}</span><span class="movie-time">{{ schedule.showtime_time }}</span>
+                    </p>
+                    <p class="movie-auditorium">{{ schedule.auditorium }}</p>
+                </div>
+            </div>
+            <div class="booking-ticket-selection">
+                <div class="booking-ticket-selector">
+                    <p>성인</p>
+                    <div class="booking-ticket-buttons">
+                        <button id="minus_adultTicket" class="minus-ticket">-</button>
+                        <div id="adultTicket" class="ticket-count">0</div>
+                        <button id="plus_adultTicket" class="plus-ticket">+</button>
+                    </div>
+                </div>
+                {% if schedule.rating != '19' %}
+                <div class="booking-ticket-selector">
+                    <p>청소년</p>
+                    <div class="booking-ticket-buttons">
+                        <button id="minus_childTicket" class="minus-ticket">-</button>
+                        <div id="childTicket" class="ticket-count">0</div>
+                        <button id="plus_childTicket" class="plus-ticket">+</button>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="booking-ticket-selector">
+                    <p>경로</p>
+                    <div class="booking-ticket-buttons">
+                        <button id="minus_seniorTicket" class="minus-ticket">-</button>
+                        <div id="seniorTicket" class="ticket-count">0</div>
+                        <button id="plus_seniorTicket" class="plus-ticket">+</button>
+                    </div>
+                </div>
+                <div class="booking-ticket-selector">
+                    <p>장애인</p>
+                    <div class="booking-ticket-buttons">
+                        <button id="minus_disabledTicket" class="minus-ticket">-</button>
+                        <div id="disabledTicket" class="ticket-count">0</div>
+                        <button id="plus_disabledTicket" class="plus-ticket">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="booking-notice">
+            <p>인원을 선택하세요.</p>
+        </div>
+        <div class="booking-seat-layout">
+            {{ schedule.seat_layout|safe }}
+        </div>
+        <div class="booking-seat-legend">
+            <ul>
+                <li><span class="legend-seat"></span>발받침석</li>
+                <li><span class="legend-selected"></span>선택</li>
+                <li><span class="legend-reserved"></span>예매완료</li>
+                <li><span class="legend-disabled"></span>선택불가</li>
+                <li><span class="legend-exit"></span>출입문</li>
+            </ul>
+        </div>
+        <div class="booking-seat-confirm">
+            <p class="booking-amount">총 합계 <span id="bookingTotal">0</span>원</p>
+            <button id="bookingConfirmBtn">결제하기</button>
+        </div>
+    </div>
+    <form action="{{ url_for('booking.seats', schedule_id=schedule.id) }}" method="get" id="selectSeatForm">
+        <input type="hidden" id="adult_tickets" name="adult_tickets" value=0 required>
+        <input type="hidden" id="child_tickets" name="child_tickets" value=0 required>
+        <input type="hidden" id="senior_tickets" name="senior_tickets" value=0 required>
+        <input type="hidden" id="disabled_tickets" name="disabled_tickets" value=0 required>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    const adult_price = {{ schedule.adult_price }};
+    const child_price = {{ schedule.child_price }};
+    const senior_price = {{ schedule.senior_price }};
+    const disabled_price = {{ schedule.disabled_price }};
+    const adult_tickets = document.getElementById('adult_tickets');
+    const child_tickets = document.getElementById('child_tickets');
+    const senior_tickets = document.getElementById('senior_tickets');
+    const disabled_tickets = document.getElementById('disabled_tickets');
+    const noticeMsg = document.querySelector('.booking-notice p');
+
+    const seats = document.querySelectorAll('.seat-layout .layout-seat');
+    seats.forEach(seat => {
+        seat.addEventListener("click", selectSeat);
+    });
+
+    const ticketButtons = document.querySelectorAll('.booking-ticket-buttons button');
+    ticketButtons.forEach(btn => {
+        btn.addEventListener("click", onTicketClick);
+    });
+
+    function onTicketClick() {
+        let action_type = this.id.split("_")[0] || "minus";
+        let ticket_type = this.id.split("_")[1] || "adultTicket";
+        let ticketElement = document.getElementById(ticket_type);
+
+        if (action_type == "plus") {
+            let total_tickets = parseInt(adult_tickets.value) +
+                parseInt(child_tickets.value) +
+                parseInt(senior_tickets.value) +
+                parseInt(disabled_tickets.value);
+            if (total_tickets < 8) {
+                switch (ticket_type) {
+                    case "adultTicket":
+                        adult_tickets.value = parseInt(adult_tickets.value) + 1;
+                        ticketElement.innerText = adult_tickets.value;
+                        break;
+                    case "childTicket":
+                        child_tickets.value = parseInt(child_tickets.value) + 1;
+                        ticketElement.innerText = child_tickets.value;
+                        break;
+                    case "seniorTicket":
+                        senior_tickets.value = parseInt(senior_tickets.value) + 1;
+                        ticketElement.innerText = senior_tickets.value;
+                        break;
+                    case "disabledTicket":
+                        disabled_tickets.value = parseInt(disabled_tickets.value) + 1;
+                        ticketElement.innerText = disabled_tickets.value;
+                        break;
+                    default:
+                        break;
+                }
+                seats.forEach(seat => {
+                    seat.classList.remove('layout-disabled');
+                });
+            }
+        }
+        else {
+            switch(ticket_type) {
+                case "adultTicket":
+                    if (adult_tickets.value > 0) {
+                        adult_tickets.value = parseInt(adult_tickets.value) - 1;
+                        ticketElement.innerText = adult_tickets.value;
+                        seats.forEach(seat => {
+                            seat.classList.remove('layout-disabled');
+                            seat.classList.remove('layout-selected');
+                        });
+                    }
+                    break;
+                case "childTicket":
+                    if (child_tickets.value > 0) {
+                        child_tickets.value = parseInt(child_tickets.value) - 1;
+                        ticketElement.innerText = child_tickets.value;
+                        seats.forEach(seat => {
+                            seat.classList.remove('layout-disabled');
+                            seat.classList.remove('layout-selected');
+                        });
+                    }
+                    break;
+                case "seniorTicket":
+                    if (senior_tickets.value > 0) {
+                        senior_tickets.value = parseInt(senior_tickets.value) - 1;
+                        ticketElement.innerText = senior_tickets.value;
+                        seats.forEach(seat => {
+                            seat.classList.remove('layout-disabled');
+                            seat.classList.remove('layout-selected');
+                        });
+                    }
+                    break;
+                case "disabledTicket":
+                    if (disabled_tickets.value > 0) {
+                        disabled_tickets.value = parseInt(disabled_tickets.value) - 1;
+                        ticketElement.innerText = disabled_tickets.value;
+                        seats.forEach(seat => {
+                            seat.classList.remove('layout-disabled');
+                            seat.classList.remove('layout-selected');
+                        });
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    function selectSeat() {
+        let total_tickets = parseInt(adult_tickets.value) +
+            parseInt(child_tickets.value) +
+            parseInt(senior_tickets.value) +
+            parseInt(disabled_tickets.value);
+        if (total_tickets == 0) {
+            return;
+        }
+        if (!this.classList.contains('layout-reserved') && !this.classList.contains('layout-disabled')) {
+            if (this.classList.contains('layout-selected')) {
+                this.classList.remove('layout-selected');
+                seats.forEach(seat => {
+                    seat.classList.remove('layout-disabled');
+                    seat.classList.remove('layout-selected');
+                });
+            }
+            else {
+                this.classList.add('layout-selected');
+                let selected_seats = document.querySelectorAll('.seat-layout .layout-seat.layout-selected');
+                if (selected_seats.length >= total_tickets) {
+                    const unselected_seats = document.querySelectorAll('.seat-layout .layout-seat:not(.layout-selected)');
+                    unselected_seats.forEach(seat => {
+                        seat.classList.add('layout-disabled');
+                    });
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}
