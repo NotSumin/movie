@@ -3,6 +3,18 @@
     box-sizing: border-box;
 }
 
+.nav {
+    --bs-link-hover-color: #333;
+}
+
+.nav-link {
+    --bs-nav-link-color: #888;
+}
+
+.nav-underline {
+    --bs-nav-underline-gap:2rem;
+}
+
 .reservation-info {
     font-size: 15px;
 }
@@ -42,7 +54,6 @@
 
 
 /* 날짜 */
-
 .reservation-date {
     font-size: 13px;
     font-weight: 600;
@@ -73,21 +84,15 @@
 
 
 /* 원 */
-
 .timeline-dot {
     position: relative;
     z-index: 2;
-
     width: 16px;
     height: 16px;
-
     margin-top: 16px;
-
     border: 1px solid #ccc;
     border-radius: 50%;
-
     background-color: white;
-
     flex-shrink: 0;
 }
 
@@ -105,7 +110,6 @@
 
 
 /* Bootstrap accordion */
-
 .reservation-content .accordion-item {
     border: 0;
     background: transparent;
@@ -115,7 +119,6 @@
     padding: 14px 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-
     /* 긴 영화 제목 때문에 영역이 늘어나지 않도록 */
     min-width: 0;
 }
@@ -126,7 +129,7 @@
 }
 
 .accordion-header {
-    padding-right: 30px;
+    padding-right: 20px;
 }
 
 .accordion-body {
@@ -145,22 +148,17 @@
 .reservation-summary {
     display: flex;
     align-items: center;
-
     width: 100%;
     min-width: 0;
-
     gap: 15px;
 }
 
 
 /* 영화 제목 */
-
 .movie-title {
     font-size: 15px;
     font-weight: 700;
-
     min-width: 0;
-
     /* 긴 영화명 처리 */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -169,7 +167,6 @@
 
 
 /* 가격 */
-
 .reservation-price {
     font-size: 14px;
     font-weight: 600;
@@ -178,11 +175,9 @@
 
 
 /* 예매번호 */
-
 .reservation-number {
     font-size: 13px;
     color: #999;
-
     white-space: nowrap;
 }
 
@@ -193,11 +188,8 @@
 
 .reservation-detail {
     border: 1px solid #e5e5e5;
-
     padding: 14px;
-
     background: white;
-
     /* 기존 700px 대신 반응형 */
     width: 700px;
     max-width: 100%;
@@ -212,68 +204,53 @@
     display: flex;
     gap: 15px;
     align-items: flex-start;
-
     min-width: 0;
 }
 
 
 /* 포스터 */
-
 .movie-poster {
     width: 100px;
     height: 130px;
-
     object-fit: cover;
-
     flex-shrink: 0;
 }
 
 
 /* 영화 상세 */
-
 .movie-detail {
     flex: 1;
     min-width: 0;
-
     font-size: 13px;
 }
 
 
 /* 영화 상세 한 줄 */
-
 .movie-detail > div {
     display: flex;
     margin-bottom: 6px;
-
     min-width: 0;
 }
 
 
 /* 왼쪽 항목 */
-
 .movie-detail span {
     width: 65px;
-
     color: #555;
-
     flex-shrink: 0;
 }
 
 
 /* 오른쪽 값 */
-
 .movie-detail strong {
     font-weight: 400;
     color: #555;
-
     min-width: 0;
-
     word-break: break-word;
 }
 
 
 /* 예매취소 버튼 */
-
 .reservation-cancel-btn {
     flex-shrink: 0;
     white-space: nowrap;
@@ -314,9 +291,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 20px;
-
     font-size: 13px;
 }
 
@@ -324,7 +299,6 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-
     min-width: 0;
 }
 
@@ -361,7 +335,6 @@
 ========================================= */
 
 @media (max-width: 767.98px) {
-
     /* 날짜 / 타임라인 / 내용 */
     .reservation-item {
         grid-template-columns: 100px 30px minmax(0, 1fr);
@@ -371,19 +344,16 @@
         left: 115px;
     }
 
-
     /* 날짜 */
     .reservation-date {
         font-size: 12px;
         padding: 15px 8px 15px 5px;
     }
 
-
     /* 오른쪽 */
     .reservation-content {
         padding-left: 10px;
     }
-
 
     /* 영화 / 가격 / 번호 */
     .reservation-summary {
@@ -403,12 +373,10 @@
         font-size: 11px;
     }
 
-
     /* 상세 */
     .reservation-detail {
         width: 100%;
     }
-
 
     /* 결제정보 */
     .payment-row {
@@ -416,7 +384,6 @@
         justify-content: flex-start;
         gap: 20px 40px;
     }
-
 
     /* 테이블 */
     .mypage-table {
@@ -431,36 +398,30 @@
 ========================================= */
 
 @media (max-width: 575.98px) {
-
     /* 안내문 */
     .reservation-info {
         font-size: 12px;
     }
-
 
     /* 예매 리스트 */
     .reservation-list {
         padding-top: 10px;
     }
 
-
     /* 날짜 / 타임라인 / 내용 */
     .reservation-item {
         grid-template-columns: 80px 25px minmax(0, 1fr);
     }
 
-
     .reservation-list::before {
         left: 92px;
     }
-
 
     /* 날짜 */
     .reservation-date {
         font-size: 10px;
         padding: 15px 5px 15px 0;
     }
-
 
     /* 타임라인 */
     .timeline-dot {
@@ -469,13 +430,11 @@
         margin-top: 17px;
     }
 
-
     /* 오른쪽 */
     .reservation-content {
         padding-left: 8px;
         padding-bottom: 15px;
     }
-
 
     /* Accordion */
     .reservation-header {
@@ -486,11 +445,9 @@
         padding-right: 5px;
     }
 
-
     /* 영화 제목 */
     .movie-title {
         font-size: 13px;
-
         /*
          * 모바일에서는 영화 제목을 한 줄로 유지
          * 너무 길면 ... 처리
@@ -498,12 +455,10 @@
         max-width: calc(100% - 10px);
     }
 
-
     /* 가격 */
     .reservation-price {
         font-size: 12px;
     }
-
 
     /* 예매번호 */
     .reservation-number {
@@ -511,27 +466,22 @@
         width: 100%;
     }
 
-
     /* 상세 */
     .reservation-detail {
         padding: 10px;
     }
 
-
     /* 영화 정보 */
     .movie-info {
         gap: 10px;
-
         flex-wrap: wrap;
     }
-
 
     /* 포스터 */
     .movie-poster {
         width: 70px;
         height: 100px;
     }
-
 
     /* 영화 상세 */
     .movie-detail {
@@ -541,29 +491,24 @@
         min-width: calc(100% - 80px);
     }
 
-
     .movie-detail > div {
         margin-bottom: 5px;
     }
 
-
     .movie-detail span {
         width: 55px;
     }
-
 
     /* 거래번호 등 긴 텍스트 */
     .movie-detail strong {
         word-break: break-all;
     }
 
-
     /* 예매취소 */
     .reservation-cancel-btn {
         margin-left: auto;
         margin-top: 5px;
     }
-
 
     /* 결제일 */
     .payment-date {
@@ -573,7 +518,6 @@
     .payment-date span {
         margin-left: 5px;
     }
-
 
     /* 결제정보 */
     .payment-row {
@@ -591,7 +535,6 @@
     .payment-row > div {
         min-width: 0;
     }
-
 
     /* 취소내역 */
     .mypage-table {

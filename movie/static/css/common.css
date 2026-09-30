@@ -151,7 +151,7 @@ ul {
 
 .site-footer {
     background: #f2f2f2;
-    margin-top: 60px;
+    /*margin-top: 60px;*/
     padding: 40px 20px 24px;
 }
 .footer-inner {
@@ -256,7 +256,7 @@ ul {
 
 .ad-banner { margin-top: 50px; }
 .ad-banner.distributor {
-  width: 100vw;
+  width: 100%;
   margin-left: calc(50% - 50vw);
   padding: 0;
   color: #333;
@@ -264,4 +264,8 @@ ul {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+}
+
+.page-inner {
+    min-height:calc(100vh - 500px);
 }
