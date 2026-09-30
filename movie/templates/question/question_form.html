@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+    {% block head %}
+    <!-- CSS 파일 연결 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/question_form.css') }}">
+    {% endblock %}
+
+    {% block content %}
+    <!-- 화면 중앙 배치를 위한 메인 컨테이너 -->
+    <div class="container">
+
+        <!-- 메인 제목 -->
+        <h3 class="main-title">문의내용</h3>
+        <hr/>
+
+        <form method="post">
+{#         <form action="{{ url_for('answer.create', question_id=question.id) }}" method="post" class="my-3">#}
+
+            {{ csrf_token() if csrf_token }}
+
+            <!-- 1. 종류 선택 영역 -->
+            <div class="form-group kind-group">
+                <label class="form-label me-3">
+                    종류 <span>*</span>
+                </label>
+                <label style="margin-right: 15px;">
+                    <input type="radio" name="kind" value="영화관문의" checked>
+                    <span>영화관문의</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="kind" value="기타 문의">
+                    <span>기타 문의</span>
+                </label>
+                <button type="button" style="margin-left: 15px;" onclick="">영화관선택</button>
+            </div>
+            <hr/>
+
+            <!-- 2. 제목 입력 영역 -->
+            <div class="form-group row">
+                <label for="title" class="form-label col-lg-1">
+                    제목 <span>*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    class="form-input col-lg-11"
+                    placeholder="제목을 입력해주세요"
+                    value="{{ question.title if question else '' }}"
+                    oninput="updateCharCount(this)"
+                    required
+                >
+                <div class="char-counter text-end">
+                    <span id="charCount">0</span>/한글 50자
+                </div>
+
+           </div>
+            <hr/>
+
+            <!-- 3. 내용 입력 영역 -->
+            <div class="form-group row">
+                <label for="content" class="form-label col-lg-1">
+                    내용 <span>*</span>
+                </label>
+
+{#                <div class="input-container">#}
+                    <textarea
+                        id="content"
+                        name="content"
+                        class="form-input col-lg-11"
+                        placeholder="내용 및 첨부파일에 개인정보(카드번호, 계좌번호, 주민번호)가 포함되지 않도록 유의하여 입력해주세요"
+                        maxlength="2000"
+                        oninput="updateCharCount(this)"
+                        required
+                    >{{ question.content if question else '' }}</textarea>
+                    <div class="char-counter text-end">
+                        <span id="contentCount">0</span>/한글 2,000자
+                    </div>
+{#                </div>#}
+            </div>
+            <hr/>
+
+            <!-- 4. 첨부파일 영역 -->
+            <div class="form-group">
+                <label class="form-label me-3">
+                    첨부파일
+                </label>
+
+                <input type="file" name="image" id="image">
+
+            </div>
+            <hr/>
+
+        <div style="text-align: center;">
+                <!-- 취소 버튼 -->
+                <button type="reset" class="cancel-button">취소</button>
+
+           <!-- 👉 수정 위치 3: 확인(저장) 버튼 -->
+                <button type="submit" class="common-button">확인</button>
+            </div>
+
+        </form>
+
+
+    </div>
+    {% endblock %}
+
+    {% block script %}
+    <!-- 글자 수 카운트 자바스크립트 -->
+    <script>
+        function updateCharCount(input) {
+            const count = input.value.length;
+            if (input.id === 'title') {
+                document.getElementById('charCount').textContent = count;
+            } else if (input.id === 'content') {
+                document.getElementById('contentCount').textContent = count;
+            }
+        }
+
+        // 페이지가 열렸을 때 기존 입력되어 있는 글자 수를 카운트하는 로직
+        window.onload = function() {
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+            if (titleInput) updateCharCount(titleInput);
+            if (contentInput) updateCharCount(contentInput);
+        };
+    </script>
+    {% endblock %}

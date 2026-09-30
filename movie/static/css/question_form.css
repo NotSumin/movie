@@ -1,0 +1,73 @@
+/* 전체 컨테이너 너비 및 중앙 정렬 */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+}
+
+/* 제목 스타일 */
+.container h5 {
+    color: #333333;
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+/* 각각의 입력 필드 간격 */
+.question-field {
+    margin-bottom: 20px;
+}
+
+/* 라벨 스타일 */
+.question-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555555;
+    font-weight: 600;
+}
+
+/* 입력 상자(input, textarea) 스타일 */
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333333;
+    box-sizing: border-box;
+}
+
+/* 입력 상자 포커스 시 테두리 색상 */
+.form-control:focus {
+    border-color: #e51013;
+    outline: none;
+}
+
+/* textarea 높이 조절 */
+textarea.form-control {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.form-group {
+    display: flex;
+}
+
+/* 버튼 스타일 */
+.signup-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.signup-button:hover {
+    background-color: #cc0000;
+}
