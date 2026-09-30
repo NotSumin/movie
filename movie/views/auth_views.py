@@ -1,6 +1,6 @@
 import functools
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, g
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -38,6 +38,8 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if not user:
             error = '존재하지 않는 사용자입니다.'
+        elif user.status != 'active':
+            error = '탈퇴 처리 중인 계정입니다.'
         elif not check_password_hash(user.password, form.password.data):
             error = '비밀번호가 올바르지 않습니다.'
 
@@ -77,3 +79,29 @@ def login_required(view):
             return redirect(url_for('auth.login', next= _next))
         return view(*args, **kwargs)
     return wrapperd_view
+
+@bp.route('/withdraw', methods=['POST'])
+@login_required
+def withdraw():
+    user = g.user
+    user.status = 'withdraw_pending'
+    user.withdrawal_requested_at = datetime.now()
+    db.session.commit()
+    session.clear()
+    flash('회원탈퇴 신청이 완료되었습니다.')
+    return redirect(url_for('main.index'))
+
+def delete_expired_users():
+    expiration_date = datetime.now() - timedelta(days=7)
+    users = User.query.filter(
+        User.status == 'withdraw_pending',
+        User.withdrawal_requested_at <= expiration_date
+    ).all()
+    for user in users:
+        db.session.delete(user)
+    if users:
+        db.session.commit()
+
+@bp.before_app_request
+def cleanup_withdrawn_users():
+    delete_expired_users()
