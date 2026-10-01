@@ -1,20 +1,24 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from datetime import datetime, timedelta, time
 
 from movie.filter import korean_days
 from movie.models import Theater, Auditorium, Schedule
+from movie.views.auth_views import login_required
 
 from sqlalchemy import func
 bp = Blueprint('booking', __name__, url_prefix='/booking')
 
 
 @bp.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
     try:
         if request.method == 'POST':
-            return redirect(url_for('booking.seats', schedule_id=int(request.form.get('selected_schedule'))))
+            session['schedule_id'] = int(request.form.get('selected_schedule'))
+            return redirect(url_for('booking.seats'))
     except:
         print(request.form.get('selected_schedule'))
+
     regions_query = Theater.query.with_entities(Theater.region, func.count(Theater.region)).group_by(Theater.region).order_by(Theater.id).all()
     regions = []
     for region in regions_query:
@@ -142,10 +146,29 @@ def get_schedules(theater_id, movie_id, selected_date):
     return schedules
 
 
-@bp.route('/seats/<int:schedule_id>')
-def seats(schedule_id):
+@bp.route('/seats', methods=['GET', 'POST'])
+@login_required
+def seats():
+    schedule_id = session.get('schedule_id')
     if schedule_id is None:
         return redirect(url_for('booking.index'))
+
+    try:
+        if request.method == 'POST':
+            seats = request.form.get('booking_seats').split(',')
+            seats = list(filter(None, seats))
+            seats.sort()
+            tickets = {
+                'adult': request.form.get('adult_tickets'),
+                'child': request.form.get('child_tickets'),
+                'senior': request.form.get('senior_tickets'),
+                'disabled': request.form.get('disabled_tickets')
+            }
+            session['seats'] = seats
+            session['tickets'] = tickets
+            return redirect(url_for('payment.index'))
+    except:
+        print(request.form.get('booking_seats'))
 
     queried_schedule = Schedule.query.filter_by(id=schedule_id).first()
     showtime_date = f'{queried_schedule.showtime.strftime("%Y.%m.%d")} ({korean_days(queried_schedule.showtime.strftime("%A"))})'

@@ -1,21 +1,8 @@
-# 0. 준비 (한 번만)
-python -m pip install requests
-flask db upgrade                     # 모든 마이그레이션 반영 (section, like_count, Still, Trailer 등)
+# 준비 (한 번만)
+python setup.py
+# 이 명령어는 'pip install -r requirements.txt', 'flask db migrate', 'flask db upgrade'
+# 그리고 모든 시드 스크립트를 순서대로 실행합니다.
+# 문제가 발생하면 'movie.db' 파일을 삭제해 보세요.
 
-# 1. 영화 기본 데이터
-python seed_movies.py                # 기존 12편 (id 1~12)
-python seed_movies_extra.py          # 새 영화 17편 (id 13~29, section 값 포함)
-
-# 2. TMDB에서 정보 채우기 (같은 터미널 탭에서)
-set TMDB_API_KEY=발급받은_키
-python fetch_movies_tmdb.py          # 줄거리, 러닝타임, 등급, 감독/출연(한글), 포스터, 장르
-python fetch_stills_tmdb.py          # 스틸컷
-
-# 3. 직접 만든 값으로 덮어쓰기 (반드시 2번 다음에)
-python update_posters.py             # 기존 12편 롯데시네마 포스터
-python seed_stills.py                # 직접 구한 스틸컷 (FOLDERS/URLS를 채웠다면)
-
-# 4. 트레일러 및 관람평
-python seed_trailers.py              # Trailer 테이블 (트레일러 섹션)
-python update_trailers.py            # Movie.trailer_url (예고편 재생 버튼)
-python seed_reviews.py               # 영화 관람평 4~15개씩 랜덤으로 생성 되는 seed
+# 다른 시드 파일을 만들고 싶다면 'scripts' 폴더에 넣어주세요.
+# 그 후 'setup.py ' 파일에서 'SCRIPT_ORDER' 변수(9번째 줄)를 찾아 시드 파일 이름을 리스트 맨 끝에 추가하세요.

@@ -5,6 +5,19 @@
 {% endblock %}
 
 {% block content %}
+<div id="bookingModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>내용</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default w-100 m-0 p-0" data-bs-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="bookingContainer" class="container">
     <div class="booking-steps">
         <a href="{{ url_for('booking.index') }}">
@@ -92,14 +105,15 @@
         </div>
         <div class="booking-seat-confirm">
             <p class="booking-amount">총 합계 <span id="bookingTotal">0</span>원</p>
-            <button id="bookingConfirmBtn">결제하기</button>
+            <button id="bookingConfirmBtn" onclick="confirmBooking()" form="selectSeatForm">결제하기</button>
         </div>
     </div>
-    <form action="{{ url_for('booking.seats', schedule_id=schedule.id) }}" method="get" id="selectSeatForm">
+    <form action="{{ url_for('booking.seats') }}" method="post" id="selectSeatForm">
         <input type="hidden" id="adult_tickets" name="adult_tickets" value=0 required>
         <input type="hidden" id="child_tickets" name="child_tickets" value=0 required>
         <input type="hidden" id="senior_tickets" name="senior_tickets" value=0 required>
         <input type="hidden" id="disabled_tickets" name="disabled_tickets" value=0 required>
+        <input type="hidden" id="booking_seats" name="booking_seats" value='' required>
     </form>
 </div>
 {% endblock %}
@@ -114,7 +128,10 @@
     const child_tickets = document.getElementById('child_tickets');
     const senior_tickets = document.getElementById('senior_tickets');
     const disabled_tickets = document.getElementById('disabled_tickets');
+    const booking_seats = document.getElementById('booking_seats');
     const noticeMsg = document.querySelector('.booking-notice p');
+    const bookingTotal = document.getElementById('bookingTotal');
+    const movieModal = new bootstrap.Modal(document.getElementById('movieModal'));
 
     const seats = document.querySelectorAll('.seat-layout .layout-seat');
     seats.forEach(seat => {
@@ -125,6 +142,13 @@
     ticketButtons.forEach(btn => {
         btn.addEventListener("click", onTicketClick);
     });
+
+    function updateBookingTotal() {
+        bookingTotal.innerText = ((parseInt(adult_tickets.value) * adult_price) +
+                (parseInt(child_tickets.value) * child_price) +
+                (parseInt(senior_tickets.value) * senior_price) +
+                (parseInt(disabled_tickets.value) * disabled_price)).toLocaleString();
+    }
 
     function onTicketClick() {
         let action_type = this.id.split("_")[0] || "minus";
@@ -141,22 +165,27 @@
                     case "adultTicket":
                         adult_tickets.value = parseInt(adult_tickets.value) + 1;
                         ticketElement.innerText = adult_tickets.value;
+                        noticeMsg.innerHTML = `좌석 선택 후 결제하기 버튼을 클릭하세요.`;
                         break;
                     case "childTicket":
                         child_tickets.value = parseInt(child_tickets.value) + 1;
                         ticketElement.innerText = child_tickets.value;
+                        noticeMsg.innerHTML = `4세 이상 ~ 19세 미만 청소년<br>* 19세가 되는 해의 1월 1일을 맞이한 사람은 제외`;
                         break;
                     case "seniorTicket":
                         senior_tickets.value = parseInt(senior_tickets.value) + 1;
                         ticketElement.innerText = senior_tickets.value;
+                        noticeMsg.innerHTML = `65세 이상 고객, 본인 확인 가능한 신분증 반드시 지참<br>(미지참 시 입장 제한)`;
                         break;
                     case "disabledTicket":
                         disabled_tickets.value = parseInt(disabled_tickets.value) + 1;
                         ticketElement.innerText = disabled_tickets.value;
+                        noticeMsg.innerHTML = `장애 중증 : 동반 1인 포함 할인 / 장애 경증 : 본인에 한하여 할인 적용<br>(상영관 입장 시 복지카드 반드시 지참 후 입장하시기 바랍니다.)<br>※ 복지카드 등 관련증빙 미확인 시 좌석 이용이 제한될 수 있습니다.`;
                         break;
                     default:
                         break;
                 }
+                updateBookingTotal();
                 seats.forEach(seat => {
                     seat.classList.remove('layout-disabled');
                 });
@@ -168,45 +197,58 @@
                     if (adult_tickets.value > 0) {
                         adult_tickets.value = parseInt(adult_tickets.value) - 1;
                         ticketElement.innerText = adult_tickets.value;
+                        updateBookingTotal();
                         seats.forEach(seat => {
                             seat.classList.remove('layout-disabled');
                             seat.classList.remove('layout-selected');
                         });
+                        booking_seats.value = '';
                     }
                     break;
                 case "childTicket":
                     if (child_tickets.value > 0) {
                         child_tickets.value = parseInt(child_tickets.value) - 1;
                         ticketElement.innerText = child_tickets.value;
+                        updateBookingTotal();
                         seats.forEach(seat => {
                             seat.classList.remove('layout-disabled');
                             seat.classList.remove('layout-selected');
                         });
+                        booking_seats.value = '';
                     }
                     break;
                 case "seniorTicket":
                     if (senior_tickets.value > 0) {
                         senior_tickets.value = parseInt(senior_tickets.value) - 1;
                         ticketElement.innerText = senior_tickets.value;
+                        updateBookingTotal();
                         seats.forEach(seat => {
                             seat.classList.remove('layout-disabled');
                             seat.classList.remove('layout-selected');
                         });
+                        booking_seats.value = '';
                     }
                     break;
                 case "disabledTicket":
                     if (disabled_tickets.value > 0) {
                         disabled_tickets.value = parseInt(disabled_tickets.value) - 1;
                         ticketElement.innerText = disabled_tickets.value;
+                        updateBookingTotal();
                         seats.forEach(seat => {
                             seat.classList.remove('layout-disabled');
                             seat.classList.remove('layout-selected');
                         });
+                        booking_seats.value = '';
                     }
                     break;
                 default:
                     break;
             }
+            let total_tickets = parseInt(adult_tickets.value) +
+                parseInt(child_tickets.value) +
+                parseInt(senior_tickets.value) +
+                parseInt(disabled_tickets.value);
+            if (total_tickets == 0) noticeMsg.innerHTML = `인원을 선택하세요.`;
         }
     }
 
@@ -216,6 +258,9 @@
             parseInt(senior_tickets.value) +
             parseInt(disabled_tickets.value);
         if (total_tickets == 0) {
+            const modalBody = document.querySelector('#movieModal .modal-body');
+            modalBody.innerHTML = `<br><p style="text-align: center;">인원을 선택해 주십시오.</p><br>`
+            movieModal.show();
             return;
         }
         if (!this.classList.contains('layout-reserved') && !this.classList.contains('layout-disabled')) {
@@ -223,8 +268,8 @@
                 this.classList.remove('layout-selected');
                 seats.forEach(seat => {
                     seat.classList.remove('layout-disabled');
-                    seat.classList.remove('layout-selected');
                 });
+                booking_seats.value = booking_seats.value.replaceAll(this.id.split("_")[1] + ",", "");
             }
             else {
                 this.classList.add('layout-selected');
@@ -235,7 +280,25 @@
                         seat.classList.add('layout-disabled');
                     });
                 }
+                booking_seats.value += this.id.split("_")[1] + ",";
             }
+        }
+    }
+
+    function confirmBooking() {
+        let total_tickets = parseInt(adult_tickets.value) +
+                parseInt(child_tickets.value) +
+                parseInt(senior_tickets.value) +
+                parseInt(disabled_tickets.value);
+        let seat_list = booking_seats.value.split(",").filter(seat => seat !== '');
+        if (seat_list.length == 0 || seat_list.length < total_tickets) {
+            const modalBody = document.querySelector('#movieModal .modal-body');
+            modalBody.innerHTML = `<br><p style="text-align: center;">좌석을 다시 선택해 주십시요.</p><br>`
+            movieModal.show();
+        }
+        else {
+            const form = document.getElementById('selectSeatForm');
+            form.submit();
         }
     }
 </script>
