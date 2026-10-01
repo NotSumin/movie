@@ -35,6 +35,18 @@
 <body>
     <!-- 네비게이션바-->
     {% include 'navbar.html' %}
+    <div id="movieModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>내용</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default w-100 m-0 p-0" data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 기본 템플릿 안에 삽입될 내용 Start-->
     {% block content %}
