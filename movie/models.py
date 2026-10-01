@@ -7,13 +7,13 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    status = db.Column(db.String(20),nullable=True, server_default='active')
-    withdrawal_requested_at = db.Column(db.DateTime, nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     contact = db.Column(db.String(50), nullable=True)
     point = db.Column(db.Integer, default=15000, nullable=False, server_default='15000')
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
+    status = db.Column(db.String(20), nullable=False, default='active')
+    withdrawal_requested_at = db.Column(db.DateTime, nullable=True)
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
