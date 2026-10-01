@@ -1,5 +1,5 @@
-from alembic.autogenerate.compare import server_defaults
 from datetime import datetime
+
 from movie import db
 
 
@@ -28,13 +28,19 @@ class Movie(db.Model):
     updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
     director = db.Column(db.String(100),nullable=True)
     cast = db.Column(db.String(255),nullable=True)
-    like_count = db.Column(db.Integer, default=0, nullable=False, server_default='0')
     section = db.Column(db.String(20), nullable=True)
+
+class LikedMovie(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movie.id', ondelete='CASCADE'))
+    movie = db.relationship(Movie, backref=db.backref('liked_movies'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    user = db.relationship(User, backref=db.backref('liked_movies'))
 
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id', ondelete='CASCADE'))
-    movie = db.relationship(Movie, backref=db.backref('movies'))
+    movie = db.relationship(Movie, backref=db.backref('genres'))
     name = db.Column(db.String(100), nullable=False)
 
 class Review(db.Model):
@@ -87,6 +93,8 @@ class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id', ondelete='CASCADE'), nullable=False)
     question = db.relationship(Question, backref=db.backref('answers',cascade='all, delete-orphan'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    user = db.relationship('User', backref=db.backref('answers'))
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
@@ -116,3 +124,32 @@ class Schedule(db.Model):
     child_price = db.Column(db.Integer, nullable=False)
     senior_price = db.Column(db.Integer, nullable=False)
     disabled_price = db.Column(db.Integer, nullable=False)
+
+class Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    user = db.relationship(User, backref=db.backref('bookings',cascade='all, delete-orphan'))
+    schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id', ondelete='CASCADE'), nullable=False)
+    schedule = db.relationship(Schedule, backref=db.backref('bookings',cascade='all, delete-orphan'))
+    booking_number = db.Column(db.String(20), nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
+
+class BookingSeat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id', ondelete='CASCADE'), nullable=False)
+    booking = db.relationship(Booking, backref=db.backref('seats',cascade='all, delete-orphan'))
+    seat_number = db.Column(db.String(20), nullable=False)
+
+class Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id', ondelete='CASCADE'), nullable=False)
+    booking = db.relationship(Booking, backref=db.backref('payments',cascade='all, delete-orphan'))
+    payment_method = db.Column(db.String(20), nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    payment_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    status = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)

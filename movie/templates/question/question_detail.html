@@ -14,13 +14,15 @@
     {% endfor %}
 
      <!-- 질문 -->
-    <h2 class="border-bottom py-2">{{ question.subject }}</h2>
+    <h2 class="py-2">{{ question.subject }}</h2>
     <div class="card my-3">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
+            <!-- 👉 질문 작성자 및 날짜 표시 -->
             <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2">
-                    {{ question.created_at|datetime }}
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <p class="mb-2">{{ question.user.username }}</p>
+                    <p>{{ question.created_at|datetime }}</p>
                 </div>
             </div>
              <div class="my-3">
@@ -34,20 +36,32 @@
         </div>
     </div>
     <!-- 답변 목록 -->
-    <h5 class="border-bottom my-3 py-2">{{ question.answer_set|length }}개의 답변이 있습니다.</h5>
-    {% for answer in question.answer_set %}
+    <h5 class="border-bottom my-3 py-2">{{ question.answers|length }}개의 답변이 있습니다.</h5>
+    {% for answer in question.answers %}
     <div class="card my-3">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
+            <!-- 👉 답변 작성자 및 날짜 표시 -->
             <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2">
-                    {{ answer.create_at|datetime }}
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <p class="mb-2">{{ answer.user.username }}</p>
+                    <p>{{ answer.created_at|datetime }}</p>
                 </div>
             </div>
         </div>
 
     </div>
     {% endfor %}
+<form action="{{ url_for('answer.create', question_id=question.id) }}" method="post" class="my-3">
+        {{ form.csrf_token }}
+        {% include "form_errors.html" %}
+        <div class="mb-3">
+            {{ form.content(class='form-control', rows='10', disabled=(not g.user)) }}
+        </div>
+        {{ form.submit(class="btn btn-primary", disabled=(not g.user)) }}
+</form>
+
+
 </div>
 {% endblock %}
 
@@ -79,9 +93,5 @@
              };
         });
     });
-
-
-
-
 </script>
 {% endblock %}
