@@ -135,13 +135,13 @@ ul {
 .main-nav-list-dropdown-customer:hover div ul li {
     width: 100%;
 }
-.main-nav-list-dropdown-customer:hover div ul li a {
+#mainNav .main-nav-list-dropdown-customer:hover div ul a li {
     font-size: 16px;
 }
 .main-nav-list-dropdown-customer:hover div ul li:hover {
     background-color: #e60012;
 }
-.main-nav-list-dropdown-customer:hover div ul li:hover a {
+.main-nav-list-dropdown-customer:hover div ul a li:hover {
     color: #fff;
 }
 #mainNav .main-nav-container .main-nav-list-end {

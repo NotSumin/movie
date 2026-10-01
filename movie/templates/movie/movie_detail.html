@@ -15,7 +15,7 @@
       <h1 class="title">{{ movie.title }}</h1>
 
       <div class="tag-row">
-          {% for genre in movie.movies %}
+          {% for genre in movie.genres %}
             <span class="tag genre-tag">{{ genre.name }}</span>
             <span class="divider">∣</span>
           {% endfor %}
@@ -30,12 +30,19 @@
           <span class="tag trailer-tag" id="mainTrailerBtn" data-trailer-url="{{ url_for('movie.trailer', movie_id=movie.id) }}">
               ▶ 예고편 재생
           </span>
-          <span class="tag rating-tag" id="likeTag" data-movie-id="{{ movie.id }}">
-             ♡ <span id="likeCount">{{ movie.like_count }}</span>
+          {% if g.user %}
+          <span class="tag rating-tag {% if is_liked %}liked{% endif %}" id="likeTag" data-movie-id="{{ movie.id }}" data-is-user="{% if g.user %}true{% endif %}">
+              {% if is_liked %}♥{% else %}♡{% endif %} <span id="likeCount">{{ movie.liked_movies|length }}</span>
           </span>
-
+          {% else %}
+          <a href="{{ url_for('auth.login', next=url_for('movie.detail', movie_id=movie.id)) }}">
+              <span class="tag rating-tag {% if is_liked %}liked{% endif %}" id="likeTag" data-movie-id="{{ movie.id }}" data-is-user="{% if g.user %}true{% endif %}">
+                  {% if is_liked %}♥{% else %}♡{% endif %} <span id="likeCount">{{ movie.liked_movies|length }}</span>
+              </span>
+          </a>
+          {% endif %}
           <span class="link-circle" id="copyLinkBtn">
-            <img src="{{ url_for('static', filename='img/linkcircle.png') }}" alt="링크">
+            <span class="material-symbols-outlined">share</span>
           </span>
 
           <div class="toast" id="copyToast">링크를 복사했습니다.</div>
@@ -43,7 +50,7 @@
 
       <div class="synopsis-box">{{ movie.description }}</div>
 
-      <a href="#" class="btn-reserve">예매하기</a>
+      <a href="{{ url_for('booking.index') }}" class="btn-reserve">예매하기</a>
     </div>
     </div>
 
@@ -57,7 +64,7 @@
         <div class="info-row">
           <span class="info-label">장르</span>
           <span class="info-value">
-            {% for genre in movie.movies %}{{ genre.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% for genre in movie.genres %}{{ genre.name }}{% if not loop.last %}, {% endif %}{% endfor %}
           </span>
         </div>
         <div class="info-row">
