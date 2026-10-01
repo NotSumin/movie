@@ -135,13 +135,13 @@ ul {
 .main-nav-list-dropdown-customer:hover div ul li {
     width: 100%;
 }
-.main-nav-list-dropdown-customer:hover div ul li a {
+#mainNav .main-nav-list-dropdown-customer:hover div ul a li {
     font-size: 16px;
 }
 .main-nav-list-dropdown-customer:hover div ul li:hover {
     background-color: #e60012;
 }
-.main-nav-list-dropdown-customer:hover div ul li:hover a {
+.main-nav-list-dropdown-customer:hover div ul a li:hover {
     color: #fff;
 }
 #mainNav .main-nav-container .main-nav-list-end {
@@ -282,14 +282,15 @@ ul {
 
 .ad-banner { margin-top: 50px; }
 .ad-banner.distributor {
-  width: 100%;
-  margin-left: calc(50% - 50vw);
-  padding: 0;
-  color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+    width: 100%;
+    margin-left: 50%;
+    transform:translateX(-50%);
+    padding: 0;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .page-inner {

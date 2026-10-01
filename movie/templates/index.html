@@ -19,7 +19,7 @@
                                         {% if movie.poster_url %}
                                         <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
                                         {% else %}
-                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        <img src="{{ url_for('static', filename='img/no_poster.png') }}" alt="포스터 이미지 없음">
                                         {% endif %}
                                     </div>
                                     <div class="movie-des px-2 text-center">
@@ -51,7 +51,7 @@
                                         {% if movie.poster_url %}
                                         <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
                                         {% else %}
-                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        <img src="{{ url_for('static', filename='img/no_poster.png') }}" alt="포스터 이미지 없음">
                                         {% endif %}
                                     </div>
                                     <div class="movie-info mt-1 d-flex align-items-center">
@@ -88,7 +88,7 @@
                                         {% if movie.poster_url %}
                                         <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
                                         {% else %}
-                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        <img src="{{ url_for('static', filename='img/no_poster.png') }}" alt="포스터 이미지 없음">
                                         {% endif %}
                                     </div>
                                     <div class="movie-des px-2 text-start">
@@ -120,7 +120,7 @@
                                         {% if movie.poster_url %}
                                         <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
                                         {% else %}
-                                        <img src="https://placehold.co/300x430" alt="포스터 이미지 없음">
+                                        <img src="{{ url_for('static', filename='img/no_poster.png') }}" alt="포스터 이미지 없음">
                                         {% endif %}
                                     </div>
                                     <div class="movie-des px-2 text-start">

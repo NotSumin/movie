@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
     {% block head %}
     <!-- CSS 파일 연결 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notice.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/question_list.css') }}">
+
     {% endblock %}
 
     {% block content %}
@@ -14,27 +16,32 @@
 
         <a class="common-button" href="{{ url_for('question.create') }}" style="margin: 0.2cm 0; display: inline-block;">문의하기</a>
 
-        <table class="table">
-            <tbody>
-                <thead>
-             <tr class="text-center">
-                 <th class="text-start" style="width: 10%;">번호</th>
-                 <th class="text-start" style="width: 20%; padding-left: 1cm;">제목</th>
-                 <th class="text-start p-1; padding-left: 1cm;">작성일시</th>
+        <table class="table table-hover notice-table">
+
+            <thead>
+            <tr class="text-center table-light">
+               <th style="width: 10%;">번호</th>
+               <th style="width: 10%;">제목</th>
+               <th style="width: 15%;">글쓴이</th>
+               <th style="width: 20%; padding-right: 7cm;">작성일시</th>
             </tr>
-                </thead>
+
+
+
+            </thead>
 
                 {% if question_list %}
                 {% for question in question_list.items %}
-                <tr>
-                <td>{{ question_list.total - ((question_list.page-1)*question_list.per_page) - loop.index0 }}</td>
+                <tr class="text-center">
+                <td>{{ question_list.total - ((question_list.page - 1)*question_list.per_page) - loop.index0 }}</td>
                 <td>
                     <a href="{{ url_for('question.detail', question_id=question.id) }}">{{ question.title }}</a>
-                    {% if question.answer_set|length > 0 %}
-                    <span class="text-danger small mx-2">[{{ question.answer_set|length }}]</span>
+                    {% if question.answers|length > 0 %}
+                    <span class="text-danger small mx-2">[{{ question.answers|length }}]</span>
                     {% endif %}
                 </td>
-                <td class="text-start ps-1">{{ question.created_at|datetime }}</td>
+                <td>{{ question.user.username }}</td>
+                <td class="text-start" style="text-align: left;">{{ question.created_at|datetime }}</td>
 
                 </tr>
                 {% endfor %}
@@ -43,7 +50,7 @@
                     <td colspan="3">등록된 문의사항이 없습니다.</td>
                 </tr>
                 {% endif %}
-           </tbody>
+
         </table>
 
 
@@ -70,7 +77,7 @@
 
 
 
-        <ul class="pagination justify-content-start" style="margin-left: 2cm;>
+        <ul class="pagination justify-content-center my-4">
             <!--이전버튼-->
             {% if question_list.has_prev %}
             <li class="page-item">

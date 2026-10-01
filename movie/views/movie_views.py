@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, redirect, url_for, g, jsonify
 
 from movie import db
-from movie.models import Movie, Review, Trailer
+from movie.models import LikedMovie, Movie, Review, Trailer
 from movie.forms import ReviewCreateForm
 from movie.views.auth_views import login_required
 
@@ -13,6 +13,12 @@ bp = Blueprint('movie', __name__, url_prefix='/movie')
 @bp.route('/detail/<int:movie_id>')
 def detail(movie_id):
     movie = Movie.query.get_or_404(movie_id)
+
+    if g.user:
+        liked_movie = LikedMovie.query.filter_by(user_id=g.user.id, movie_id=movie_id).first()
+        is_liked = True if liked_movie else False
+    else:
+        is_liked = False
 
     reviews = Review.query.filter_by(movie_id=movie_id) \
         .order_by(Review.created_at.desc()).all()
@@ -28,6 +34,7 @@ def detail(movie_id):
     return render_template(
         'movie/movie_detail.html',
         movie=movie,
+        is_liked=is_liked,
         reviews=reviews,
         review_count=review_count,
         avg_rating=avg_rating,
@@ -37,11 +44,21 @@ def detail(movie_id):
 
 
 @bp.route('/<int:movie_id>/like', methods=['POST'])
+@login_required
 def like(movie_id):
+    liked_movie = LikedMovie.query.filter_by(user_id=g.user.id, movie_id=movie_id).first()
+    if not liked_movie:
+        liked_movie = LikedMovie(
+            user_id=g.user.id,
+            movie_id=movie_id
+        )
+        db.session.add(liked_movie)
+        db.session.commit()
+    else:
+        db.session.delete(liked_movie)
+        db.session.commit()
     movie = Movie.query.get_or_404(movie_id)
-    movie.like_count = (movie.like_count or 0) + 1
-    db.session.commit()
-    return jsonify({'like_count': movie.like_count})
+    return jsonify({'like_count': len(movie.liked_movies)})
 
 
 @bp.route('/<int:movie_id>/review/new', methods=['GET', 'POST'])
