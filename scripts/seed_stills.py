@@ -7,7 +7,7 @@ from movie.models import Movie, Still
 app = create_app()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STILL_DIR = os.path.join(BASE_DIR, "movie", "static", "img", "stillcut")
+STILL_DIR = os.path.join(BASE_DIR, "../movie", "static", "img", "stillcut")
 IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp")
 
 FOLDERS = { "델마": "delma",

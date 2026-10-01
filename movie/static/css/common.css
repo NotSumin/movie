@@ -18,6 +18,10 @@ ul {
     padding-inline: 0;
 }
 
+#movieModal .modal-footer {
+    background-color: #f8f8f8;
+}
+
 .common-button {
     background-color: #e60012;
     color: white;

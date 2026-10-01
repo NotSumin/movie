@@ -48,8 +48,8 @@ with app.app_context():
         movie = Movie(
             title=data["title"],
             description=data.get("description", PLACEHOLDER),
-            runtime=data.get("runtime"),
-            rating=data.get("rating"),
+            runtime=data.get("runtime", 90),
+            rating=data.get("rating", "ALL"),
             status="상영중",
             section=data["section"],
             created_at=datetime.now(),

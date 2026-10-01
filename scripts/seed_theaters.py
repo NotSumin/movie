@@ -588,7 +588,7 @@ with (app.app_context()):
             if character == "!":
                 auditorium_layout += "<div class='layout-row'>"
             elif character == "o":
-                auditorium_layout += f"<div class='layout-seat' id='seat-{seat_row}{seat_col}'>{seat_col}</div>"
+                auditorium_layout += f"<div class='layout-seat' id='seat_{seat_row}{seat_col}'>{seat_col}</div>"
                 seat_col += 1
             elif character == "d":
                 auditorium_layout += "<div class='layout-blank'></div>"
