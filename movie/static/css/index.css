@@ -101,7 +101,55 @@ body {
     width:100%;
 }
 
-/* 섹션3,4 */
+/* 섹션3,4 공통 및 개별 */
+/* 섹션 3*/
+#section3.movie-section .movie-swiper {
+    position: relative;
+}
+
+#section3.movie-section .movie-swiper::before,
+#section3.movie-section .movie-swiper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#section3.movie-section .movie-swiper::before {
+    left: 0;
+    background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
+#section3.movie-section .movie-swiper::after {
+    right: 0;
+    background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
+/*섹션 4*/
+#section4.movie-section .movie-swiper {
+    position: relative;
+}
+
+#section4.movie-section .movie-swiper::before,
+#section4.movie-section .movie-swiper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#section4.movie-section .movie-swiper::before {
+    left: 0;
+    background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
+#section4.movie-section .movie-swiper::after {
+    right: 0;
+    background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
 .movie-section .movie-swiper .swiper-slide {
     width: 170px;
     position: relative;
@@ -134,9 +182,32 @@ body {
 }
 
 /*섹션1*/
+#section1.movie-section .movie-swiper {
+    position: relative;
+}
+
+#section1.movie-section .movie-swiper::before,
+#section1.movie-section .movie-swiper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#section1.movie-section .movie-swiper::before {
+    left: 0;
+    background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
+#section1.movie-section .movie-swiper::after {
+    right: 0;
+    background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
 #section1.movie-section .movie-swiper .swiper-slide {
     width:230px;
-    height:260px;
+    height: 325px;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
@@ -190,6 +261,29 @@ body {
 }
 
 /*섹션2*/
+#section2.movie-section .movie-swiper {
+    position: relative;
+}
+
+#section2.movie-section .movie-swiper::before,
+#section2.movie-section .movie-swiper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#section2.movie-section .movie-swiper::before {
+    left: 0;
+    background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
+#section2.movie-section .movie-swiper::after {
+    right: 0;
+    background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
 #section2.movie-section .movie-swiper .swiper-slide {
     width: 190px;
     position: relative;

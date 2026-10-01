@@ -198,7 +198,6 @@ ul {
 .footer-logo {
     display: flex;
     align-items: center;
-    gap: 8px;
     padding: 14px 24px;
     border-radius: 6px;
     width: fit-content;
@@ -207,17 +206,19 @@ ul {
 .footer-sns {
     justify-content: center;
     display: flex;
-    gap: 10px;
-    margin-top: 14px;
+    gap: 20px;
+}
+.footer-sns img{
+    width: 100%;
+    height: 100%;
 }
 .footer-sns a {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
 }
 
 .footer-col {

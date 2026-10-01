@@ -25,11 +25,12 @@
                 <div class="reservation-list-box">
                     <p class="py-3 text-center mb-0 reservation-info">최근 70일 이내의 정보만 조회가 가능합니다.</p>
                     <div class="reservation-list">
-                    <!-- 예매내역 1 -->
+                    {% for r in reservations %}
+                    <!-- 예매내역 -->
                     <div class="reservation-item">
                         <!-- 왼쪽 날짜 -->
                         <div class="reservation-date">
-                            2026.08.16(일)
+                            {{ r.schedule.showtime.strftime('%Y.%m.%d(%a)') }}
                         </div>
                         <!-- 타임라인 -->
                         <div class="timeline">
@@ -37,7 +38,7 @@
                         </div>
                         <!-- 오른쪽 내용 -->
                         <div class="reservation-content">
-                            <div class="accordion" id="reservationAccordion">
+                            <div class="accordion" id="reservationAccordion{{ loop.index }}">
                                 <div class="accordion-item">
                                     <!-- 상단 -->
                                     <h2 class="accordion-header">
@@ -45,76 +46,81 @@
                                             class="accordion-button collapsed reservation-header"
                                             type="button"
                                             data-bs-toggle="collapse"
-                                            data-bs-target="#reservation1"
+                                            data-bs-target="#reservation{{ loop.index }}"
                                             aria-expanded="false"
-                                            aria-controls="reservation1">
+                                            aria-controls="reservation{{ loop.index }}">
                                             <div class="reservation-summary">
                                                 <div class="movie-title">
-                                                    오디세이(2D4K)
+                                                    {{ r.schedule.movie.title }}
                                                 </div>
                                                 <div class="reservation-price">
-                                                    30,000원
+                                                    {{ '{:,}'.format(r.total_amount) }}원
                                                 </div>
                                                 <div class="reservation-number">
-                                                    예매번호 17758920
+                                                    예매번호 {{ r.order_id }}
+                                                    {% if r.canceled_at %}<span class="text-danger">[예매 취소 완료됨]</span>{% endif %}
                                                 </div>
                                             </div>
                                         </button>
                                     </h2>
                                     <!-- 상세 -->
                                     <div
-                                        id="reservation1"
+                                        id="reservation{{ loop.index }}"
                                         class="accordion-collapse collapse"
-                                        data-bs-parent="#reservationAccordion">
+                                        data-bs-parent="#reservationAccordion{{ loop.index }}">
                                         <div class="accordion-body">
                                             <div class="reservation-detail">
                                                 <!-- 영화 정보 -->
                                                 <div class="movie-info">
-                                                    <img src="https://placehold.co/300x430" class="movie-poster" alt="영화 포스터">
+                                                    <img src="{{ r.schedule.movie.poster_url or 'https://placehold.co/300x430' }}" class="movie-poster" alt="영화 포스터">
                                                     <div class="movie-detail">
                                                         <div>
                                                             <span>상영일시</span>
-                                                            <strong>2026.08.16(일) 20:45 ~ 23:47</strong>
+                                                            <strong>{{ r.schedule.showtime.strftime('%Y.%m.%d(%a) %H:%M') }}</strong>
                                                         </div>
                                                         <div>
                                                             <span>상영관</span>
-                                                            <strong>영등포 2관 LASER</strong>
+                                                            <strong>{{ r.schedule.auditorium.theater.name }} {{ r.schedule.auditorium.name }}</strong>
                                                         </div>
                                                         <div>
                                                             <span>관람인원</span>
-                                                            <strong>성인 2</strong>
+                                                            <strong>{{ r.audience_count }}명</strong>
                                                         </div>
                                                         <div>
                                                             <span>좌석</span>
-                                                            <strong>G16, G17</strong>
+                                                            <strong>{{ r.seats }}</strong>
                                                         </div>
                                                         <div>
                                                             <span>거래번호</span>
-                                                            <strong>102202608160002019</strong>
+                                                            <strong>{{ r.order_id }}</strong>
                                                         </div>
                                                     </div>
-                                                    <button type="button" class="reservation-cancel-btn btn btn-sm border">예매취소</button>
+                                                    {% if not r.canceled_at %}
+                                                    <form action="{{ url_for('mypage.cancel_reservation', reservation_id=r.id) }}" method="post" class="d-inline">
+                                                        <button type="submit" class="reservation-cancel-btn btn btn-sm border">예매취소</button>
+                                                    </form>
+                                                    {% endif %}
                                                 </div>
                                                 <hr>
                                                 <!-- 결제 정보 -->
                                                 <div class="payment-info">
                                                     <div class="payment-date">
                                                         결제일시
-                                                        <span>2026-08-16 오후 12:11:10</span>
+                                                        <span>{{ r.paid_at.strftime('%Y-%m-%d %p %I:%M:%S') }}</span>
                                                     </div>
                                                     <div class="payment-row">
                                                         <div>
                                                             <span>주문금액</span>
-                                                            <strong>30,000원</strong>
+                                                            <strong>{{ '{:,}'.format(r.order_amount) }}원</strong>
                                                         </div>
                                                         <div>
                                                             <span>할인금액</span>
-                                                            <strong>10,000원</strong>
+                                                            <strong>{{ '{:,}'.format(r.discount_amount) }}원</strong>
                                                         </div>
                                                         <div>
                                                             <span>총 결제금액</span>
                                                             <strong class="text-danger">
-                                                                20,000원
+                                                                {{ '{:,}'.format(r.total_amount) }}원
                                                             </strong>
                                                         </div>
                                                     </div>
@@ -126,107 +132,17 @@
                             </div>
                         </div>
                     </div>
-                    <!-- 예매내역 2 -->
-                    <div class="reservation-item">
-                        <div class="reservation-date">
-                            2026.08.01(토)
-                        </div>
-                        <div class="timeline">
-                            <span class="timeline-dot"></span>
-                        </div>
-                        <div class="reservation-content">
-                            <div class="accordion" id="reservationAccordion2">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button
-                                            class="accordion-button collapsed reservation-header"
-                                            type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#reservation2">
-                                            <div class="reservation-summary">
-                                                <div class="movie-title">
-                                                    스파이더맨: 브랜드 뉴 데이(2D4K)
-                                                </div>
-                                                <div class="reservation-price">
-                                                    30,000원
-                                                </div>
-                                                <div class="reservation-number">
-                                                    예매번호 15276188
-                                                </div>
-                                            </div>
-                                        </button>
-                                    </h2>
-                                    <div
-                                        id="reservation2"
-                                        class="accordion-collapse collapse">
-                                        <div class="accordion-body">
-                                            <div class="reservation-detail">
-                                                <div class="movie-info">
-                                                    <img
-                                                        src="https://placehold.co/300x430"
-                                                        class="movie-poster"
-                                                        alt="영화 포스터">
-                                                    <div class="movie-detail">
-                                                        <div>
-                                                            <span>상영일시</span>
-                                                            <strong>2026.08.01(토) 20:45 ~ 23:47</strong>
-                                                        </div>
-                                                        <div>
-                                                            <span>상영관</span>
-                                                            <strong>영등포 2관 LASER</strong>
-                                                        </div>
-                                                        <div>
-                                                            <span>관람인원</span>
-                                                            <strong>성인 2</strong>
-                                                        </div>
-                                                        <div>
-                                                            <span>좌석</span>
-                                                            <strong>G16, G17</strong>
-                                                        </div>
-                                                        <div>
-                                                            <span>거래번호</span>
-                                                            <strong>102202608010002019</strong>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                                <div class="payment-info">
-                                                    <div class="payment-date">
-                                                        결제일시
-                                                        <span>2026-08-01 오후 12:11:10</span>
-                                                    </div>
-                                                    <div class="payment-row">
-                                                        <div>
-                                                            <span>주문금액</span>
-                                                            <strong>30,000원</strong>
-                                                        </div>
-                                                        <div>
-                                                            <span>할인금액</span>
-                                                            <strong>10,000원</strong>
-                                                        </div>
-                                                        <div>
-                                                            <span>총 결제금액</span>
-                                                            <strong class="text-danger">
-                                                                20,000원
-                                                            </strong>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
                 </div>
                 <!--예매내역이 없을 경우-->
-                <!--<div class="text-center py-5">
+                {% if not reservations %}
+                <div class="text-center py-5">
                     <p class="text-secondary mb-0">
                         예매내역이 없습니다.
                     </p>
-                </div>-->
+                </div>
+                {% endif %}
                 <!--//예매내역이 없을 경우-->
           </div>
           <div class="tab-pane fade" id="cancel-tab-pane" role="tabpanel" aria-labelledby="cancel-tab" tabindex="0">
@@ -244,18 +160,22 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for r in canceled_reservations %}
                                 <tr>
-                                    <td class="text-center">2026.08.10(월) 20:45</td>
-                                    <td class="text-center">오디세이</td>
-                                    <td class="text-center">영등포 2관 LASER</td>
-                                    <td class="text-center">2026.08.16(일) 20:45 ~ 23:47</td>
-                                    <td class="text-center">13,000원</td>
+                                    <td class="text-center">{{ r.canceled_at.strftime('%Y.%m.%d(%a) %H:%M') }}</td>
+                                    <td class="text-center">{{ r.schedule.movie.title }}</td>
+                                    <td class="text-center">{{ r.schedule.auditorium.theater.name }} {{ r.schedule.auditorium.name }}</td>
+                                    <td class="text-center">{{ r.schedule.showtime.strftime('%Y.%m.%d(%a) %H:%M') }}</td>
+                                    <td class="text-center">{{ '{:,}'.format(r.total_amount) }}원</td>
                                 </tr>
-                                <!--<tr>
+                                {% endfor %}
+                                {% if not canceled_reservations %}
+                                <tr>
                                     <td colspan="5" class="text-center">
                                         취소내역이 없습니다.
                                     </td>
-                                </tr>-->
+                                </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
