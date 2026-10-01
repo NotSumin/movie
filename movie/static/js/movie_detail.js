@@ -137,22 +137,30 @@ if (stillGallery && stillLightbox) {
 
 // ----- 좋아요 (서버에 저장) -----
 var likeTag = document.getElementById('likeTag');
-var likeCount = document.getElementById('likeCount');
 if (likeTag) {
-    likeTag.addEventListener('click', function () {
-        fetch('/movie/' + likeTag.dataset.movieId + '/like', { method: 'POST' })
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-                likeCount.textContent = data.like_count;
-                likeTag.classList.add('flash');
-                setTimeout(function () {
-                    likeTag.classList.remove('flash');
-                }, 250);
-            })
-            .catch(function (err) {
-                console.error('좋아요 요청 실패:', err);
-            });
-    });
+    if (likeTag.dataset.isUser == "true") {
+        likeTag.addEventListener('click', function () {
+            fetch('/movie/' + likeTag.dataset.movieId + '/like', { method: 'POST' })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    likeTag.classList.add('flash');
+                    setTimeout(function () {
+                        likeTag.classList.remove('flash');
+                    }, 250);
+                    if (likeTag.classList.contains('liked')) {
+                        likeTag.classList.remove('liked');
+                        likeTag.innerHTML = `♡ <span id="likeCount">${data.like_count}</span>`;
+                    }
+                    else {
+                        likeTag.classList.add('liked');
+                        likeTag.innerHTML = `♥ <span id="likeCount">${data.like_count}</span>`;
+                    }
+                })
+                .catch(function (err) {
+                    console.error('좋아요 요청 실패:', err);
+                });
+        });
+    }
 }
 
 // ----- 링크 복사 -----

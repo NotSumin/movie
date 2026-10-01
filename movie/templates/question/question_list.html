@@ -36,8 +36,8 @@
                 <td>{{ question_list.total - ((question_list.page - 1)*question_list.per_page) - loop.index0 }}</td>
                 <td>
                     <a href="{{ url_for('question.detail', question_id=question.id) }}">{{ question.title }}</a>
-                    {% if question.answer_set|length > 0 %}
-                    <span class="text-danger small mx-2">[{{ question.answer_set|length }}]</span>
+                    {% if question.answers|length > 0 %}
+                    <span class="text-danger small mx-2">[{{ question.answers|length }}]</span>
                     {% endif %}
                 </td>
                 <td>{{ question.user.username }}</td>

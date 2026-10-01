@@ -51,7 +51,8 @@ def login():
                 return redirect(_next)
             else:
                 return redirect(url_for('main.index'))
-        flash(error)
+        else:
+            flash(error)
     return render_template('auth/login.html', form=form)
 
 @bp.route('/logout')
