@@ -51,9 +51,7 @@ def login():
                 return redirect(_next)
             else:
                 return redirect(url_for('main.index'))
-        else:
-            flash(error)
-
+        flash(error)
     return render_template('auth/login.html', form=form)
 
 @bp.route('/logout')
@@ -73,12 +71,12 @@ def load_logged_in_user():
 # 데코레이터 함수: 원래 함수에 추가기능 부여
 def login_required(view):
     @functools.wraps(view)
-    def wrapperd_view(*args, **kwargs):
+    def wrapped_view(*args, **kwargs):
         if g.user is None:
             _next = request.url if request.method == 'GET' else ''
             return redirect(url_for('auth.login', next= _next))
         return view(*args, **kwargs)
-    return wrapperd_view
+    return wrapped_view
 
 @bp.route('/withdraw', methods=['POST'])
 @login_required

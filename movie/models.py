@@ -1,5 +1,8 @@
 from alembic.autogenerate.compare import server_defaults
 from datetime import datetime
+
+from sqlalchemy import false
+
 from movie import db
 
 
@@ -90,6 +93,9 @@ class Answer(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'),
+                        nullable=False)
+    user = db.relationship('User', backref=db.backref('answer_set'))
 
 class Theater(db.Model):
     id = db.Column(db.Integer, primary_key=True)
