@@ -1,37 +1,216 @@
 {% extends 'base.html' %}
+    {% block head %}
+    <!-- CSS 파일 연결 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/question_list.css') }}">
+    {% endblock %}
 
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/question.css') }}">
-{% endblock %}
-
-{% block content %}
+    {% block content %}
+    <!-- 화면 중앙 배치를 위한 메인 컨테이너 -->
     <div class="container">
-    <h5 class="my-3 border-bottom pb-2">문의내용</h5>
-    <form method="post" novalidate>
-        {{ form.csrf_token }}
-        {% include 'form_errors.html' %}
 
-        <div class="question-field">
-          {{ form.title.label }}
-            {{ form.title(class='form-control') }}
-        </div>
+        <!-- 메인 제목 -->
+        <h3 class="main-title">문의목록</h3>
+        <hr/>
 
-        <div class="question-field">
-            {{ form.content.label }}
-            {{ form.content(class='form-control') }}
-        </div>
+        <a class="common-button" href="{{ url_for('question.create') }}" style="margin: 0.2cm 0; display: inline-block;">문의하기</a>
 
-        <div class="question-field">
-            {{ form.image.label }}
-            {{ form.image(class='form-control') }}
-        </div>
+        <table class="table">
+            <tbody>
+                <thead>
+             <tr class="text-center">
+                 <th class="text-start" style="width: 10%;">번호</th>
+                 <th class="text-start" style="width: 20%; padding-left: 1cm;">제목</th>
+                 <th class="text-start p-1; padding-left: 1cm;">작성일시</th>
+            </tr>
+                </thead>
 
-        {{ form.submit(class='signup-button') }}
+                {% if question_list %}
+                {% for question in question_list.items %}
+                <tr>
+                <td>{{ question_list.total - ((question_list.page-1)*question_list.per_page) - loop.index0 }}</td>
+                <td>
+                    <a href="{{ url_for('question.detail', question_id=question.id) }}">{{ question.title }}</a>
+                    {% if question.answer_set|length > 0 %}
+                    <span class="text-danger small mx-2">[{{ question.answer_set|length }}]</span>
+                    {% endif %}
+                </td>
+                <td class="text-start ps-1">{{ question.created_at|datetime }}</td>
 
-    </form>
-</div>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="3">등록된 문의사항이 없습니다.</td>
+                </tr>
+                {% endif %}
+           </tbody>
+        </table>
 
 
 
 
-{% endblock %}
+
+        <style>
+            .page-link {
+                color: #e60012;
+            }
+
+            .page-link:hover {
+                color: #cc0010;
+            }
+
+            .page-item.active .page-link{
+                background-color: #e60012;
+                border-color: #e60012;
+                color: #ffffff;
+            }
+
+        </style>
+
+
+
+
+        <ul class="pagination justify-content-start" style="margin-left: 2cm;>
+            <!--이전버튼-->
+            {% if question_list.has_prev %}
+            <li class="page-item">
+                <a href="?page={{ question_list.prev_num }}" class="page-link">이전</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0)">이전</a>
+            </li>
+            {% endif %}
+            <!--페이지 번호-->
+            {% for page_num in question_list.iter_pages() %}
+            {% if page_num %}
+            {% if page_num != question_list.page %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="javascript:void(0)">{{ page_num }}</a>
+            </li>
+            {% endif %}
+            {% else %}
+            <li class="disabled">
+                <a class="page-link" href="javascript:void(0)">...</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            <!--다음페이지-->
+            {% if question_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ question_list.next_num }}">다음</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0)">다음</a>
+            </li>
+            {% endif %}
+        </ul>
+
+
+
+{#        <form method="post">#}
+{#            <!-- 1. 종류 선택 영역 -->#}
+{#            <div class="form-group kind-group">#}
+{#                <label class="form-label me-3">#}
+{#                    종류 <span class="required">*</span>#}
+{#                </label>#}
+{#                <label style="margin-right: 15px;">#}
+{#                    <input type="radio" name="kind" value="영화관문의" checked>#}
+{#                    <span>영화관문의</span>#}
+{#                </label>#}
+{##}
+{#                <label>#}
+{#                    <input type="radio" name="kind" value="기타 문의">#}
+{#                    <span>기타 문의</span>#}
+{#                </label>#}
+{#                <button type="button" style="margin-left: 15px;" onclick="">영화관선택</button>#}
+{#            </div>#}
+{#            <hr/>#}
+{##}
+{#            <!-- 2. 제목 입력 영역 -->#}
+{#            <div class="form-group">#}
+{#                <label for="title" class="form-label me-3">#}
+{#                    제목 <span class="required">*</span>#}
+{#                </label>#}
+{##}
+{#                <div class="input-container">#}
+{#                    <input#}
+{#                        type="text"#}
+{#                        id="title"#}
+{#                        name="title"#}
+{#                        class="form-input"#}
+{#                        placeholder="제목을 입력해주세요"#}
+{#                        maxlength="50"#}
+{#                        oninput="updateCharCount(this)"#}
+{#                    >#}
+{#                    <div class="char-counter">#}
+{#                        <span id="charCount">0</span>/한글 50자#}
+{#                    </div>#}
+{#              </div>#}
+{#           </div>#}
+{#            <hr/>#}
+{##}
+{#            <!-- 3. 내용 입력 영역 -->#}
+{#            <div class="form-group">#}
+{#                <label for="content" class="form-label me-3">#}
+{#                    내용 <span class="required">*</span>#}
+{#                </label>#}
+{##}
+{#                <div class="input-container">#}
+{#                    <textarea#}
+{#                        id="content"#}
+{#                        name="content"#}
+{#                        class="form-input"#}
+{#                        placeholder="내용 및 첨부파일에 개인정보(카드번호, 계좌번호, 주민번호)가 포함되지 않도록 유의하여 입력해주세요"#}
+{#                        maxlength="2000"#}
+{#                        oninput="updateCharCount(this)"#}
+{#                    ></textarea>#}
+{#                    <div class="char-counter">#}
+{#                        <span id="contentCount">0</span>/한글 2,000자#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <hr/>#}
+{##}
+{#            <!-- 4. 첨부파일 영역 -->#}
+{#            <div class="form-group">#}
+{#                <label class="form-label me-3">#}
+{#                    첨부파일#}
+{#                </label>#}
+{#                <div>#}
+{#                    <input type="file" name="image" id="image">#}
+{#                </div>#}
+{#            </div>#}
+{#            <hr/>#}
+{##}
+{#            <div>#}
+{#                <button type="reset">취소</button>#}
+{#                <button type="submit">확인</button>#}
+{#            </div>#}
+{##}
+{#        </form>#}
+
+
+    </div>
+    {% endblock %}
+
+    {% block script %}
+    <!-- 글자 수 카운트 자바스크립트 -->
+    <script>
+        function updateCharCount(input) {
+            const count = input.value.length;
+            if (input.id === 'title') {
+                document.getElementById('charCount').textContent = count;
+            } else if (input.id === 'content') {
+                document.getElementById('contentCount').textContent = count;
+            }
+        }
+
+
+    </script>
+    {% endblock %}

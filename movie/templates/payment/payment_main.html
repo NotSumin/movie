@@ -1,0 +1,549 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payment_main.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="paymentContainer" class="container"
+    data-amount="{{ amount }}"
+    data-point-balance="{{ point_balance }}"
+    data-logged-in="{{ 'true' if g.user else 'false' }}"
+    data-login-url="{{ url_for('auth.login', next=request.url) }}"
+    data-verify-password-url="{{ url_for('payment.verify_password') }}"
+    data-deduct-points-url="{{ url_for('payment.deduct_points') }}"
+    data-toss-client-key="{{ toss_client_key }}"
+    data-order-id="{{ order_id }}"
+    data-order-name="{{ order_name }}"
+    data-success-url="{{ url_for('payment.toss_success', _external=True) }}"
+    data-fail-url="{{ url_for('payment.toss_fail', _external=True) }}"
+>
+    <div class="booking-steps">
+        <div class="booking-step">
+            <strong>01<br>상영시간</strong>
+        </div>
+        <div class="booking-step">
+            <strong>02<br>인원/좌석</strong>
+        </div>
+        <div class="booking-step active-step">
+            <strong>03<br>결제</strong>
+        </div>
+        <div class="booking-step">
+            <strong>04<br>결제완료</strong>
+        </div>
+    </div>
+    <div class="payment-content">
+        <div class="payment-info">
+            <div class="payment-title-bar"><strong>예매정보</strong></div>
+            <div class="payment-info-body">
+                <img src="{{ schedule.movie.poster_url if schedule else url_for('static', filename='img/no_poster.png') }}" alt="포스터">
+                <div class="payment-movie-title">
+                    {% if schedule %}
+                    {% if schedule.movie.rating == "12" %}
+                    <div class="movie-rating rating-12"></div>
+                    {% elif schedule.movie.rating == "15" %}
+                    <div class="movie-rating rating-15"></div>
+                    {% elif schedule.movie.rating == "19" %}
+                    <div class="movie-rating rating-19"></div>
+                    {% else %}
+                    <div class="movie-rating rating-all"></div>
+                    {% endif %}
+                    <p>{{ schedule.movie.title }}</p>
+                    {% endif %}
+                </div>
+                <div class="payment-info-row">
+                    <span>일시</span>
+                    <p><strong>{{ schedule.showtime.strftime('%Y-%m-%d (%a) %H:%M') if schedule else '-' }}</strong></p>
+                </div>
+                <div class="payment-info-row">
+                    <span>영화관</span>
+                    <p>{{ (schedule.auditorium.theater.name ~ ' ' ~ schedule.auditorium.name) if schedule else '-' }}</p>
+                </div>
+                <div class="payment-info-row">
+                    <span>인원</span>
+                    <p>{{ audience_count }}명</p>
+                </div>
+            </div>
+            <div class="payment-info-seats">
+                <span>좌석</span>
+                <p><strong>{{ seats|join(', ') if seats else '-' }}</strong></p>
+            </div>
+        </div>
+
+        <div class="payment-methods">
+            <div class="payment-title-bar">
+                <strong>결제수단</strong>
+                <button type="button" class="btn-reset"><strong>↻초기화</strong></button>
+            </div>
+            <div class="payment-methods-body">
+                <div class="payment-section-label">할인/포인트</div>
+                <div class="payment-point-tabs">
+                    <button type="button" class="payment-point-tab" data-tab="lookup">BG.POINT <span class="payment-point-tab-balance">조회</span></button>
+                    <button type="button" class="payment-point-tab" data-tab="cardnum">BG.POINT 카드번호</button>
+                </div>
+                <div class="payment-point-panel" id="pointPanelLookup" data-panel="lookup">
+                    <div class="payment-point-result-block">
+                        <div class="payment-point-balance-row">
+                            <span>보유 포인트 <strong class="payment-point-balance-value">{{ point_balance }}P</strong></span>
+                        </div>
+                        <div class="payment-point-inline-row">
+                            <input type="text" class="payment-point-input" placeholder="포인트 입력">
+                            <button type="button" class="btn-point-max">최대적용</button>
+                        </div>
+                        <input type="password" class="payment-point-pw" placeholder="BG.POINT 비밀번호 입력 (4~8자리)" maxlength="8">
+                        <div class="payment-point-actions">
+                            <button type="button" class="btn-point-cancel">취소</button>
+                            <button type="button" class="btn-point-apply">적용</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-point-panel" id="pointPanelCardnum" data-panel="cardnum">
+                    <input type="text" class="payment-point-cardnum" value="{{ fixed_card_number }}" maxlength="16">
+                    <div class="payment-point-inline-row">
+                        <input type="password" class="payment-point-pw" placeholder="BG.POINT 비밀번호 입력 (4~8자리)" maxlength="8">
+                        <button type="button" class="btn-point-lookup">조회</button>
+                    </div>
+                    <div class="payment-point-lookup-result" id="pointLookupResult">
+                        <div class="payment-point-result-block">
+                            <div class="payment-point-balance-row">
+                                <span>보유 포인트 <strong class="payment-point-balance-value">{{ point_balance }}P</strong></span>
+                            </div>
+                            <div class="payment-point-inline-row">
+                                <input type="text" class="payment-point-input" placeholder="포인트 입력">
+                                <button type="button" class="btn-point-max">최대적용</button>
+                            </div>
+                            <div class="payment-point-actions">
+                                <button type="button" class="btn-point-cancel">취소</button>
+                                <button type="button" class="btn-point-apply">적용</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-discount-grid">
+                    <button type="button"><span class="badge">0</span>VIP</button>
+                    <button type="button"><span class="badge">0</span>관람권</button>
+                    <button type="button"><span class="badge">0</span>할인권</button>
+                    <button type="button">제휴포인트/할인</button>
+                </div>
+                <div class="payment-section-label">최종 결제수단</div>
+                <div class="payment-method-grid">
+                    <button type="button" class="payment-method-btn" data-method="card">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/card_2.png') }}" alt="링크"></span>신용카드
+                    </button>
+                    <button type="button" class="payment-method-btn" data-method="samsungpay">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/samsung_2.png') }}" alt="링크"></span>삼성pay
+                    </button>
+                    <button type="button" class="payment-method-btn" data-method="kakaopay">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/kakao_2.png') }}" alt="링크"></span>카카오pay
+                    </button>
+                    <button type="button" class="payment-method-btn" data-method="toss">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/toss_2.png') }}" alt="링크"></span>토스pay
+                    </button>
+                    <button type="button" class="payment-method-btn" data-method="naverpay">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/naver_2.png') }}" alt="링크"></span>네이버pay
+                    </button>
+                </div>
+                <div class="payment-card-picker" id="paymentCardPicker">
+                    <button type="button" class="payment-card-icon" data-card="KB국민">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/kb.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="신한">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/shinhan.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="삼성">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/samsung.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="현대">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/hyundai.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="롯데">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/lot.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="우리">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/woori.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="하나">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/hana.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="BC">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/bc.png') }}" alt="링크"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-checkout">
+            <div class="payment-title-bar"><strong>결제하기</strong></div>
+            <div class="payment-checkout-body">
+                <div class="payment-accrual-row">
+                    <label class="payment-accrual-item" data-accrual="bgpoint">
+                        <span class="payment-agree-checkbox"><span class="material-symbols-outlined">check_small</span></span>BG.POINT 적립
+                    </label>
+                    <label class="payment-accrual-item disabled" data-accrual="id">
+                        <span class="payment-agree-checkbox"><span class="material-symbols-outlined">check_small</span></span>ID적립
+                    </label>
+                    <label class="payment-accrual-item disabled" data-accrual="cardnum">
+                        <span class="payment-agree-checkbox"><span class="material-symbols-outlined">check_small</span></span>카드번호 적립
+                    </label>
+                </div>
+                <div class="payment-accordion" id="refundAccordion">
+                    <span>예매 취소 및 환불 정보 동의</span>
+                    <span class="material-symbols-outlined">keyboard_arrow_down</span>
+                </div>
+                <div class="payment-refund-box" id="refundInfoBox">
+                        <strong>예매 취소/환불 안내</strong>
+                        <ul>
+                            <li>온라인 예매 내역 취소는 상영 20분 전까지 가능하며, 20분 이전부터는 현장 취소만 가능합니다.</li>
+                            <li>티켓에 표기된 상영시작시간 이후 환불은 불가합니다.</li>
+                            <li>무대인사, 스페셜상영회, GV, 라이브뷰잉 등 특별 상영 회차의 예매 취소는 상영전일 23시 59분 59초까지만 가능합니다.</li>
+                            <li>온라인 예매 후 현장에서 티켓 발권 시 온라인으로 예매 취소는 불가능하며, 현장 취소만 가능합니다.</li>
+                        </ul>
+                </div>
+                <div class="payment-agree-row">
+                    <span class="payment-agree-checkbox" id="agreeCheckbox">
+                        <span class="material-symbols-outlined">check_small</span>
+                    </span>
+                    위 내용을 확인하였으며 결제에 동의합니다.
+                </div>
+                <div class="payment-benefit-section">
+                    <div class="payment-section-label">결제수단 혜택 안내</div>
+                    <div class="payment-benefit-row">
+                        <div class="payment-benefit-image">
+                            <img src="{{ url_for('static', filename='img/naver_1.png') }}" alt="링크">
+                        </div>
+                        <div class="payment-benefit-content">
+                            <strong>Npay 2만원 이상 결제 시 포인트 적립!</strong>
+                            <ul>
+                                <li>•네이버페이포인트 1,000원 추가 적립!<br>
+                                    (9.21(월)~10.11(일) /3만명추첨,10.30(금)일괄 지급)</li>
+                                <li>•상시 혜택: 네이버유입1% / 기타경로 0.3% 적립</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="payment-benefit-row">
+                        <div class="payment-benefit-image">
+                            <img src="{{ url_for('static', filename='img/toss_1.png') }}" alt="링크">
+                        </div>
+                        <div class="payment-benefit-content">
+                            <strong>토스페이 생애 첫 결제 시 2천원 즉시 할인</strong>
+                            <ul>
+                                <li>•토스페이 생애 첫 결제 시<br>
+                                    2천원 즉시 할인 (1만원 이상 결제 시, 선착순 5천명)</li>
+                                <li>※자세한 내용은 이벤트 페이지 참고</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-checkout-footer">
+                <div class="payment-price-list">
+                    <div class="payment-price-row">
+                        <span>상품금액</span>
+                        <span>{{ '{:,}'.format(amount) }}원</span>
+                    </div>
+                    <div class="payment-price-row">
+                        <span>할인금액</span>
+                        <span id="discountAmountText">- 0원</span>
+                    </div>
+                    <div class="payment-price-row total">
+                        <span>결제금액</span>
+                        <span id="totalAmountText">₩ {{ '{:,}'.format(amount) }}원</span>
+                    </div>
+                </div>
+                <a href="#" class="btn-payment-confirm" id="paymentConfirmBtn">결제하기</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://js.tosspayments.com/v1"></script>
+<script>
+    const paymentContainer = document.getElementById('paymentContainer');
+    const baseAmount = parseInt(paymentContainer.dataset.amount, 10);
+    let pointBalance = parseInt(paymentContainer.dataset.pointBalance, 10);
+    const isLoggedIn = paymentContainer.dataset.loggedIn === 'true';
+    const loginUrl = paymentContainer.dataset.loginUrl;
+    const verifyPasswordUrl = paymentContainer.dataset.verifyPasswordUrl;
+    const discountAmountText = document.getElementById('discountAmountText');
+    const totalAmountTextEl = document.getElementById('totalAmountText');
+    let appliedPoints = 0;
+    let currentAmount = baseAmount;
+
+    const tossPayments = TossPayments(paymentContainer.dataset.tossClientKey);
+
+    function updatePriceDisplay() {
+        currentAmount = Math.max(baseAmount - appliedPoints, 0);
+        discountAmountText.textContent = '- ' + appliedPoints.toLocaleString('ko-KR') + '원';
+        totalAmountTextEl.textContent = '₩ ' + currentAmount.toLocaleString('ko-KR') + '원';
+    }
+
+    const methodButtons = document.querySelectorAll('.payment-method-btn');
+    const cardPicker = document.getElementById('paymentCardPicker');
+    let selectedMethod = '';
+
+    methodButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            methodButtons.forEach(function (b) { b.classList.remove('selected'); });
+            btn.classList.add('selected');
+            selectedMethod = btn.dataset.method;
+            cardPicker.classList.toggle('show', selectedMethod === 'card');
+        });
+    });
+
+    const cardIcons = document.querySelectorAll('.payment-card-icon');
+    let selectedCardCompany = '';
+
+    cardIcons.forEach(function (icon) {
+        icon.addEventListener('click', function () {
+            cardIcons.forEach(function (i) { i.classList.remove('selected'); });
+            icon.classList.add('selected');
+            selectedCardCompany = icon.dataset.card;
+        });
+    });
+
+    function verifyBgPassword(password) {
+        return fetch(verifyPasswordUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'password=' + encodeURIComponent(password)
+        }).then(function (res) { return res.json(); }).then(function (data) { return data.valid; });
+    }
+
+    const pointTabs = document.querySelectorAll('.payment-point-tab');
+    const pointPanels = document.querySelectorAll('.payment-point-panel');
+    const pointLookupResult = document.getElementById('pointLookupResult');
+
+    const lookupTab = document.querySelector('.payment-point-tab[data-tab="lookup"]');
+    const lookupTabBalance = lookupTab.querySelector('.payment-point-tab-balance');
+    let lookupRevealed = false;
+
+    function syncLookupTabLabel() {
+        lookupTabBalance.textContent = lookupRevealed
+            ? pointBalance.toLocaleString('ko-KR') + 'P'
+            : '조회';
+    }
+
+    function resetPointPanel(panel) {
+        panel.querySelectorAll('input').forEach(function (input) {
+            input.value = input.defaultValue || '';
+        });
+        panel.classList.remove('show');
+        pointLookupResult.classList.remove('show');
+        pointTabs.forEach(function (t) { t.classList.remove('active'); });
+    }
+
+    const pointTabsEl = document.querySelector('.payment-point-tabs');
+
+    pointTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            if (!isLoggedIn) {
+                window.location.href = loginUrl;
+                return;
+            }
+
+            pointTabsEl.classList.add('clicked');
+
+            if (tab.dataset.tab === 'lookup') {
+                lookupRevealed = true;
+            }
+
+            const isActive = tab.classList.contains('active');
+            pointTabs.forEach(function (t) { t.classList.remove('active'); });
+            pointPanels.forEach(function (p) { p.classList.remove('show'); });
+
+            if (!isActive) {
+                tab.classList.add('active');
+                document.querySelector('.payment-point-panel[data-panel="' + tab.dataset.tab + '"]').classList.add('show');
+            }
+
+            syncLookupTabLabel();
+        });
+    });
+
+    document.querySelectorAll('.btn-point-lookup').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const panel = btn.closest('.payment-point-panel');
+            const cardNumber = panel.querySelector('.payment-point-cardnum').value.trim();
+            const pw = panel.querySelector('.payment-point-pw').value.trim();
+
+            if (!cardNumber || pw.length < 4 || pw.length > 8) {
+                alert('카드번호와 BG.POINT 비밀번호(4~8자리)를 정확히 입력해주세요.');
+                return;
+            }
+
+            verifyBgPassword(pw).then(function (valid) {
+                if (!valid) {
+                    alert('BG.POINT 비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+                pointLookupResult.classList.add('show');
+            });
+        });
+    });
+
+    document.querySelectorAll('.btn-point-max').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const block = btn.closest('.payment-point-result-block');
+            const balanceText = block.querySelector('.payment-point-balance-row strong').textContent;
+            block.querySelector('.payment-point-input').value = balanceText.replace('P', '');
+        });
+    });
+
+    document.querySelectorAll('.btn-point-cancel').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            resetPointPanel(btn.closest('.payment-point-panel'));
+        });
+    });
+
+    document.querySelectorAll('.btn-point-apply').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const panel = btn.closest('.payment-point-panel');
+            const block = btn.closest('.payment-point-result-block');
+            const pwInput = block.querySelector('.payment-point-pw');
+
+            function finishApply() {
+                const pointInput = block.querySelector('.payment-point-input');
+                const requested = parseInt(pointInput.value, 10) || 0;
+                appliedPoints = Math.min(Math.max(requested, 0), pointBalance);
+                updatePriceDisplay();
+
+                alert('BG.POINT ' + appliedPoints.toLocaleString('ko-KR') + 'P가 적용되었습니다. (연습용)');
+                resetPointPanel(panel);
+            }
+
+            if (pwInput) {
+                const pw = pwInput.value.trim();
+                if (pw.length < 4 || pw.length > 8) {
+                    alert('BG.POINT 비밀번호를 4~8자리로 입력해주세요.');
+                    return;
+                }
+                verifyBgPassword(pw).then(function (valid) {
+                    if (!valid) {
+                        alert('BG.POINT 비밀번호가 일치하지 않습니다.');
+                        return;
+                    }
+                    finishApply();
+                });
+            } else {
+                finishApply();
+            }
+        });
+    });
+
+    const resetBtn = document.querySelector('.payment-title-bar .btn-reset');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            methodButtons.forEach(function (b) { b.classList.remove('selected'); });
+            cardPicker.classList.remove('show');
+            cardIcons.forEach(function (i) { i.classList.remove('selected'); });
+            selectedMethod = '';
+            selectedCardCompany = '';
+
+            pointPanels.forEach(function (p) { resetPointPanel(p); });
+            lookupRevealed = false;
+            syncLookupTabLabel();
+        });
+    }
+
+    const refundAccordion = document.getElementById('refundAccordion');
+    const refundInfoBox = document.getElementById('refundInfoBox');
+    if (refundAccordion && refundInfoBox) {
+        refundAccordion.addEventListener('click', function () {
+            refundAccordion.classList.toggle('open');
+            refundInfoBox.classList.toggle('show');
+        });
+    }
+
+    const agreeCheckbox = document.getElementById('agreeCheckbox');
+    if (agreeCheckbox) {
+        agreeCheckbox.addEventListener('click', function () {
+            agreeCheckbox.classList.toggle('checked');
+        });
+    }
+
+    const bgPointItem = document.querySelector('.payment-accrual-item[data-accrual="bgpoint"]');
+    const subAccrualItems = document.querySelectorAll('.payment-accrual-item[data-accrual="id"], .payment-accrual-item[data-accrual="cardnum"]');
+
+    function setSubAccrualEnabled(enabled) {
+        subAccrualItems.forEach(function (item) {
+            item.classList.toggle('disabled', !enabled);
+            item.querySelector('.payment-agree-checkbox').classList.remove('checked');
+        });
+        if (enabled) {
+            subAccrualItems[0].querySelector('.payment-agree-checkbox').classList.add('checked');
+        }
+    }
+
+    bgPointItem.addEventListener('click', function () {
+        const checkbox = bgPointItem.querySelector('.payment-agree-checkbox');
+        checkbox.classList.toggle('checked');
+        setSubAccrualEnabled(checkbox.classList.contains('checked'));
+    });
+
+    subAccrualItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+            if (item.classList.contains('disabled')) {
+                return;
+            }
+            subAccrualItems.forEach(function (i) {
+                i.querySelector('.payment-agree-checkbox').classList.remove('checked');
+            });
+            item.querySelector('.payment-agree-checkbox').classList.add('checked');
+        });
+    });
+
+    const easyPayProviderMap = {
+        samsungpay: 'SAMSUNGPAY',
+        kakaopay: 'KAKAOPAY',
+        toss: 'TOSSPAY',
+        naverpay: 'NAVERPAY'
+    };
+
+    function handleTossPayError(err) {
+        if (err.code === 'USER_CANCEL') {
+            return;
+        }
+        alert(err.message || '결제 요청 중 오류가 발생했습니다.');
+    }
+
+    const paymentConfirmBtn = document.getElementById('paymentConfirmBtn');
+    if (paymentConfirmBtn) {
+        paymentConfirmBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (!agreeCheckbox.classList.contains('checked')) {
+                alert('예매 취소 및 환불 정보 동의를 해주셔야 합니다.');
+                return;
+            }
+
+            if (!selectedMethod) {
+                alert('결제수단을 선택해주세요.');
+                return;
+            }
+
+            const successUrl = new URL(paymentContainer.dataset.successUrl);
+            successUrl.searchParams.set('appliedPoints', appliedPoints);
+
+            const options = {
+                amount: currentAmount,
+                orderId: paymentContainer.dataset.orderId,
+                orderName: paymentContainer.dataset.orderName,
+                successUrl: successUrl.toString(),
+                failUrl: paymentContainer.dataset.failUrl
+            };
+
+            if (selectedMethod === 'card') {
+                if (selectedCardCompany) {
+                    options.cardCompany = selectedCardCompany;
+                }
+                tossPayments.requestPayment('카드', options).catch(handleTossPayError);
+            } else {
+                options.easyPay = easyPayProviderMap[selectedMethod];
+                tossPayments.requestPayment('간편결제', options).catch(handleTossPayError);
+            }
+        });
+    }
+</script>
+{% endblock %}
