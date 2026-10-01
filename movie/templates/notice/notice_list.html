@@ -25,7 +25,7 @@
                         </a>
                     </td>
                     <td class="text-center">
-                        {{ notice.create_date.strftime('%Y-%m-%d') }}
+                        {{ notice.create_date | datetime }}
                     </td>
                 </tr>
                 {% else %}

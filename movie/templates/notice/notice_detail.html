@@ -7,31 +7,35 @@
 {% block content %}
 <div class="page-inner">
     <div class="container py-5">
-        <table class="notice-table table mt-3">
+        <table class="notice-table table mt-3 mb-0">
             <thead>
                 <tr>
-                    <th class="notice-title">{{ notice.title }}</th>
+                    <th class="notice-title px-3">{{ notice.title }}</th>
                 </tr>
                 <tr class="table-light">
-                    <th class="text-end">등록일: {{ notice.create_date.strftime('%Y-%m-%d') }}</th>
+                    <th class="text-end px-3">등록일: {{ notice.create_date | datetime }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <div style="min-height:400px;">
+                        <div class="p-3" style="min-height:400px;">
                             {{ notice.content }}
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <table class="table notice-table">
+        <table class="table notice-table border-top-0">
+            <colgroup>
+                <col style="width:120px;">
+                <col>
+            </colgroup>
             <tbody>
                 {% if next_notice %}
                 <tr>
-                    <th>다음글 <i class="fa-solid fa-angle-up"></i></th>
-                    <td>
+                    <th class="px-3">다음글 <i class="fa-solid fa-angle-up"></i></th>
+                    <td class="px-3">
                         <a href="{{ url_for('notice.notice_detail', notice_id=next_notice.id) }}">
                             {{ next_notice.title }}
                         </a>
@@ -41,8 +45,8 @@
 
                 {% if prev_notice %}
                 <tr>
-                    <th>이전글 <i class="fa-solid fa-angle-down"></i></th>
-                    <td>
+                    <th class="px-3">이전글 <i class="fa-solid fa-angle-down"></i></th>
+                    <td class="px-3">
                         <a href="{{ url_for('notice.notice_detail', notice_id=prev_notice.id) }}">
                             {{ prev_notice.title }}
                         </a>
