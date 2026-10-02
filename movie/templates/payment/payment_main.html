@@ -13,16 +13,22 @@
     data-verify-password-url="{{ url_for('payment.verify_password') }}"
     data-deduct-points-url="{{ url_for('payment.deduct_points') }}"
     data-toss-client-key="{{ toss_client_key }}"
+    data-customer-key="{{ customer_key }}"
     data-order-id="{{ order_id }}"
     data-order-name="{{ order_name }}"
     data-success-url="{{ url_for('payment.toss_success', _external=True) }}"
     data-fail-url="{{ url_for('payment.toss_fail', _external=True) }}"
+    data-mock-complete-url="{{ url_for('payment.mock_complete') }}"
+    data-schedule-id="{{ schedule.id if schedule else '' }}"
+    data-seats="{{ seats|join(',') }}"
+    data-count="{{ audience_count }}"
+    data-adult-price="{{ adult_price }}"
 >
     <div class="booking-steps">
-        <div class="booking-step">
+        <div class="booking-step completed-step">
             <strong>01<br>상영시간</strong>
         </div>
-        <div class="booking-step">
+        <div class="booking-step completed-step">
             <strong>02<br>인원/좌석</strong>
         </div>
         <div class="booking-step active-step">
@@ -120,10 +126,28 @@
                     </div>
                 </div>
                 <div class="payment-discount-grid">
-                    <button type="button"><span class="badge">0</span>VIP</button>
-                    <button type="button"><span class="badge">0</span>관람권</button>
-                    <button type="button"><span class="badge">0</span>할인권</button>
+                    <button type="button" class="payment-discount-btn" data-coupon="vip" {{ 'disabled' if vip_coupon_count < 1 }}><span class="badge">{{ vip_coupon_count }}</span>VIP</button>
+                    <button type="button" class="payment-discount-btn" data-coupon="voucher" {{ 'disabled' if screening_voucher_count < 1 }}><span class="badge">{{ screening_voucher_count }}</span>관람권</button>
+                    <button type="button" class="payment-discount-btn" data-coupon="discount" {{ 'disabled' if discount_coupon_count < 1 }}><span class="badge">{{ discount_coupon_count }}</span>할인권</button>
                     <button type="button">제휴포인트/할인</button>
+                </div>
+                <div class="payment-discount-panel" id="discountPanelVip" data-panel="vip">
+                    <div class="payment-discount-item" data-coupon="vip">
+                        <span>VIP 쿠폰 (결제금액 80% 할인)</span>
+                        <strong>{{ vip_coupon_count }}장 보유</strong>
+                    </div>
+                </div>
+                <div class="payment-discount-panel" id="discountPanelVoucher" data-panel="voucher">
+                    <div class="payment-discount-item" data-coupon="voucher">
+                        <span>관람권 (티켓 1매 무료)</span>
+                        <strong>{{ screening_voucher_count }}장 보유</strong>
+                    </div>
+                </div>
+                <div class="payment-discount-panel" id="discountPanelDiscount" data-panel="discount">
+                    <div class="payment-discount-item" data-coupon="discount">
+                        <span>할인권 (결제금액 15% 할인)</span>
+                        <strong>{{ discount_coupon_count }}장 보유</strong>
+                    </div>
                 </div>
                 <div class="payment-section-label">최종 결제수단</div>
                 <div class="payment-method-grid">
@@ -144,7 +168,7 @@
                     </button>
                 </div>
                 <div class="payment-card-picker" id="paymentCardPicker">
-                    <button type="button" class="payment-card-icon" data-card="KB국민">
+                    <button type="button" class="payment-card-icon" data-card="국민">
                         <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/kb.png') }}" alt="링크"></span>
                     </button>
                     <button type="button" class="payment-card-icon" data-card="신한">
@@ -255,11 +279,27 @@
         </div>
     </div>
 </div>
+
+<div class="payment-modal-overlay" id="paymentModalOverlay">
+    <div class="payment-modal">
+        <div class="payment-modal-header">
+            <span>결제 확인</span>
+            <button type="button" class="payment-modal-close" id="paymentModalClose">&times;</button>
+        </div>
+        <div class="payment-modal-body">
+            <div class="payment-modal-simplepay-badge" id="paymentModalMethodBadge"></div>
+            <div class="payment-modal-amount" id="paymentModalAmount"></div>
+            <p class="payment-modal-guide">실제 결제가 발생하지 않는 테스트용 결제창입니다.</p>
+            <button type="button" class="payment-modal-confirm-btn" id="paymentModalConfirmBtn">확인</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}
-<script src="https://js.tosspayments.com/v1"></script>
+<script src="https://js.tosspayments.com/v2/standard"></script>
 <script>
+    const movieModal = new bootstrap.Modal(document.getElementById('movieModal'))
     const paymentContainer = document.getElementById('paymentContainer');
     const baseAmount = parseInt(paymentContainer.dataset.amount, 10);
     let pointBalance = parseInt(paymentContainer.dataset.pointBalance, 10);
@@ -268,16 +308,75 @@
     const verifyPasswordUrl = paymentContainer.dataset.verifyPasswordUrl;
     const discountAmountText = document.getElementById('discountAmountText');
     const totalAmountTextEl = document.getElementById('totalAmountText');
+    const adultPrice = parseInt(paymentContainer.dataset.adultPrice, 10) || 0;
     let appliedPoints = 0;
+    let selectedCoupon = '';
+    let couponDiscount = 0;
     let currentAmount = baseAmount;
 
+    const customerKey = paymentContainer.dataset.customerKey || TossPayments.ANONYMOUS;
     const tossPayments = TossPayments(paymentContainer.dataset.tossClientKey);
+    const widgets = tossPayments.widgets({ customerKey });
+
+    function calcCouponDiscount(coupon) {
+        if (coupon === 'vip') {
+            return Math.round(baseAmount * 0.8);
+        }
+        if (coupon === 'voucher') {
+            return adultPrice;
+        }
+        if (coupon === 'discount') {
+            return Math.round(baseAmount * 0.15);
+        }
+        return 0;
+    }
 
     function updatePriceDisplay() {
-        currentAmount = Math.max(baseAmount - appliedPoints, 0);
-        discountAmountText.textContent = '- ' + appliedPoints.toLocaleString('ko-KR') + '원';
+        const totalDiscount = appliedPoints + couponDiscount;
+        currentAmount = Math.max(baseAmount - totalDiscount, 0);
+        discountAmountText.textContent = '- ' + totalDiscount.toLocaleString('ko-KR') + '원';
         totalAmountTextEl.textContent = '₩ ' + currentAmount.toLocaleString('ko-KR') + '원';
     }
+
+    const discountButtons = document.querySelectorAll('.payment-discount-btn');
+    const discountPanels = document.querySelectorAll('.payment-discount-panel');
+    const discountItems = document.querySelectorAll('.payment-discount-item');
+
+    discountButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            if (btn.disabled) {
+                return;
+            }
+            const panel = document.querySelector('.payment-discount-panel[data-panel="' + btn.dataset.coupon + '"]');
+            const isOpen = panel.classList.contains('show');
+            discountPanels.forEach(function (p) { p.classList.remove('show'); });
+            discountButtons.forEach(function (b) { b.classList.remove('selected'); });
+
+            if (!isOpen) {
+                panel.classList.add('show');
+                btn.classList.add('selected');
+            }
+        });
+    });
+
+    discountItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+            const isSelected = item.classList.contains('selected');
+            discountItems.forEach(function (i) { i.classList.remove('selected'); });
+            discountButtons.forEach(function (b) { b.classList.remove('selected'); });
+
+            if (isSelected) {
+                selectedCoupon = '';
+                couponDiscount = 0;
+            } else {
+                item.classList.add('selected');
+                selectedCoupon = item.dataset.coupon;
+                couponDiscount = calcCouponDiscount(selectedCoupon);
+                document.querySelector('.payment-discount-btn[data-coupon="' + selectedCoupon + '"]').classList.add('selected');
+            }
+            updatePriceDisplay();
+        });
+    });
 
     const methodButtons = document.querySelectorAll('.payment-method-btn');
     const cardPicker = document.getElementById('paymentCardPicker');
@@ -369,13 +468,17 @@
             const pw = panel.querySelector('.payment-point-pw').value.trim();
 
             if (!cardNumber || pw.length < 4 || pw.length > 8) {
-                alert('카드번호와 BG.POINT 비밀번호(4~8자리)를 정확히 입력해주세요.');
+                const modalBody = document.querySelector('#movieModal .modal-body');
+                modalBody.innerHTML = `<br><p style="text-align: center;">카드번호와 BG.POINT 비밀번호(4~8자리)를 정확히 입력해주세요.</p><br>`
+                movieModal.show();
                 return;
             }
 
             verifyBgPassword(pw).then(function (valid) {
                 if (!valid) {
-                    alert('BG.POINT 비밀번호가 일치하지 않습니다.');
+                    const modalBody = document.querySelector('#movieModal .modal-body');
+                    modalBody.innerHTML = `<br><p style="text-align: center;">BG.POINT 비밀번호가 일치하지 않습니다.</p><br>`
+                    movieModal.show();
                     return;
                 }
                 pointLookupResult.classList.add('show');
@@ -408,20 +511,25 @@
                 const requested = parseInt(pointInput.value, 10) || 0;
                 appliedPoints = Math.min(Math.max(requested, 0), pointBalance);
                 updatePriceDisplay();
-
-                alert('BG.POINT ' + appliedPoints.toLocaleString('ko-KR') + 'P가 적용되었습니다. (연습용)');
+                const modalBody = document.querySelector('#movieModal .modal-body');
+                modalBody.innerHTML = `<br><p style="text-align: center;">BG.POINT ${appliedPoints.toLocaleString('ko-KR')}P가 적용되었습니다.</p><br>`
+                movieModal.show();
                 resetPointPanel(panel);
             }
 
             if (pwInput) {
                 const pw = pwInput.value.trim();
                 if (pw.length < 4 || pw.length > 8) {
-                    alert('BG.POINT 비밀번호를 4~8자리로 입력해주세요.');
+                    const modalBody = document.querySelector('#movieModal .modal-body');
+                    modalBody.innerHTML = `<br><p style="text-align: center;">BG.POINT 비밀번호(4~8자리)를 정확히 입력해주세요.</p><br>`
+                    movieModal.show();
                     return;
                 }
                 verifyBgPassword(pw).then(function (valid) {
                     if (!valid) {
-                        alert('BG.POINT 비밀번호가 일치하지 않습니다.');
+                        const modalBody = document.querySelector('#movieModal .modal-body');
+                        modalBody.innerHTML = `<br><p style="text-align: center;">BG.POINT 비밀번호가 일치하지 않습니다.</p><br>`
+                        movieModal.show();
                         return;
                     }
                     finishApply();
@@ -440,6 +548,13 @@
             cardIcons.forEach(function (i) { i.classList.remove('selected'); });
             selectedMethod = '';
             selectedCardCompany = '';
+
+            discountButtons.forEach(function (b) { b.classList.remove('selected'); });
+            discountItems.forEach(function (i) { i.classList.remove('selected'); });
+            discountPanels.forEach(function (p) { p.classList.remove('show'); });
+            selectedCoupon = '';
+            couponDiscount = 0;
+            updatePriceDisplay();
 
             pointPanels.forEach(function (p) { resetPointPanel(p); });
             lookupRevealed = false;
@@ -510,39 +625,69 @@
 
     const paymentConfirmBtn = document.getElementById('paymentConfirmBtn');
     if (paymentConfirmBtn) {
-        paymentConfirmBtn.addEventListener('click', function (e) {
+        paymentConfirmBtn.addEventListener('click', async function (e) {
             e.preventDefault();
 
             if (!agreeCheckbox.classList.contains('checked')) {
-                alert('예매 취소 및 환불 정보 동의를 해주셔야 합니다.');
+                const modalBody = document.querySelector('#movieModal .modal-body');
+                modalBody.innerHTML = `<br><p style="text-align: center;">예매 취소 및 환불 정보 동의를 해주셔야 합니다.</p><br>`
+                movieModal.show();
                 return;
             }
 
             if (!selectedMethod) {
-                alert('결제수단을 선택해주세요.');
+                const modalBody = document.querySelector('#movieModal .modal-body');
+                modalBody.innerHTML = `<br><p style="text-align: center;">결제수단을 선택해주세요.</p><br>`
+                movieModal.show();
                 return;
             }
 
-            const successUrl = new URL(paymentContainer.dataset.successUrl);
-            successUrl.searchParams.set('appliedPoints', appliedPoints);
-
-            const options = {
-                amount: currentAmount,
-                orderId: paymentContainer.dataset.orderId,
-                orderName: paymentContainer.dataset.orderName,
-                successUrl: successUrl.toString(),
-                failUrl: paymentContainer.dataset.failUrl
-            };
-
-            if (selectedMethod === 'card') {
-                if (selectedCardCompany) {
-                    options.cardCompany = selectedCardCompany;
-                }
-                tossPayments.requestPayment('카드', options).catch(handleTossPayError);
-            } else {
-                options.easyPay = easyPayProviderMap[selectedMethod];
-                tossPayments.requestPayment('간편결제', options).catch(handleTossPayError);
+            if (currentAmount <= 0) {
+                const mockCompleteUrl = new URL(paymentContainer.dataset.mockCompleteUrl, window.location.origin);
+                mockCompleteUrl.searchParams.set('orderId', paymentContainer.dataset.orderId);
+                mockCompleteUrl.searchParams.set('amount', currentAmount);
+                mockCompleteUrl.searchParams.set('method', '포인트/쿠폰 전액 할인');
+                mockCompleteUrl.searchParams.set('appliedPoints', appliedPoints);
+                mockCompleteUrl.searchParams.set('coupon', selectedCoupon);
+                mockCompleteUrl.searchParams.set('couponDiscount', couponDiscount);
+                mockCompleteUrl.searchParams.set('schedule_id', paymentContainer.dataset.scheduleId);
+                mockCompleteUrl.searchParams.set('seats', paymentContainer.dataset.seats);
+                mockCompleteUrl.searchParams.set('count', paymentContainer.dataset.count);
+                window.location.href = mockCompleteUrl.toString();
+                return;
             }
+
+            await widgets.setAmount({ value: currentAmount, currency: 'KRW' });
+            const paymentWindow = await widgets.renderPaymentWindow({
+                orderName: paymentContainer.dataset.orderName,
+                variantKey: { paymentMethod: 'DEFAULT', agreement: 'AGREEMENT' },
+            });
+
+            paymentWindow.on('paymentRequest', async function ({ paymentMethod }) {
+                const successUrl = new URL(paymentContainer.dataset.successUrl);
+                successUrl.searchParams.set('appliedPoints', appliedPoints);
+                successUrl.searchParams.set('coupon', selectedCoupon);
+                successUrl.searchParams.set('couponDiscount', couponDiscount);
+                successUrl.searchParams.set('schedule_id', paymentContainer.dataset.scheduleId);
+                successUrl.searchParams.set('seats', paymentContainer.dataset.seats);
+                successUrl.searchParams.set('count', paymentContainer.dataset.count);
+
+                try {
+                    await widgets.requestPayment({
+                        orderId: paymentContainer.dataset.orderId,
+                        orderName: paymentContainer.dataset.orderName,
+                        successUrl: successUrl.toString(),
+                        failUrl: paymentContainer.dataset.failUrl,
+                    });
+                } catch (error) {
+                    if (error.code === 'USER_CANCEL') {
+                        return;
+                    }
+                    const modalBody = document.querySelector('#movieModal .modal-body');
+                    modalBody.innerHTML = `<br><p style="text-align: center;">${error.message || '결제 요청 중 오류가 발생했습니다.'}</p><br>`
+                    movieModal.show();
+                }
+            });
         });
     }
 </script>

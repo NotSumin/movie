@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fakesite_youtube.css') }}">
+</head>
+<body>
+    <header class="yt-header">
+        <div class="yt-header-left">
+            <div class="yt-menu-icon"><span></span><span></span><span></span></div>
+            <a href="{{ url_for('main.index') }}" class="yt-home-link">
+                <span class="yt-logo-icon"></span>
+                <span class="yt-logo-text">YouTube</span>
+            </a>
+        </div>
+        <div class="yt-header-middle">
+            <div class="yt-search">
+                <input type="text" placeholder="검색">
+                <button type="button">🔍</button>
+            </div>
+        </div>
+        <div class="yt-header-right">
+            <a href="{{ url_for('main.index') }}" class="yt-signin-btn">👤 로그인</a>
+        </div>
+    </header>
+    <div class="yt-body">
+        <aside class="yt-sidebar">
+            <div class="yt-sidebar-item"><div class="yt-sidebar-dot"></div>홈</div>
+            <div class="yt-sidebar-item"><div class="yt-sidebar-dot"></div>Shorts</div>
+            <div class="yt-sidebar-item"><div class="yt-sidebar-dot"></div>구독</div>
+        </aside>
+        <main class="yt-main">
+            <div class="yt-grid">
+                {% for i in range(12) %}
+                <div class="yt-video-card">
+                    <div class="yt-thumb"></div>
+                    <div class="yt-video-info">
+                        <div class="yt-avatar"></div>
+                        <div>
+                            <p class="yt-video-title">부귀영화 예고편 영상 {{ i + 1 }}</p>
+                            <p class="yt-video-meta">부귀영화 · 조회수 {{ (i + 1) * 123 }}회 · {{ i + 1 }}일 전</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('main.index') }}" class="yt-home-footer-link">← 부귀영화로 돌아가기 (연습용 가짜 페이지)</a>
+        </main>
+    </div>
+</body>
+</html>

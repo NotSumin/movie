@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fakesite_facebook.css') }}">
+</head>
+<body>
+    <a href="{{ url_for('main.index') }}" class="fb-home-link">← 부귀영화로 돌아가기</a>
+    <div class="fb-wrap">
+        <div class="fb-main">
+            <div class="fb-left">
+                <p class="fb-logo">facebook</p>
+                <p class="fb-tagline">페이스북을 통해 친구, 가족 등 지인과 소통하고 연락해 보세요.</p>
+            </div>
+            <div class="fb-right">
+                <div class="fb-card">
+                    <input type="text" placeholder="이메일 또는 전화번호">
+                    <input type="password" placeholder="비밀번호">
+                    <button type="button" class="fb-login-btn">로그인</button>
+                    <a href="#" class="fb-forgot" onclick="return false;">비밀번호를 잊으셨나요?</a>
+                    <hr class="fb-divider">
+                    <a href="#" class="fb-signup-btn" onclick="return false;">새 계정 만들기</a>
+                </div>
+                <p class="fb-create-page"><a href="#" onclick="return false;">내 비즈니스를 위한 페이지 만들기</a></p>
+            </div>
+        </div>
+        <div class="fb-footer">
+            <div class="fb-footer-links">
+                <a href="#" onclick="return false;">가입하기</a>
+                <a href="#" onclick="return false;">로그인</a>
+                <a href="#" onclick="return false;">Messenger</a>
+                <a href="#" onclick="return false;">동영상</a>
+                <a href="#" onclick="return false;">마켓플레이스</a>
+                <a href="#" onclick="return false;">Meta</a>
+                <a href="#" onclick="return false;">개인정보처리방침</a>
+                <a href="#" onclick="return false;">쿠키</a>
+                <a href="#" onclick="return false;">광고 선택</a>
+                <a href="#" onclick="return false;">이용약관</a>
+                <a href="#" onclick="return false;">도움말</a>
+            </div>
+            <div class="fb-footer-copy">Meta © 2026 · 부귀영화 (연습용 가짜 페이지)</div>
+        </div>
+    </div>
+</body>
+</html>
