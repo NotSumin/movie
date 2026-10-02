@@ -303,6 +303,21 @@
 {% block script %}
 <script src="https://js.tosspayments.com/v2/standard"></script>
 <script>
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+            return;
+        }
+
+        const navigationEntries = performance.getEntriesByType('navigation');
+        if (navigationEntries.length > 0) {
+            const navigationType = navigationEntries[0].type;
+            if (navigationType === 'back_forward') {
+                window.location.reload();
+            }
+        }
+    });
+
     const movieModal = new bootstrap.Modal(document.getElementById('movieModal'))
     const paymentContainer = document.getElementById('paymentContainer');
     const baseAmount = parseInt(paymentContainer.dataset.amount, 10);
