@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payment_main.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/store_checkout.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="paymentContainer" class="container store-checkout-container"
+    data-amount="{{ total }}"
+    data-logged-in="{{ 'true' if g.user else 'false' }}"
+    data-toss-client-key="{{ toss_client_key }}"
+    data-customer-key="{{ customer_key }}"
+    data-order-id="{{ order_id }}"
+    data-order-name="{{ order_name }}"
+    data-success-url="{{ url_for('store.checkout_success', _external=True) }}"
+    data-fail-url="{{ url_for('store.checkout_fail', _external=True) }}"
+>
+    <div class="payment-content store-checkout-content">
+        <div class="payment-info">
+            <div class="payment-title-bar"><strong>구매내역</strong></div>
+            <div class="store-checkout-items">
+                {% for item in cart %}
+                <div class="store-checkout-item">
+                    <img src="{{ item.image }}" alt="{{ item.name }}">
+                    <div class="store-checkout-item-info">
+                        <p class="store-checkout-item-name">{{ item.name }}</p>
+                        <p class="store-checkout-item-qty">{{ item.qty }}개</p>
+                    </div>
+                    <div class="store-checkout-item-price">{{ '{:,}'.format(item.price * item.qty) }}원</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="payment-methods">
+            <div class="payment-title-bar">
+                <strong>결제수단</strong>
+            </div>
+            <div class="payment-methods-body">
+                <div class="payment-section-label">최종 결제수단</div>
+                <div class="payment-method-grid">
+                    <button type="button" class="payment-method-btn" data-method="card">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/card_2.png') }}" alt="링크"></span>신용카드
+                    </button>
+                    <button type="button" class="payment-method-btn" data-method="samsungpay">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/samsung_2.png') }}" alt="링크"></span>삼성pay
+                    </button>
+                    <button type="button" class="payment-method-btn" data-method="kakaopay">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/kakao_2.png') }}" alt="링크"></span>카카오pay
+                    </button>
+                    <button type="button" class="payment-method-btn" data-method="toss">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/toss_2.png') }}" alt="링크"></span>토스pay
+                    </button>
+                    <button type="button" class="payment-method-btn" data-method="naverpay">
+                        <span class="payment-method-icon"><img src="{{ url_for('static', filename='img/naver_2.png') }}" alt="링크"></span>네이버pay
+                    </button>
+                </div>
+                <div class="payment-card-picker" id="paymentCardPicker">
+                    <button type="button" class="payment-card-icon" data-card="국민">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/kb.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="신한">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/shinhan.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="삼성">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/samsung.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="현대">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/hyundai.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="롯데">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/lot.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="우리">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/woori.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="하나">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/hana.png') }}" alt="링크"></span>
+                    </button>
+                    <button type="button" class="payment-card-icon" data-card="BC">
+                        <span class="payment-card-icon-badge"><img src="{{ url_for('static', filename='img/bc.png') }}" alt="링크"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-checkout">
+            <div class="payment-title-bar"><strong>결제하기</strong></div>
+            <div class="payment-checkout-body">
+                <div class="payment-accordion" id="refundAccordion">
+                    <span>취소 및 환불 정보 동의</span>
+                    <span class="material-symbols-outlined">keyboard_arrow_down</span>
+                </div>
+                <div class="payment-refund-box" id="refundInfoBox">
+                    <strong>취소/환불 안내</strong>
+                    <ul>
+                        <li>상품 발송 전까지는 전체 취소가 가능합니다.</li>
+                        <li>발송이 시작된 이후에는 취소가 불가합니다.</li>
+                        <li>부분 취소는 지원하지 않으며, 주문 전체 단위로만 취소할 수 있습니다.</li>
+                    </ul>
+                </div>
+                <div class="payment-agree-row">
+                    <span class="payment-agree-checkbox" id="agreeCheckbox">
+                        <span class="material-symbols-outlined">check_small</span>
+                    </span>
+                    위 내용을 확인하였으며 결제에 동의합니다.
+                </div>
+            </div>
+            <div class="payment-checkout-footer">
+                <div class="payment-price-list">
+                    <div class="payment-price-row total">
+                        <span>결제금액</span>
+                        <span>₩ {{ '{:,}'.format(total) }}원</span>
+                    </div>
+                </div>
+                <a href="#" class="btn-payment-confirm" id="paymentConfirmBtn">결제하기</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://js.tosspayments.com/v2/standard"></script>
+<script>
+    const movieModal = new bootstrap.Modal(document.getElementById('movieModal'))
+    const paymentContainer = document.getElementById('paymentContainer');
+    const currentAmount = parseInt(paymentContainer.dataset.amount, 10);
+
+    const customerKey = paymentContainer.dataset.customerKey || TossPayments.ANONYMOUS;
+    const tossPayments = TossPayments(paymentContainer.dataset.tossClientKey);
+    const widgets = tossPayments.widgets({ customerKey });
+
+    const methodButtons = document.querySelectorAll('.payment-method-btn');
+    const cardPicker = document.getElementById('paymentCardPicker');
+    let selectedMethod = '';
+
+    methodButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            methodButtons.forEach(function (b) { b.classList.remove('selected'); });
+            btn.classList.add('selected');
+            selectedMethod = btn.dataset.method;
+            cardPicker.classList.toggle('show', selectedMethod === 'card');
+        });
+    });
+
+    const cardIcons = document.querySelectorAll('.payment-card-icon');
+    let selectedCardCompany = '';
+
+    cardIcons.forEach(function (icon) {
+        icon.addEventListener('click', function () {
+            cardIcons.forEach(function (i) { i.classList.remove('selected'); });
+            icon.classList.add('selected');
+            selectedCardCompany = icon.dataset.card;
+        });
+    });
+
+    const refundAccordion = document.getElementById('refundAccordion');
+    const refundInfoBox = document.getElementById('refundInfoBox');
+    if (refundAccordion && refundInfoBox) {
+        refundAccordion.addEventListener('click', function () {
+            refundAccordion.classList.toggle('open');
+            refundInfoBox.classList.toggle('show');
+        });
+    }
+
+    const agreeCheckbox = document.getElementById('agreeCheckbox');
+    if (agreeCheckbox) {
+        agreeCheckbox.addEventListener('click', function () {
+            agreeCheckbox.classList.toggle('checked');
+        });
+    }
+
+    const paymentConfirmBtn = document.getElementById('paymentConfirmBtn');
+    if (paymentConfirmBtn) {
+        paymentConfirmBtn.addEventListener('click', async function (e) {
+            e.preventDefault();
+
+            if (!agreeCheckbox.classList.contains('checked')) {
+                const modalBody = document.querySelector('#movieModal .modal-body');
+                modalBody.innerHTML = `<br><p style="text-align: center;">취소 및 환불 정보 동의를 해주셔야 합니다.</p><br>`
+                movieModal.show();
+                return;
+            }
+
+            if (!selectedMethod) {
+                const modalBody = document.querySelector('#movieModal .modal-body');
+                modalBody.innerHTML = `<br><p style="text-align: center;">결제수단을 선택해주세요.</p><br>`
+                movieModal.show();
+                return;
+            }
+
+            await widgets.setAmount({ value: currentAmount, currency: 'KRW' });
+            const paymentWindow = await widgets.renderPaymentWindow({
+                orderName: paymentContainer.dataset.orderName,
+                variantKey: { paymentMethod: 'DEFAULT', agreement: 'AGREEMENT' },
+            });
+
+            paymentWindow.on('paymentRequest', async function ({ paymentMethod }) {
+                try {
+                    await widgets.requestPayment({
+                        orderId: paymentContainer.dataset.orderId,
+                        orderName: paymentContainer.dataset.orderName,
+                        successUrl: paymentContainer.dataset.successUrl,
+                        failUrl: paymentContainer.dataset.failUrl,
+                    });
+                } catch (error) {
+                    if (error.code === 'USER_CANCEL') {
+                        return;
+                    }
+                    const modalBody = document.querySelector('#movieModal .modal-body');
+                    modalBody.innerHTML = `<br><p style="text-align: center;">${error.message || '결제 요청 중 오류가 발생했습니다.'}</p><br>`
+                    movieModal.show();
+                }
+            });
+        });
+    }
+</script>
+{% endblock %}

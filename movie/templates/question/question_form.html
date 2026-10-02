@@ -12,7 +12,7 @@
         <h3 class="main-title">문의내용</h3>
         <hr/>
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
 {#         <form action="{{ url_for('answer.create', question_id=question.id) }}" method="post" class="my-3">#}
 
             {{ csrf_token() if csrf_token }}

@@ -155,6 +155,27 @@ ul {
 #mainNav .main-nav-container .main-nav-list-end li {
     padding: 0 10px;
 }
+#mainNav .main-nav-container .main-nav-list-end .main-nav-cart {
+    position: relative;
+    display: inline-flex;
+    font-size: 20px;
+}
+#mainNav .main-nav-container .main-nav-list-end .main-nav-cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 3px;
+    border-radius: 8px;
+    background: #e60012;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 #mainNav .main-nav-container .main-nav-list-end .main-nav-login a {
     background-color: #e60012;
     color: #fff;
