@@ -25,12 +25,16 @@
     data-adult-price="{{ adult_price }}"
 >
     <div class="booking-steps">
-        <div class="booking-step completed-step">
-            <strong>01<br>상영시간</strong>
-        </div>
-        <div class="booking-step completed-step">
-            <strong>02<br>인원/좌석</strong>
-        </div>
+        <a href="{{ url_for('booking.index') }}">
+            <div class="booking-step completed-step">
+                <strong>01<br>상영시간</strong>
+            </div>
+        </a>
+        <a href="{{ url_for('booking.seats') }}">
+            <div class="booking-step completed-step">
+                <strong>02<br>인원/좌석</strong>
+            </div>
+        </a>
         <div class="booking-step active-step">
             <strong>03<br>결제</strong>
         </div>
@@ -59,7 +63,7 @@
                 </div>
                 <div class="payment-info-row">
                     <span>일시</span>
-                    <p><strong>{{ schedule.showtime.strftime('%Y-%m-%d (%a) %H:%M') if schedule else '-' }}</strong></p>
+                    <p><strong>{{ showtime if schedule else '-' }}</strong></p>
                 </div>
                 <div class="payment-info-row">
                     <span>영화관</span>

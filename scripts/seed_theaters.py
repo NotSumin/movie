@@ -582,7 +582,7 @@ with (app.app_context()):
 
     def fill_auditorium_skeleton(skeleton):
         auditorium_layout = "<div class='layout-screen'>SCREEN</div><div class='seat-layout'>"
-        seat_row = "a"
+        seat_row = "A"
         seat_col = 1
         for character in skeleton:
             if character == "!":
@@ -602,7 +602,7 @@ with (app.app_context()):
                 auditorium_layout += "</div>"
             else:
                 auditorium_layout += f"<div class='layout-row-marker'>{character}</div>"
-                seat_row = character.lower()
+                seat_row = character
                 seat_col = 1
         auditorium_layout += "</div>"
         return auditorium_layout

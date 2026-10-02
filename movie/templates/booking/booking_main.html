@@ -269,9 +269,12 @@
                         const scheduleDiv = document.createElement('div');
                         scheduleDiv.id = `schedule_${ schedule.id }`;
                         scheduleDiv.classList.add('booking-schedule');
+                        if (schedule.remaining_seats <= 0) scheduleDiv.classList.add('sold-out');
                         scheduleDiv.innerHTML = `<p class="booking-schedule-time">${ schedule.showtime }</p>
                             <div class="booking-schedule-seats">
-                                <p><span>120</span>/<span>${ schedule.total_seats }</span></p>
+                                <p>${schedule.remaining_seats <= 0 ? '<span>매진</span>' :
+                                    '<span class="' + (parseFloat(schedule.remaining_seats/schedule.total_seats) <= .2 ? 'remaining-red' : 'remaining-green') +
+                                    '">' + schedule.remaining_seats + '</span>/<span class="seats-total">' + schedule.total_seats + '</span>'}</p>
                                 <p>${ schedule.auditorium }</p>
                             </div>`;
                         scheduleDiv.addEventListener("click", enableConfirm);
