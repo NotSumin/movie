@@ -339,6 +339,10 @@ ul {
     border-radius: 5px;
     cursor: pointer;
 }
+#bookingContainer .booking-search-schedules #bookingSchedulesList .booking-schedule.sold-out {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 #bookingContainer .booking-search-schedules #bookingSchedulesList .booking-schedule.active-schedule {
     border: #333 1px solid;
 }
@@ -359,6 +363,15 @@ ul {
     align-items: center;
     font-size: 12px;
     margin-top: 10px;
+}
+#bookingContainer .booking-search-schedules #bookingSchedulesList .booking-schedule .booking-schedule-seats p span {
+    color: #888;
+}
+#bookingContainer .booking-search-schedules #bookingSchedulesList .booking-schedule .booking-schedule-seats p span.remaining-red {
+    color: #e60012;
+}
+#bookingContainer .booking-search-schedules #bookingSchedulesList .booking-schedule .booking-schedule-seats p span.remaining-green {
+    color: #427652;
 }
 #bookingContainer .booking-search-schedules .booking-confirm {
     width: 100%;

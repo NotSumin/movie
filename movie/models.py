@@ -145,32 +145,3 @@ class Reservation(db.Model):
     method = db.Column(db.String(50), nullable=True)
     paid_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     canceled_at = db.Column(db.DateTime, nullable=True)
-   
-class Booking(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
-    user = db.relationship(User, backref=db.backref('bookings',cascade='all, delete-orphan'))
-    schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id', ondelete='CASCADE'), nullable=False)
-    schedule = db.relationship(Schedule, backref=db.backref('bookings',cascade='all, delete-orphan'))
-    booking_number = db.Column(db.String(20), nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
-    status = db.Column(db.String(20), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
-
-class BookingSeat(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id', ondelete='CASCADE'), nullable=False)
-    booking = db.relationship(Booking, backref=db.backref('seats',cascade='all, delete-orphan'))
-    seat_number = db.Column(db.String(20), nullable=False)
-
-class Payment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id', ondelete='CASCADE'), nullable=False)
-    booking = db.relationship(Booking, backref=db.backref('payments',cascade='all, delete-orphan'))
-    payment_method = db.Column(db.String(20), nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
-    payment_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    status = db.Column(db.String(20), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)

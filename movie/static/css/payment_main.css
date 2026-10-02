@@ -23,6 +23,7 @@ ul {
     width: 7%;
     min-width: 80px;
     height: 700px;
+    user-select: none;
 }
 #paymentContainer .booking-steps .booking-step {
     width: 100%;
@@ -71,7 +72,7 @@ ul {
 }
 
 #paymentContainer .payment-content {
-    width: 100%;
+    width: 93%;
     height: 800px;
     display: flex;
     background: #fff;

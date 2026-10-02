@@ -124,6 +124,8 @@
     const child_price = {{ schedule.child_price }};
     const senior_price = {{ schedule.senior_price }};
     const disabled_price = {{ schedule.disabled_price }};
+    const reserved_seats = {{ schedule.reserved_seats|tojson }};
+    const remaining_seats = {{ schedule.remaining_seats }};
     const adult_tickets = document.getElementById('adult_tickets');
     const child_tickets = document.getElementById('child_tickets');
     const senior_tickets = document.getElementById('senior_tickets');
@@ -135,7 +137,8 @@
 
     const seats = document.querySelectorAll('.seat-layout .layout-seat');
     seats.forEach(seat => {
-        seat.addEventListener("click", selectSeat);
+        if (reserved_seats.includes(seat.id.split("_")[1])) seat.classList.add('layout-reserved');
+        else seat.addEventListener("click", selectSeat);
     });
 
     const ticketButtons = document.querySelectorAll('.booking-ticket-buttons button');
@@ -160,7 +163,7 @@
                 parseInt(child_tickets.value) +
                 parseInt(senior_tickets.value) +
                 parseInt(disabled_tickets.value);
-            if (total_tickets < 8) {
+            if (total_tickets < 8 && total_tickets < remaining_seats) {
                 switch (ticket_type) {
                     case "adultTicket":
                         adult_tickets.value = parseInt(adult_tickets.value) + 1;

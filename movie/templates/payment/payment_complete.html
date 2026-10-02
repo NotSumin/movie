@@ -7,15 +7,21 @@
 {% block content %}
 <div id="paymentContainer" class="container">
     <div class="booking-steps">
-        <div class="booking-step completed-step">
-            <strong>01<br>상영시간</strong>
-        </div>
-        <div class="booking-step completed-step">
-            <strong>02<br>인원/좌석</strong>
-        </div>
-        <div class="booking-step completed-step">
-            <strong>03<br>결제</strong>
-        </div>
+        <a href="{{ url_for('booking.index') }}">
+            <div class="booking-step completed-step">
+                <strong>01<br>상영시간</strong>
+            </div>
+        </a>
+        <a href="{{ url_for('booking.index') }}">
+            <div class="booking-step completed-step">
+                <strong>02<br>인원/좌석</strong>
+            </div>
+        </a>
+        <a href="{{ url_for('booking.index') }}">
+            <div class="booking-step completed-step">
+                <strong>03<br>결제</strong>
+            </div>
+        </a>
         <div class="booking-step active-step">
             <strong>04<br>결제완료</strong>
         </div>
@@ -41,7 +47,7 @@
                         </div>
                         <div class="payment-complete-field">
                             <span>상영일시</span>
-                            <p>{{ schedule.showtime.strftime('%Y-%m-%d (%a) %H:%M') if schedule else '-' }}</p>
+                            <p>{{ showtime if schedule else '-' }}</p>
                         </div>
                         <div class="payment-complete-field">
                             <span>상영관</span>
