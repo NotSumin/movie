@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request
 from sqlalchemy import or_
-
-from movie.models import Notice, User
+from movie.models import Notice
 
 
 bp = Blueprint('notice', __name__, url_prefix='/notice')
