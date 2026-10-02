@@ -12,10 +12,20 @@
 .page-link {
     color:#333;
 }
+/*.page-link:hover {*/
+/*    --bs-pagination-hover-color: #333;*/
+/*}*/
+/*.active>.page-link, .page-link.active {*/
+/*    background-color: #333;*/
+/*    border-color:#333;*/
+/*}*/
+
 .page-link:hover {
-    --bs-pagination-hover-color: #333;
+    color: #cc0010;
 }
-.active>.page-link, .page-link.active {
-    background-color: #333;
-    border-color:#333;
+
+.page-item.active .page-link {
+    background-color: #e60012;
+    border-color: #e60012;
+    color: #ffffff;
 }

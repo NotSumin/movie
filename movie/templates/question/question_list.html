@@ -8,41 +8,41 @@
 
     {% block content %}
     <!-- 화면 중앙 배치를 위한 메인 컨테이너 -->
-    <div class="container">
+    <div class="container py-4">
 
         <!-- 메인 제목 -->
-        <h3 class="main-title">문의목록</h3>
-        <hr/>
+        <h4 class="main-title pb-2 border-bottom mb-1">문의목록</h4>
 
-        <a class="common-button" href="{{ url_for('question.create') }}" style="margin: 0.2cm 0; display: inline-block;">문의하기</a>
+        <p class="text-end my-2"><a class="common-button mt-0" href="{{ url_for('question.create') }}" style="display: inline-block;">문의하기</a></p>
 
         <table class="table table-hover notice-table">
-
+            <colgroup>
+                <col style="width:10%;">
+                <col>
+                <col>
+                <col>
+            </colgroup>
             <thead>
-            <tr class="text-center table-light">
-               <th style="width: 10%;">번호</th>
-               <th style="width: 10%;">제목</th>
-               <th style="width: 15%;">글쓴이</th>
-               <th style="width: 20%; padding-right: 7cm;">작성일시</th>
-            </tr>
-
-
-
+                <tr class="text-center table-light">
+                   <th>번호</th>
+                   <th>제목</th>
+                   <th>글쓴이</th>
+                   <th>작성일시</th>
+                </tr>
             </thead>
-
+            <tbody>
                 {% if question_list %}
                 {% for question in question_list.items %}
                 <tr class="text-center">
                 <td>{{ question_list.total - ((question_list.page - 1)*question_list.per_page) - loop.index0 }}</td>
-                <td>
+                <td class="text-start">
                     <a href="{{ url_for('question.detail', question_id=question.id) }}">{{ question.title }}</a>
                     {% if question.answers|length > 0 %}
                     <span class="text-danger small mx-2">[{{ question.answers|length }}]</span>
                     {% endif %}
                 </td>
                 <td>{{ question.user.username }}</td>
-                <td class="text-start" style="text-align: left;">{{ question.created_at|datetime }}</td>
-
+                <td>{{ question.created_at|datetime }}</td>
                 </tr>
                 {% endfor %}
                 {% else %}
@@ -50,32 +50,8 @@
                     <td colspan="3">등록된 문의사항이 없습니다.</td>
                 </tr>
                 {% endif %}
-
+            </tbody>
         </table>
-
-
-
-
-
-        <style>
-            .page-link {
-                color: #e60012;
-            }
-
-            .page-link:hover {
-                color: #cc0010;
-            }
-
-            .page-item.active .page-link{
-                background-color: #e60012;
-                border-color: #e60012;
-                color: #ffffff;
-            }
-
-        </style>
-
-
-
 
         <ul class="pagination justify-content-center my-4">
             <!--이전버튼-->
