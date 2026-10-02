@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import Blueprint, render_template, redirect, url_for, g
 from movie import db
+from movie.filter import korean_days
 from movie.models import Reservation, Purchase
 from movie.views.auth_views import login_required
 from movie.views.payment_views import COUPON_COUNT_FIELDS
@@ -22,6 +23,7 @@ def mypage():
         reservations=reservations,
         canceled_reservations=canceled_reservations,
         purchases=purchases,
+        korean_days=korean_days
     )
 
 

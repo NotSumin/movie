@@ -58,7 +58,7 @@
         <ul class="pagination justify-content-center">
               <!--이전버튼-->
               {% if notice_list.has_prev %}
-              <li class="page-item"><a href="?page={{ notice_list.prev_num }}" class="page-link">이전</a></li>
+              <li class="page-item"><a data-page="{{ notice_list.prev_num }}" href="javascript:void(0)" class="page-link">이전</a></li>
               {% else %}
               <li class="page-item disabled"><a href="javascript:void(0)" class="page-link" aria-disabled="true">이전</a></li>
               {% endif %}
@@ -80,7 +80,7 @@
 
               <!--다음버튼-->
               {% if notice_list.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{ notice_list.next_num }}">다음</a></li>
+              <li class="page-item"><a class="page-link" data-page="{{ notice_list.next_num }}" href="javascript:void(0)">다음</a></li>
               {% else %}
               <li class="page-item disabled"><a class="page-link" href="javascript:void(0)" aria-disabled="true">다음</a></li>
               {% endif %}

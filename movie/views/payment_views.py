@@ -24,6 +24,15 @@ TOSS_SECRET_KEY = 'test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6'
 TOSS_CONFIRM_URL = 'https://api.tosspayments.com/v1/payments/confirm'
 
 
+@bp.after_app_request
+def add_header(response):
+    """This runs globally for ALL routes across all files."""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+
 def _build_payment_context():
     schedule_id = session.get('schedule_id') or request.args.get('schedule_id', type=int)
 
