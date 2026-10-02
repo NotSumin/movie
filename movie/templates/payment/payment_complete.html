@@ -43,7 +43,7 @@
                     <div class="payment-complete-card-info">
                         <div class="payment-complete-field highlight">
                             <span>예매번호</span>
-                            <p>{{ payment.orderId }}</p>
+                            <p>{{ '%08d'|format(payment.orderId[:8]|int(0, 16) % 100000000) }}</p>
                         </div>
                         <div class="payment-complete-field">
                             <span>상영일시</span>

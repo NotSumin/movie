@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payment_main.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="paymentContainer" class="container">
+    <div class="payment-complete-wrap">
+        <div class="payment-title-bar"><strong>결제완료</strong></div>
+        <div class="payment-complete-content">
+        {% if success %}
+        <div class="payment-complete-icon success">
+            <span class="material-symbols-outlined">check_small</span>
+        </div>
+        <h2>{% if g.user %}{{ g.user.username }}님, {% endif %}결제가 성공적으로 완료되었습니다.</h2>
+
+        <div class="payment-complete-info">
+            {% for item in cart %}
+            <div class="payment-complete-row">
+                <span>{{ item.name }} x {{ item.qty }}</span>
+                <p>{{ '{:,}'.format(item.price * item.qty) }}원</p>
+            </div>
+            {% endfor %}
+            <div class="payment-complete-row">
+                <span>주문번호</span>
+                <p>{{ '%08d'|format(payment.orderId[:8]|int(0, 16) % 100000000) }}</p>
+            </div>
+            <div class="payment-complete-row">
+                <span>결제수단</span>
+                <p>{{ payment.method }}</p>
+            </div>
+            <div class="payment-complete-row">
+                <span>총 결제금액</span>
+                <p>{{ '{:,}'.format(payment.totalAmount) }}원</p>
+            </div>
+            <div class="payment-complete-row">
+                <span>승인시각</span>
+                <p>{{ payment.approvedAt }}</p>
+            </div>
+        </div>
+        <a href="{{ url_for('store.index') }}" class="btn-payment-confirm">스토어로</a>
+        {% else %}
+        <div class="payment-complete-icon fail">✕</div>
+        <h2>결제에 실패했습니다</h2>
+        <p class="payment-complete-error">{{ error.message }} ({{ error.code }})</p>
+        <a href="{{ url_for('store.cart') }}" class="btn-payment-confirm">장바구니로</a>
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

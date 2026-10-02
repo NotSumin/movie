@@ -14,6 +14,9 @@
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#res-tab-pane" type="button" role="tab" aria-controls="res-tab-pane" aria-selected="true">예매내역</button>
           </li>
           <li class="nav-item" role="presentation">
+            <button class="nav-link" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase-tab-pane" type="button" role="tab" aria-controls="purchase-tab-pane" aria-selected="false">구매내역</button>
+          </li>
+          <li class="nav-item" role="presentation">
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#cancel-tab-pane" type="button" role="tab" aria-controls="cancel-tab-pane" aria-selected="false">취소내역</button>
           </li>
           <li class="nav-item" role="presentation">
@@ -57,7 +60,7 @@
                                                     {{ '{:,}'.format(r.total_amount) }}원
                                                 </div>
                                                 <div class="reservation-number">
-                                                    예매번호 {{ r.order_id }}
+                                                    예매번호 {{ '%08d'|format(r.order_id[:8]|int(0, 16) % 100000000) }}
                                                     {% if r.canceled_at %}<span class="text-danger">[예매 취소 완료됨]</span>{% endif %}
                                                 </div>
                                             </div>
@@ -92,7 +95,7 @@
                                                         </div>
                                                         <div>
                                                             <span>거래번호</span>
-                                                            <strong>{{ r.order_id }}</strong>
+                                                            <strong>{{ '%08d'|format(r.order_id[:8]|int(0, 16) % 100000000) }}</strong>
                                                         </div>
                                                     </div>
                                                     {% if not r.canceled_at %}
@@ -144,6 +147,104 @@
                 </div>
                 {% endif %}
                 <!--//예매내역이 없을 경우-->
+          </div>
+          <div class="tab-pane fade" id="purchase-tab-pane" role="tabpanel" aria-labelledby="purchase-tab" tabindex="0">
+                <div class="reservation-list-box">
+                    <p class="py-3 text-center mb-0 reservation-info">최근 70일 이내의 정보만 조회가 가능합니다.</p>
+                    <div class="reservation-list">
+                    {% for p in purchases %}
+                    <!-- 구매내역 -->
+                    <div class="reservation-item">
+                        <!-- 왼쪽 날짜 -->
+                        <div class="reservation-date">
+                            {{ p.purchased_at.strftime('%Y.%m.%d(%a)') }}
+                        </div>
+                        <!-- 타임라인 -->
+                        <div class="timeline">
+                            <span class="timeline-dot"></span>
+                        </div>
+                        <!-- 오른쪽 내용 -->
+                        <div class="reservation-content">
+                            <div class="accordion" id="purchaseAccordion{{ loop.index }}">
+                                <div class="accordion-item">
+                                    <!-- 상단 -->
+                                    <h2 class="accordion-header">
+                                        <button
+                                            class="accordion-button collapsed reservation-header"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#purchase{{ loop.index }}"
+                                            aria-expanded="false"
+                                            aria-controls="purchase{{ loop.index }}">
+                                            <div class="reservation-summary">
+                                                <div class="movie-title">
+                                                    {{ p.items[0].name }}{% if p.items|length > 1 %} 외 {{ p.items|length - 1 }}건{% endif %}
+                                                </div>
+                                                <div class="reservation-price">
+                                                    {{ '{:,}'.format(p.total_amount) }}원
+                                                </div>
+                                                <div class="reservation-number">
+                                                    주문번호 {{ '%08d'|format(p.order_id[:8]|int(0, 16) % 100000000) }}
+                                                    {% if p.canceled_at %}<span class="text-danger">[제품환불 완료됨]</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <!-- 상세 -->
+                                    <div
+                                        id="purchase{{ loop.index }}"
+                                        class="accordion-collapse collapse"
+                                        data-bs-parent="#purchaseAccordion{{ loop.index }}">
+                                        <div class="accordion-body">
+                                            <div class="reservation-detail">
+                                                <!-- 구매 상품 이미지 -->
+                                                <div class="purchase-detail-row">
+                                                    <div class="purchase-item-images">
+                                                        {% for item in p.items %}
+                                                        <img src="{{ item.image }}" alt="{{ item.name }}">
+                                                        {% endfor %}
+                                                    </div>
+                                                    {% if not p.canceled_at %}
+                                                    <form action="{{ url_for('mypage.cancel_purchase', purchase_id=p.id) }}" method="post" class="d-inline">
+                                                        <button type="submit" class="reservation-cancel-btn btn btn-sm border">제품환불</button>
+                                                    </form>
+                                                    {% endif %}
+                                                </div>
+                                                <hr>
+                                                <!-- 결제 정보 -->
+                                                <div class="payment-info">
+                                                    <div class="payment-date">
+                                                        결제일시
+                                                        <span>{{ p.purchased_at.strftime('%Y-%m-%d %p %I:%M:%S') }}</span>
+                                                    </div>
+                                                    <div class="payment-row">
+                                                        <div>
+                                                            <span>총 결제금액</span>
+                                                            <strong class="text-danger">
+                                                                {{ '{:,}'.format(p.total_amount) }}원
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                </div>
+                <!--구매내역이 없을 경우-->
+                {% if not purchases %}
+                <div class="text-center py-5">
+                    <p class="text-secondary mb-0">
+                        구매내역이 없습니다.
+                    </p>
+                </div>
+                {% endif %}
+                <!--//구매내역이 없을 경우-->
           </div>
           <div class="tab-pane fade" id="cancel-tab-pane" role="tabpanel" aria-labelledby="cancel-tab" tabindex="0">
               <div class="py-3">

@@ -130,9 +130,9 @@
                     </div>
                 </div>
                 <div class="payment-discount-grid">
-                    <button type="button" class="payment-discount-btn" data-coupon="vip" {{ 'disabled' if vip_coupon_count < 1 }}><span class="badge">{{ vip_coupon_count }}</span>VIP</button>
-                    <button type="button" class="payment-discount-btn" data-coupon="voucher" {{ 'disabled' if screening_voucher_count < 1 }}><span class="badge">{{ screening_voucher_count }}</span>관람권</button>
-                    <button type="button" class="payment-discount-btn" data-coupon="discount" {{ 'disabled' if discount_coupon_count < 1 }}><span class="badge">{{ discount_coupon_count }}</span>할인권</button>
+                    <button type="button" class="payment-discount-btn" data-coupon="vip" {{ 'disabled' if not vip_coupon_count }}><span class="badge">{{ vip_coupon_count }}</span>VIP</button>
+                    <button type="button" class="payment-discount-btn" data-coupon="voucher" {{ 'disabled' if not screening_voucher_count }}><span class="badge">{{ screening_voucher_count }}</span>관람권</button>
+                    <button type="button" class="payment-discount-btn" data-coupon="discount" {{ 'disabled' if not discount_coupon_count }}><span class="badge">{{ discount_coupon_count }}</span>할인권</button>
                     <button type="button">제휴포인트/할인</button>
                 </div>
                 <div class="payment-discount-panel" id="discountPanelVip" data-panel="vip">
@@ -494,7 +494,10 @@
         btn.addEventListener('click', function () {
             const block = btn.closest('.payment-point-result-block');
             const balanceText = block.querySelector('.payment-point-balance-row strong').textContent;
-            block.querySelector('.payment-point-input').value = balanceText.replace('P', '');
+            const balance = parseInt(balanceText.replace('P', ''), 10) || 0;
+            const payableBeforePoints = Math.max(baseAmount - couponDiscount, 0);
+            const maxApplicable = Math.min(balance, payableBeforePoints);
+            block.querySelector('.payment-point-input').value = maxApplicable;
         });
     });
 
