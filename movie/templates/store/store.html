@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/store.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="store-hero" id="store-top">
+    <div class="store-hero-inner">
+         <img src="{{ url_for('static', filename='img/store_banner.png') }}" alt="링크" >
+    </div>
+</div>
+
+<div class="store-categories">
+    {% for c in categories %}
+    <div class="store-category-card" style="background-image: url('{{ url_for('static', filename='img/' ~ c.image) }}');">
+        <div class="store-category-icon">{{ c.icon }}</div>
+        <h3>{{ c.title }}</h3>
+        <p>{{ c.desc | safe}}</p>
+        <a href="#{{ c.anchor }}" class="btn-store-goto">바로가기 <span>→</span></a>
+    </div>
+    {% endfor %}
+</div>
+
+{% for section in product_sections %}
+<div class="store-section" id="{{ section.anchor }}">
+    <div class="store-section-header">
+        <h4>{{ section.icon }} {{ section.title }} <a href="#store-top" class="store-section-top">↑</a></h4>
+        <p>{{ section.desc }}</p>
+    </div>
+    <div class="store-product-grid">
+        {% for p in section.products %}
+        <div class="store-product-card">
+            <img src="{{ p.image }}" alt="{{ p.name }}">
+            <div class="store-product-name">{{ p.name }}</div>
+            {% if p.price %}
+            <div class="store-product-price">{{ '{:,}'.format(p.price) }}원</div>
+            <form action="{{ url_for('store.cart_add') }}" method="post" class="store-cart-add-form">
+                <input type="hidden" name="product_id" value="{{ section.anchor }}-{{ loop.index0 }}">
+                <button type="submit" class="btn-store-buy">구매하기</button>
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block script %}
+<script>
+    const movieModal = new bootstrap.Modal(document.getElementById('movieModal'))
+
+    document.querySelectorAll('.store-cart-add-form').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+            }).then(function (res) {
+                if (res.redirected && res.url.includes('/auth/login')) {
+                    window.location.href = res.url;
+                    return;
+                }
+                const cartBadge = document.querySelector('.main-nav-cart-badge');
+                if (cartBadge) {
+                    cartBadge.textContent = (parseInt(cartBadge.textContent, 10) || 0) + 1;
+                }
+                const modalBody = document.querySelector('#movieModal .modal-body');
+                modalBody.innerHTML = `<br><p style="text-align: center;">장바구니에 담겼습니다.</p><br>`
+                movieModal.show();
+            });
+        });
+    });
+</script>
+{% endblock %}
