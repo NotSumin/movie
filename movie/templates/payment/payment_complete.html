@@ -7,50 +7,89 @@
 {% block content %}
 <div id="paymentContainer" class="container">
     <div class="booking-steps">
-        <div class="booking-step">
+        <div class="booking-step completed-step">
             <strong>01<br>상영시간</strong>
         </div>
-        <div class="booking-step">
+        <div class="booking-step completed-step">
             <strong>02<br>인원/좌석</strong>
         </div>
-        <div class="booking-step">
+        <div class="booking-step completed-step">
             <strong>03<br>결제</strong>
         </div>
         <div class="booking-step active-step">
             <strong>04<br>결제완료</strong>
         </div>
     </div>
-    <div class="payment-complete-content">
+    <div class="payment-complete-wrap">
+        <div class="payment-title-bar"><strong>결제완료</strong></div>
+        <div class="payment-complete-content{% if success %} has-ticket{% endif %}">
         {% if success %}
         <div class="payment-complete-icon success">
-            <span class="material-symbols-outlined">check_small</span>
+            <img src="{{ url_for('static', filename='img/ticket.png') }}" alt="링크">
         </div>
-        <h2>결제가 완료되었습니다</h2>
-        <div class="payment-complete-info">
-            <div class="payment-complete-row">
-                <span>주문번호</span>
-                <p>{{ payment.orderId }}</p>
-            </div>
-            <div class="payment-complete-row">
-                <span>결제수단</span>
-                <p>{{ payment.method }}</p>
-            </div>
-            <div class="payment-complete-row">
-                <span>결제금액</span>
-                <p>{{ '{:,}'.format(payment.totalAmount) }}원</p>
-            </div>
-            <div class="payment-complete-row">
-                <span>승인시각</span>
-                <p>{{ payment.approvedAt }}</p>
+        <h2>{% if g.user %}{{ g.user.username }}님, {% endif %}결제가 성공적으로 완료되었습니다.</h2>
+
+        <div class="payment-ticket">
+            <div class="payment-ticket-stub"></div>
+            <div class="payment-ticket-main">
+                <div class="payment-complete-card">
+                    <img src="{{ schedule.movie.poster_url if schedule else url_for('static', filename='img/no_poster.png') }}" alt="포스터">
+                    <div class="payment-complete-card-info">
+                        <div class="payment-complete-field highlight">
+                            <span>예매번호</span>
+                            <p>{{ payment.orderId }}</p>
+                        </div>
+                        <div class="payment-complete-field">
+                            <span>상영일시</span>
+                            <p>{{ schedule.showtime.strftime('%Y-%m-%d (%a) %H:%M') if schedule else '-' }}</p>
+                        </div>
+                        <div class="payment-complete-field">
+                            <span>상영관</span>
+                            <p>{{ (schedule.auditorium.theater.name ~ ' ' ~ schedule.auditorium.name) if schedule else '-' }}</p>
+                        </div>
+                        <div class="payment-complete-field">
+                            <span>관람인원</span>
+                            <p>{{ audience_count }}명</p>
+                        </div>
+                        <div class="payment-complete-field">
+                            <span>좌석</span>
+                            <p>{{ seats|join(', ') if seats else '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-complete-price-summary">
+                    <span>주문금액 <strong>{{ '{:,}'.format(payment.totalAmount + applied_points + coupon_discount|default(0)) }}원</strong></span>
+                    <span class="op">-</span>
+                    <span>할인금액 <strong>{{ '{:,}'.format(applied_points + coupon_discount|default(0)) }}원</strong></span>
+                    <span class="op">=</span>
+                    <span class="total">총 결제금액 <strong>{{ '{:,}'.format(payment.totalAmount) }}원</strong></span>
+                </div>
+                <div class="payment-complete-meta-row">
+                    <span>결제수단 <strong>{{ payment.method }}</strong></span>
+                    <span>승인시각 <strong>{{ payment.approvedAt }}</strong></span>
+                </div>
+                <ul class="payment-ticket-notice">
+                    <li>온라인 예매 및 추가상품 구매 취소는 상영 시작 20분 전까지 온라인에서 가능합니다.</li>
+                    <li>상영시작 20분전 이후 부터는 영화관 현장에서만 취소 가능합니다.</li>
+                    <li>반드시 전체 취소만 가능하며, 예매나 추가상품 중 부분취소는 불가능합니다.</li>
+                    <li>적립 예정 BG.POINT는 영화관람 다음날 적립 됩니다.</li>
+                    <li>예고편 상영 등 사정에 의해 본 영화 시작이 10여분 정도 차이 날 수 있습니다.</li>
+                    <li>개인정보 보호 정책에 따라 주민번호로 예매 티켓을 찾을 수 없습니다.</li>
+                </ul>
             </div>
         </div>
-        <a href="{{ url_for('main.index') }}" class="btn-payment-confirm">홈으로</a>
+        <div class="payment-confirm-buttons">
+            <a href="{{ url_for('main.index') }}" class="btn-payment-confirm">홈으로</a>
+            <a href="{{ url_for('mypage.mypage') }}" class="btn-payment-confirm">마이페이지</a>
+        </div>
         {% else %}
         <div class="payment-complete-icon fail">✕</div>
         <h2>결제에 실패했습니다</h2>
         <p class="payment-complete-error">{{ error.message }} ({{ error.code }})</p>
         <a href="{{ url_for('main.index') }}" class="btn-payment-confirm">홈으로</a>
         {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

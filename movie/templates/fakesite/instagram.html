@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fakesite_instagram.css') }}">
+</head>
+<body>
+    <a href="{{ url_for('main.index') }}" class="ig-home-link">← 부귀영화로 돌아가기</a>
+    <div class="ig-wrap">
+        <div class="ig-main">
+            <div class="ig-phone"><div class="material-icon-camera"></div></div>
+            <div class="ig-cards">
+                <div class="ig-card">
+                    <div class="ig-logo">Instagram</div>
+                    <input type="text" placeholder="휴대폰 번호, 사용자 이름 또는 이메일 주소">
+                    <input type="password" placeholder="비밀번호">
+                    <button type="button" class="ig-login-btn">로그인</button>
+                    <div class="ig-divider">또는</div>
+                    <div class="ig-fb-login">Facebook으로 로그인</div>
+                    <a href="#" class="ig-forgot" onclick="return false;">비밀번호를 잊으셨나요?</a>
+                </div>
+                <div class="ig-signup-card">
+                    계정이 없으신가요? <a href="#" onclick="return false;">가입하기</a>
+                </div>
+            </div>
+        </div>
+        <div class="ig-footer">
+            <div class="ig-footer-links">
+                <a href="#" onclick="return false;">Meta</a>
+                <a href="#" onclick="return false;">소개</a>
+                <a href="#" onclick="return false;">블로그</a>
+                <a href="#" onclick="return false;">채용 정보</a>
+                <a href="#" onclick="return false;">도움말</a>
+                <a href="#" onclick="return false;">API</a>
+                <a href="#" onclick="return false;">개인정보처리방침</a>
+                <a href="#" onclick="return false;">약관</a>
+            </div>
+            <div>부귀영화 (연습용 가짜 페이지)</div>
+        </div>
+    </div>
+</body>
+</html>
