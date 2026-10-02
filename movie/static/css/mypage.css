@@ -30,14 +30,23 @@
     padding-top: 14px;
 }
 
-.reservation-list::before {
+.reservation-list:has(.reservation-item)::after {
     content: "";
+    display: block;
     position: absolute;
     top: 0;
     left: 157px;
     width: 1px;
     height: 14px;
     background-color: #ddd;
+}
+
+.no_res {
+    background: #f8f9fa;
+}
+
+.no_res p {
+    padding-bottom:14px;
 }
 
 
@@ -348,6 +357,11 @@
     vertical-align: middle;
 }
 
+/*회원정보*/
+.signup-field.mypage-field label {
+    justify-content: flex-start;
+    width: 100px;
+}
 
 /* =========================================
    태블릿

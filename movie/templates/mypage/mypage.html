@@ -7,8 +7,8 @@
 
 {% block content %}
 <div class="page-inner">
-    <div class="container pt-4 pb-5">
-        <!--<h5 class="mb-3"><span class="fw-bold">{{ g.user.username }}님</span> 반가워요!</h5>-->
+    <div class="container py-4">
+        <h4 class="mb-4">마이페이지</h4>
         <ul class="nav nav-underline border-bottom" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#res-tab-pane" type="button" role="tab" aria-controls="res-tab-pane" aria-selected="true">예매내역</button>
@@ -24,7 +24,7 @@
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="res-tab-pane" role="tabpanel" aria-labelledby="res-tab" tabindex="0">
+            <div class="tab-pane fade show active" id="res-tab-pane" role="tabpanel" aria-labelledby="res-tab" tabindex="0">
                 <div class="reservation-list-box">
                     <p class="py-3 text-center mb-0 reservation-info">최근 70일 이내의 정보만 조회가 가능합니다.</p>
                     <div class="reservation-list">
@@ -98,33 +98,76 @@
                                                             <strong>{{ '%08d'|format(r.order_id[:8]|int(0, 16) % 100000000) }}</strong>
                                                         </div>
                                                     </div>
-                                                    {% if not r.canceled_at %}
-                                                    <form action="{{ url_for('mypage.cancel_reservation', reservation_id=r.id) }}" method="post" class="d-inline">
-                                                        <button type="submit" class="reservation-cancel-btn btn btn-sm border">예매취소</button>
-                                                    </form>
-                                                    {% endif %}
-                                                </div>
-                                                <hr>
-                                                <!-- 결제 정보 -->
-                                                <div class="payment-info">
-                                                    <div class="payment-date">
-                                                        결제일시
-                                                        <span>{{ r.paid_at.strftime('%Y-%m-%d %p %I:%M:%S') }}</span>
+                                                    <div class="reservation-price">
+                                                        {{ '{:,}'.format(r.total_amount) }}원
                                                     </div>
-                                                    <div class="payment-row">
-                                                        <div>
-                                                            <span>주문금액</span>
-                                                            <strong>{{ '{:,}'.format(r.order_amount) }}원</strong>
+                                                    <div class="reservation-number">
+                                                        예매번호 {{ r.order_id }}
+                                                        {% if r.canceled_at %}<span class="text-danger">[예매 취소 완료됨]</span>{% endif %}
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </h2>
+                                        <!-- 상세 -->
+                                        <div
+                                            id="reservation{{ loop.index }}"
+                                            class="accordion-collapse collapse"
+                                            data-bs-parent="#reservationAccordion{{ loop.index }}">
+                                            <div class="accordion-body">
+                                                <div class="reservation-detail">
+                                                    <!-- 영화 정보 -->
+                                                    <div class="movie-info">
+                                                        <img src="{{ r.schedule.movie.poster_url or url_for('static', filename='img/no_poster.png') }}" class="movie-poster" alt="영화 포스터">
+                                                        <div class="movie-detail">
+                                                            <div>
+                                                                <span>상영일시</span>
+                                                                <strong>{{ r.schedule.showtime.strftime('%Y.%m.%d(%a) %H:%M') }}</strong>
+                                                            </div>
+                                                            <div>
+                                                                <span>상영관</span>
+                                                                <strong>{{ r.schedule.auditorium.theater.name }} {{ r.schedule.auditorium.name }}</strong>
+                                                            </div>
+                                                            <div>
+                                                                <span>관람인원</span>
+                                                                <strong>{{ r.audience_count }}명</strong>
+                                                            </div>
+                                                            <div>
+                                                                <span>좌석</span>
+                                                                <strong>{{ r.seats }}</strong>
+                                                            </div>
+                                                            <div>
+                                                                <span>거래번호</span>
+                                                                <strong>{{ r.order_id }}</strong>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <span>할인금액</span>
-                                                            <strong>{{ '{:,}'.format(r.discount_amount) }}원</strong>
+                                                        {% if not r.canceled_at %}
+                                                        <form action="{{ url_for('mypage.cancel_reservation', reservation_id=r.id) }}" method="post" class="d-inline">
+                                                            <button type="submit" class="reservation-cancel-btn btn btn-sm border">예매취소</button>
+                                                        </form>
+                                                        {% endif %}
+                                                    </div>
+                                                    <hr>
+                                                    <!-- 결제 정보 -->
+                                                    <div class="payment-info">
+                                                        <div class="payment-date">
+                                                            결제일시
+                                                            <span>{{ r.paid_at.strftime('%Y-%m-%d %p %I:%M:%S') }}</span>
                                                         </div>
-                                                        <div>
-                                                            <span>총 결제금액</span>
-                                                            <strong class="text-danger">
-                                                                {{ '{:,}'.format(r.total_amount) }}원
-                                                            </strong>
+                                                        <div class="payment-row">
+                                                            <div>
+                                                                <span>주문금액</span>
+                                                                <strong>{{ '{:,}'.format(r.order_amount) }}원</strong>
+                                                            </div>
+                                                            <div>
+                                                                <span>할인금액</span>
+                                                                <strong>{{ '{:,}'.format(r.discount_amount) }}원</strong>
+                                                            </div>
+                                                            <div>
+                                                                <span>총 결제금액</span>
+                                                                <strong class="text-danger">
+                                                                    {{ '{:,}'.format(r.total_amount) }}원
+                                                                </strong>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -134,14 +177,13 @@
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                </div>
                 </div>
                 <!--예매내역이 없을 경우-->
                 {% if not reservations %}
-                <div class="text-center py-5">
-                    <p class="text-secondary mb-0">
+                <div class="no_res text-center py-5">
+                    <p class="mb-0">
                         예매내역이 없습니다.
                     </p>
                 </div>
@@ -280,23 +322,24 @@
                             </tbody>
                         </table>
                     </div>
-              </div>
-          </div>
-          <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                <div class=" mt-4">
-                    <div class="signup-field">
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                <div class="mt-3">
+                    <div class="signup-field mypage-field">
                         <label>아이디</label>
                         <input type="text" class="form-control" value="{{ g.user.username }}" readonly>
                     </div>
-                    <div class="signup-field">
+                    <div class="signup-field mypage-field">
                         <label>이메일</label>
                         <input type="text" class="form-control" value="{{ g.user.email }}" readonly>
                     </div>
-                    <div class="signup-field">
+                    <div class="signup-field mypage-field">
                         <label>연락처</label>
                         <input type="text" class="form-control" value="{{ g.user.contact }}" readonly>
                     </div>
                 </div>
+
                 <div class="text-end mt-3">
                     <button type="button" class="btn btn-link text-secondary p-0" data-bs-toggle="modal" data-bs-target="#withdrawModal">
                         회원탈퇴
@@ -337,7 +380,7 @@
                     </div>
                 </div>
                 <!--// 회원탈퇴 확인 모달창-->
-          </div>
+            </div>
         </div>
     </div>
 </div>
