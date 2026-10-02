@@ -6,8 +6,26 @@
 
 {% block content %}
 <div class="page-inner">
-    <div class="container py-5">
+    <div class="container py-4">
+        <h4 class="pb-2 border-bottom mb-1">공지사항</h4>
+        <div class="row my-2 justify-content-end">
+            <div class="col-md-4">
+               <div class="input-group">
+                    <input type="text" id="search_kw" class="form-control"
+                        value="{{ kw or '' }}">
+                    <div class="input-group-append">
+                        <button class="common-button mx-2 mt-0 px-3" id="btn_search">찾기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <table class="notice-table table table-hover">
+            <colgroup>
+                <col style="width:10%;">
+                <col>
+                <col>
+            </colgroup>
             <thead>
                 <tr class="table-light">
                     <th class="text-center">번호</th>
@@ -49,7 +67,7 @@
               {% for page_num in notice_list.iter_pages() %}
               {% if page_num %}
               {% if page_num != notice_list.page %}
-              <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+              <li class="page-item"><a class="page-link" data-page="{{ page_num }}" href="javascript:void(0)">{{ page_num }}</a></li>
               {% else %}
               <li class="page-item active">
                 <a class="page-link" href="javascript:void(0)" aria-current="page">{{ page_num }}</a>
@@ -67,6 +85,43 @@
               <li class="page-item disabled"><a class="page-link" href="javascript:void(0)" aria-disabled="true">다음</a></li>
               {% endif %}
           </ul>
+        <form id="searchForm" action="{{ url_for('notice.notice_list') }}" method="get">
+            <input type="hidden" id="kw" name="kw" value="{{ kw or '' }}">
+            <input type="hidden" id="page" name="page" value="{{ page }}">
+        </form>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    // 페이지버튼 클릭시
+    const page_elements = document.querySelectorAll('.page-link')
+    console.log(page_elements)
+    page_elements.forEach(element => {
+        element.addEventListener('click', function(){
+            const page = this.dataset.page;
+            if (page){
+                document.getElementById('page').value = page;
+                document.getElementById('searchForm').submit();
+            }
+        })
+    })
+
+    // 검색버튼 클릭시
+    const btn_search = document.getElementById('btn_search')
+    btn_search.addEventListener('click', function(){
+        document.getElementById('kw').value = document.getElementById('search_kw').value;
+        document.getElementById('page').value = 1;
+        document.getElementById('searchForm').submit();
+    })
+
+    const search_kw = document.getElementById('search_kw')
+    search_kw.addEventListener('keydown', function(event){
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        btn_search.click();
+    }
+})
+</script>
 {% endblock %}
