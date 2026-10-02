@@ -13,6 +13,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if g.user:
+        return redirect(url_for('main.index'))
     form = UserCreateForm()
     if request.method == 'POST' and form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -24,6 +26,13 @@ def signup():
                 created_at = datetime.now())
             db.session.add(user)
             db.session.commit()
+
+            session.clear()
+            session['user_id'] = user.id
+            _next = request.args.get('next', '')  # next 파라미터 전달
+            if _next:
+                return redirect(_next)
+
             return redirect(url_for('main.index'))
         else:
             flash('이미 존재하는 사용자입니다.')

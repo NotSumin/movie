@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from datetime import datetime, timedelta, time
+import re
 
 from movie.filter import korean_days
 from movie.models import Theater, Auditorium, Schedule
@@ -135,10 +136,17 @@ def get_schedules(theater_id, movie_id, selected_date):
 
     schedules = []
     for schedule in queried_schedules:
+        taken_seats = []
+        for reservation in schedule.reservations:
+            if reservation.canceled_at is None:
+                seats = reservation.seats.split(',')
+                seats = list(filter(None, seats))
+                taken_seats += seats
         schedules.append({
             'id': str(schedule.id),
             'auditorium': schedule.auditorium.name,
             'total_seats': schedule.auditorium.total_seats,
+            'remaining_seats': schedule.auditorium.total_seats - len(taken_seats),
             'showtime': schedule.showtime.strftime("%H:%M")
         })
     schedules = sorted(schedules, key=lambda x: x['showtime'])
@@ -157,7 +165,11 @@ def seats():
         if request.method == 'POST':
             seats = request.form.get('booking_seats').split(',')
             seats = list(filter(None, seats))
-            seats.sort()
+
+            def natural_sort_key(s):
+                return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
+
+            seats = sorted(seats, key=natural_sort_key)
             tickets = {
                 'adult': request.form.get('adult_tickets'),
                 'child': request.form.get('child_tickets'),
@@ -171,6 +183,13 @@ def seats():
         print(request.form.get('booking_seats'))
 
     queried_schedule = Schedule.query.filter_by(id=schedule_id).first()
+
+    reserved_seats = []
+    for reservation in queried_schedule.reservations:
+        if reservation.canceled_at is None:
+            seats = reservation.seats.split(',')
+            seats = list(filter(None, seats))
+            reserved_seats += seats
     showtime_date = f'{queried_schedule.showtime.strftime("%Y.%m.%d")} ({korean_days(queried_schedule.showtime.strftime("%A"))})'
     end_time = queried_schedule.showtime + timedelta(minutes=queried_schedule.movie.runtime)
     showtime_time = f'{queried_schedule.showtime.strftime("%H:%M")} ~ {end_time.strftime("%H:%M")}'
@@ -184,6 +203,8 @@ def seats():
         'showtime_time': showtime_time,
         'auditorium': auditorium,
         'seat_layout': queried_schedule.auditorium.seat_layout,
+        'reserved_seats': reserved_seats,
+        'remaining_seats': queried_schedule.auditorium.total_seats - len(reserved_seats),
         'adult_price': queried_schedule.adult_price,
         'child_price': queried_schedule.child_price,
         'senior_price': queried_schedule.senior_price,

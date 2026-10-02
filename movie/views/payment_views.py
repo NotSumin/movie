@@ -3,10 +3,12 @@ import uuid
 from datetime import datetime
 
 import requests
-from flask import Blueprint, render_template, request, g, jsonify, session
+from flask import Blueprint, render_template, request, g, jsonify, session, redirect, url_for
 
 from movie import db
+from movie.filter import korean_days
 from movie.models import Schedule, Reservation
+from movie.views.auth_views import login_required
 
 bp = Blueprint('payment', __name__, url_prefix='/payment')
 
@@ -31,6 +33,7 @@ def _build_payment_context():
         seats = [s for s in seats_param.split(',') if s]
 
     schedule = Schedule.query.get_or_404(schedule_id) if schedule_id else None
+    showtime = f'{schedule.showtime.strftime('%Y-%m-%d')} ({korean_days(schedule.showtime.strftime("%A"))}) {schedule.showtime.strftime('%H:%M')}'
     tickets = session.get('tickets')
 
     if tickets and schedule:
@@ -53,6 +56,7 @@ def _build_payment_context():
 
     return {
         'schedule': schedule,
+        'showtime': showtime,
         'seats': seats,
         'audience_count': audience_count,
         'amount': amount,
@@ -102,7 +106,10 @@ def _save_reservation(context, payment, applied_points, coupon_discount, coupon_
 
 
 @bp.route('/', methods=['GET'])
+@login_required
 def index():
+    if not session.get('schedule_id') or not session.get('seats') or not session.get('tickets'):
+        return redirect(url_for('booking.index'))
     return render_template(
         'payment/payment_main.html',
         toss_client_key=TOSS_CLIENT_KEY,
@@ -136,6 +143,7 @@ def deduct_points():
 
 
 @bp.route('/mock-complete')
+@login_required
 def mock_complete():
     order_id = request.args.get('orderId')
     amount = request.args.get('amount', type=int)
@@ -158,6 +166,9 @@ def mock_complete():
     _save_reservation(context, payment, applied_points, coupon_discount, coupon)
     if g.user:
         db.session.commit()
+        session.pop('schedule_id', None)
+        session.pop('seats', None)
+        session.pop('tickets', None)
 
     return render_template(
         'payment/payment_complete.html',
@@ -166,12 +177,14 @@ def mock_complete():
         applied_points=applied_points,
         coupon_discount=coupon_discount,
         schedule=context['schedule'],
+        showtime=context['showtime'],
         seats=context['seats'],
         audience_count=context['audience_count'],
     )
 
 
 @bp.route('/toss/success')
+@login_required
 def toss_success():
     payment_key = request.args.get('paymentKey')
     order_id = request.args.get('orderId')
@@ -200,6 +213,9 @@ def toss_success():
         _save_reservation(context, payment, applied_points, coupon_discount, coupon)
         if g.user:
             db.session.commit()
+            session.pop('schedule_id', None)
+            session.pop('seats', None)
+            session.pop('tickets', None)
 
         return render_template(
             'payment/payment_complete.html',
@@ -208,6 +224,7 @@ def toss_success():
             applied_points=applied_points,
             coupon_discount=coupon_discount,
             schedule=context['schedule'],
+            showtime=context['showtime'],
             seats=context['seats'],
             audience_count=context['audience_count'],
         )
@@ -216,6 +233,7 @@ def toss_success():
 
 
 @bp.route('/toss/fail')
+@login_required
 def toss_fail():
     error = {
         'code': request.args.get('code'),
