@@ -6,22 +6,25 @@
 
 {% block content %}
 <!-- 화면 중앙 배치를 위한 메인 컨테이너 -->
-<div class="container common-container">
+<div class="container common-container py-4">
 
     <!-- 메인 제목 -->
-    <h3 class="main-title">문의내용</h3>
+    <h4 class="main-title mb-4">문의하기</h4>
     <hr/>
 
     <form method="post" enctype="multipart/form-data">
 
+
         {{ csrf_token() if csrf_token }}
 
         <!-- 👈👇 [1. 종류 선택 영역 수정 - 버튼 및 hidden input 제거] 👇👈 -->
-        <div class="form-group d-flex align-items-center gap-5">
-            <label class="form-label" style="width: 150px">
-                종류 <span class="text-dark">*</span>
+        <div class="form-group row py-1">
+            <label class="form-label col-2">
+                <div class="mx-3">
+                    종류 <span class="text-danger">*</span>
+                </div>
             </label>
-            <div class="d-flex align-items-center gap-4">
+            <div class="d-flex align-items-center gap-4 col-10">
                 <!-- 라디오 버튼 1: 영화관문의 -->
                 <label class="radio-label">
                     <input type="radio" name="kind" value="영화관문의" id="kind_theater"
@@ -41,63 +44,72 @@
         <hr/>
 
         <!-- 2. 제목 입력 영역 -->
-        <div class="form-group row">
-            <label for="title" class="form-label col-lg-2">
-                제목 <span>*</span>
+        <div class="form-group row py-1">
+            <label for="title" class="form-label col-2">
+                <div class="mx-3">
+                    제목 <span class="text-danger">*</span>
+                </div>
             </label>
 
-            <input
+            <div class="col-10">
+                <input
 
-                type="text"
-                id="title"
-                name="title"
-                class="form-input col-lg-10"
-                placeholder="제목을 입력해주세요"
-                value="{{ question.title if question else '' }}"
-                maxlength="50"
-                oninput="updateCharCount(this)"
-                required
-            >
-            <div class="char-counter text-end">
-                <span id="charCount">0</span>/한글 50자
+                    type="text"
+                    id="title"
+                    name="title"
+                    class="form-input p-2"
+                    placeholder="제목을 입력해주세요"
+                    value="{{ question.title if question else '' }}"
+                    maxlength="50"
+                    oninput="updateCharCount(this)"
+                    required>
+                <div class="char-counter text-end text-secondary">
+                    <span id="charCount">0</span>/한글 50자
+                </div>
             </div>
         </div>
         <hr/>
 
         <!-- 3. 내용 입력 영역 -->
-        <div class="form-group row">
-            <label for="content" class="form-label col-lg-2">
-                내용 <span>*</span>
+        <div class="form-group row py-1">
+            <label for="content" class="form-label col-2">
+                <div class="mx-3">
+                    내용 <span class="text-danger">*</span>
+                </div>
             </label>
-
-            <textarea
-                id="content"
-                name="content"
-                class="form-input col-lg-10"
-                placeholder="내용 및 첨부파일에 개인정보(카드번호, 계좌번호, 주민번호)가 포함되지 않도록 유의하여 입력해주세요"
-                maxlength="2000"
-                oninput="updateCharCount(this)"
-                required
-            >{{ question.content if question else '' }}</textarea>
-            <div class="char-counter text-end">
-                <span id="contentCount">0</span>/한글 2,000자
+            <div class="col-10">
+                <textarea
+                    id="content"
+                    name="content"
+                    class="form-input p-2"
+                    placeholder="내용 및 첨부파일에 개인정보(카드번호, 계좌번호, 주민번호)가 포함되지 않도록 유의하여 입력해주세요"
+                    maxlength="2000"
+                    oninput="updateCharCount(this)"
+                    required style="height:150px;">{{ question.content if question else '' }}</textarea>
+                <div class="char-counter text-end text-secondary">
+                    <span id="contentCount">0</span>/한글 2,000자
+                </div>
             </div>
         </div>
         <hr/>
 
         <!-- 4. 첨부파일 영역 -->
-        <div class="form-group">
-            <label class="form-label col-lg-2">
-                첨부파일
+        <div class="form-group row py-1">
+            <label class="form-label col-2">
+                <div class="mx-3">
+                    첨부파일
+                </div>
             </label>
 
-            <input type="file" name="image" id="image">
+            <div class="col-10">
+                <input type="file" name="image" id="image">
+            </div>
         </div>
         <hr/>
 
         <div style="text-align: center;">
-            <button type="button" class="cancel-button" style="width: 100px;" onclick="history.back()">취소</button>
-            <button type="submit" class="common-button" style="width: 100px;">저장하기</button>
+            <button type="button" class="cancel-button" style="width: 79px;" onclick="history.back()">취소</button>
+            <button type="submit" class="common-button">저장하기</button>
         </div>
 
     </form>
