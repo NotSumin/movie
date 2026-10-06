@@ -1,8 +1,8 @@
 /* 전체 컨테이너 너비 및 중앙 정렬 */
 .container {
     /*max-width: 1300px;*/
-    margin: 40px auto;
-    padding: 20px;
+    /*margin: 40px auto;*/
+    /*padding: 20px;*/
     background-color: #ffffff;
     border-radius: 8px;
 }
@@ -76,4 +76,44 @@ textarea.form-control {
     background-color: #e60012;
     border-color: #e60012;
     color: #ffffff;
+}
+
+/*문의내용 상세*/
+.table-list1 {
+    display: flex;
+    align-items: center;
+    margin:0;
+    padding:0;
+}
+
+.table-list1 li:not(:last-child):after {
+    content:'|';
+    display: inline-block;
+    color:#888;
+    margin: 0 12px;
+    font-size:14px;
+    font-weight:400;
+    vertical-align: 2px;
+}
+
+.question-content-box {
+    position: relative;
+    padding-bottom: 50px !important;
+}
+
+.fix-btn-box {
+    width: 100%;
+    position:absolute;
+    bottom:0;
+    left:0;
+}
+
+.answer-title {
+    font-size:20px;
+    font-weight:600;
+}
+
+.answer_content-box {
+    position: relative;
+    padding-bottom: 65px !important;
 }

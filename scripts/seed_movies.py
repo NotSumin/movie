@@ -137,7 +137,12 @@ movies_data = [
 ]
 
 with app.app_context():
+    added = 0
     for data in movies_data:
+        if Movie.query.filter_by(title=data["title"]).first():
+            print(f"[건너뜀] 이미 있음: {data['title']}")
+            continue
+
         genres = data.pop("genres", [])
         movie = Movie(**data, created_at=datetime.now())
         db.session.add(movie)
@@ -145,6 +150,7 @@ with app.app_context():
 
         for g in genres:
             db.session.add(Genre(movie_id=movie.id, name=g))
+        added += 1
 
     db.session.commit()
-    print(f"{len(movies_data)}편 등록 완료")
+    print(f"{added}편 등록 완료 ({len(movies_data) - added}편은 이미 존재해서 건너뜀)")

@@ -1,11 +1,18 @@
 from datetime import datetime, date, time, timedelta
 
 from movie import db, create_app
-from movie.models import Movie, Theater, Auditorium, Schedule
+from movie.models import Movie, Theater, Auditorium, Schedule, Reservation
 
 app = create_app()
 
 with (app.app_context()):
+    Reservation.query.delete()
+    Schedule.query.delete()
+    Auditorium.query.delete()
+    Theater.query.delete()
+    db.session.commit()
+    print('기존 영화관/상영관/상영일정 데이터 삭제 완료!')
+
     theater_list = {
     "서울": [
       {
