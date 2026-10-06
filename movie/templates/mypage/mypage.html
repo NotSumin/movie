@@ -130,7 +130,7 @@
                                                             <div>
                                                                 <span>거래번호</span>
                                                                 <strong>
-                                                                    {{ r.order_id }}
+                                                                    {{ '%08d'|format(r.order_id[:8]|int(0, 16) % 100000000) }}
                                                                 </strong>
                                                             </div>
 
