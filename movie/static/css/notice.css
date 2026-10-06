@@ -6,6 +6,9 @@
     height:60px;
     vertical-align: middle;
 }
+.notice-table th {
+    font-weight: 500;
+}
 .notice-table th.notice-title {
     height:65px;
 }

@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="common-container">
 <div class="store-hero" id="store-top">
     <div class="store-hero-inner">
          <img src="{{ url_for('static', filename='img/store_banner.png') }}" alt="링크" >
@@ -45,6 +46,7 @@
     </div>
 </div>
 {% endfor %}
+</div>
 {% endblock %}
 
 {% block script %}

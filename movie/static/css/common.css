@@ -46,7 +46,7 @@ ul {
 
 #mainNav {
     width: 100%;
-    min-width: 800px;
+    /*min-width: 800px;*/
     height: 80px;
     background-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
@@ -63,6 +63,7 @@ ul {
 }
 #mainNav .main-nav-container .main-nav-logo {
     width: 160px;
+    margin-right:20px;
 }
 #mainNavLogo {
     width: 160px;
@@ -72,6 +73,8 @@ ul {
     width: calc(calc(100% - 160px) / 2);
     height: 100%;
     display: flex;
+    margin-left:  clamp(10px, 3vw, 50px);
+    gap: 20px;
 }
 #mainNav .main-nav-container .main-nav-list li {
     height: 40px;
@@ -195,14 +198,24 @@ ul {
     transition: 0.3s;
 }
 
+@media (max-width: 1360px) {
+    #mainNav {
+        min-width:1280px;
+        padding:20px;
+        margin:0 auto;
+    }
+}
+
 .site-footer {
     background: #f2f2f2;
     /*margin-top: 60px;*/
     padding: 40px 20px 24px;
+    min-width:1280px;
 }
 .footer-inner {
-    max-width: 1400px;
+    max-width: 1280px;
     margin: 0 auto;
+    width: 100%;
 }
 
 /* 상단: 로고+SNS / 기업정보 / 서비스약관 */
@@ -314,6 +327,40 @@ ul {
     overflow: hidden;
 }
 
+/*공통 컨테이너*/
 .page-inner {
     min-height:calc(100vh - 500px);
+}
+.common-container {
+    min-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+}
+.mypage-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #333;
+}
+
+.mypage-link span {
+    color: inherit;
+}
+
+.mypage-link img {
+    width: 22px;
+    height: 22px;
+    transition: filter 0.2s ease;
+}
+
+.mypage-link span {
+    transition: color 0.2s ease;
+}
+
+li:hover .mypage-link {
+    color: #d71819;
+}
+
+li:hover .mypage-link img {
+    filter: brightness(0) saturate(100%) invert(18%) sepia(94%) saturate(5000%) hue-rotate(350deg);
 }
