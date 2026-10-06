@@ -6,8 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="page-inner">
-    <div class="container py-4">
+    <div class="container py-4 common-container page-inner">
         <h4 class="mb-4">마이페이지</h4>
         <ul class="nav nav-underline border-bottom" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
@@ -395,7 +394,7 @@
     <!-- 구매내역이 없을 경우 -->
     {% if not purchases %}
 
-    <div class="text-center py-5">
+    <div class="no_res text-center py-5">
         <p class="text-secondary mb-0">
             구매내역이 없습니다.
         </p>
@@ -500,5 +499,4 @@
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
