@@ -332,10 +332,10 @@ ul {
     min-height:calc(100vh - 500px);
 }
 .common-container {
-    min-width:1280px;
-    width:100%;
-    margin:0 auto;
-
+    min-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+}
 .mypage-link {
     display: flex;
     align-items: center;
