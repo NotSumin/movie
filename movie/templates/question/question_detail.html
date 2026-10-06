@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<!-- 공통 CSS 연결 -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notice.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/question_form.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-4 common-container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-danger" role="alert">
         {{ message }}
@@ -14,82 +14,79 @@
     {% endfor %}
 
     <!-- 질문 영역 -->
+    <h4 class="mb-4">문의내용</h4>
+    <table class="notice-table table mt-3 mb-0">
+        <thead>
+            <tr>
+                <th class="notice-title px-3">{{ question.title }}</th>
+            </tr>
+            <tr class="table-light">
+                <th class="d-flex px-3 justify-content-end">
+                    <ul class="table-list1">
+                        <li>{{ question.kind }}</li>
+                        <li>글쓴이: {{ question.user.username }}</li>
+                        <li>등록일: {{ question.created_at|datetime }}</li>
+                        {% if question.updated_at %}
+                        <li>수정일: {{ question.updated_at|datetime }}</li>
+                        {% endif %}
+                    </ul>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="p-3 question-content-box" style="min-height:400px;">
+                        {{ question.content }}
 
-   <h2 class="py-2 border-bottom">문의내용</h2>
-    <div class="card my-3">
-        <div class="card-body">
-            <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
+                        {% if question.image_path %}
+                        <div class="my-3">
+                            <img src="{{ url_for('static', filename=question.image_path.replace('static/', '')) }}" alt="첨부 이미지"
+                                 style="max-width: 100%; height: auto;" class="img-thumbnail">
+                        </div>
+                        {% endif %}
 
-            <!-- 👇 [이미지 출력 영역] -->
-            {% if question.image_path %}
-            <div class="my-3">
-                <img src="{{ url_for('static', filename=question.image_path.replace('static/', '')) }}" alt="첨부 이미지"
-                     style="max-width: 100%; height: auto;" class="img-thumbnail">
-            </div>
-            {% endif %}
-
-            <!-- 작성자 및 날짜/수정일시 표시 -->
-            <div class="d-flex justify-content-end">
-                {% if question.modify_date %}
-                <div class="badge bg-light text-dark p-2 text-start mx-3">
-                    <div class="mb-2">modified at</div>
-                    <div>{{ question.modify_date|datetime }}</div>
-                </div>
-                {% elif question.modified_at %}
-                <div class="badge bg-light text-dark p-2 text-start mx-3">
-                    <div class="mb-2">modified at</div>
-                    <div>{{ question.modified_at|datetime }}</div>
-                </div>
-                {% endif %}
-                <div class="badge bg-light text-dark p-2 text-start">
-                    <div class="mb-2">{{ question.user.username }}</div>
-                    <div>{{ question.created_at|datetime }}</div>
-                </div>
-            </div>
-
-            <div class="my-3">
-                {% if g.user == question.user %}
-                <a href="{{ url_for('question.modify', question_id=question.id) }}"
-                    class="btn btn-sm btn-outline-secondary">수정</a>
-                <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
-                   data-uri="{{ url_for('question.delete', question_id=question.id) }}">삭제</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+                        <div class="fix-btn-box py-2 px-3">
+                            {% if g.user == question.user %}
+                            <a href="{{ url_for('question.modify', question_id=question.id) }}"
+                                class="btn btn-sm btn-outline-secondary">수정</a>
+                            <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
+                               data-uri="{{ url_for('question.delete', question_id=question.id) }}">삭제</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
     <!-- 답변 목록 영역 -->
-    <h5 class="border-bottom my-3 py-2">{{ question.answers|length }}개의 답변이 있습니다.</h5>
+    <p class="answer-title border-bottom mt-4 py-2">{{ question.answers|length }}개의 답변이 있습니다.</p>
     {% for answer in question.answers %}
     <div class="card my-3">
-        <div class="card-body">
-            <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
+        <div class="card-body answer_content-box">
+            <div class="card-text" style="white-space: pre-line; min-height:60px;">{{ answer.content }}</div>
 
-            <div class="d-flex justify-content-end">
-                {% if answer.modify_date %}
-                <div class="badge bg-light text-dark p-2 text-start mx-3">
-                    <div class="mb-2">modified at</div>
-                    <div>{{ answer.modify_date|datetime }}</div>
+            <div class="fix-btn-box py-3 px-3">
+                <div class="row">
+                    <div class="col-3">
+                        {% if g.user == answer.user %}
+                        <a href="{{ url_for('answer.modify', answer_id=answer.id) }}"
+                           class="btn btn-sm btn-outline-secondary">수정</a>
+                        <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
+                           data-uri="{{ url_for('answer.delete', answer_id=answer.id) }}">삭제</a>
+                        {% endif %}
+                    </div>
+                    <div class="col-9 d-flex justify-content-end">
+                        <ul class="table-list1">
+                            <li>답변자: {{ answer.user.username }}</li>
+                            <li>등록일: {{ answer.created_at|datetime }}</li>
+                            {% if answer.updated_at %}
+                            <li>수정일: {{ answer.updated_at|datetime }}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
-                {% elif answer.modified_at %}
-                <div class="badge bg-light text-dark p-2 text-start mx-3">
-                    <div class="mb-2">modified at</div>
-                    <div>{{ answer.modified_at|datetime }}</div>
-                </div>
-                {% endif %}
-                <div class="badge bg-light text-dark p-2 text-start">
-                    <div class="mb-2">{{ answer.user.username }}</div>
-                    <div>{{ answer.created_at|datetime }}</div>
-                </div>
-            </div>
-
-            <div class="my-3">
-                {% if g.user == answer.user %}
-                <a href="{{ url_for('answer.modify', answer_id=answer.id) }}"
-                   class="btn btn-sm btn-outline-secondary">수정</a>
-                <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
-                   data-uri="{{ url_for('answer.delete', answer_id=answer.id) }}">삭제</a>
-                {% endif %}
             </div>
         </div>
     </div>
@@ -102,7 +99,9 @@
         <div class="mb-3">
             {{ form.content(class='form-control', rows='10', disabled=(not g.user)) }}
         </div>
-        {{ form.submit(class="btn btn-primary", disabled=(not g.user)) }}
+        <p class="text-end">
+            {{ form.submit(class="common-button my-0", disabled=(not g.user)) }}
+        </p>
     </form>
 </div>
 {% endblock %}

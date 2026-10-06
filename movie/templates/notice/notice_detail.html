@@ -5,8 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="page-inner">
-    <div class="container py-4">
+    <div class="container py-4 common-container page-inner">
         <h4 class="mb-4">공지사항</h4>
         <table class="notice-table table mt-3 mb-0">
             <thead>
@@ -61,5 +60,4 @@
             <a class="btn btn-dark" href="{{ url_for('notice.notice_list') }}">목록</a>
         </p>
     </div>
-</div>
 {% endblock %}

@@ -1,19 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container my-3">
-    <h5 class="my-3 border-bottom pb-2">답변 수정</h5>
+<div class="container my-3 common-container">
+    <h4 class="mb-4">문의 답변 수정</h4>
+
+    <!--<h5 class="my-3 border-bottom pb-2">답변 수정</h5>-->
     <form method="post" class="my-3">
         {{ form.csrf_token }}
         {% include "form_errors.html" %}
         <div class="mb-3">
-            <label for="content" class="form-label">답변 내용</label>
+            <!--<label for="content" class="form-label">답변 내용</label>-->
             <textarea class="form-control" name="content" id="content" rows="10">{{ form.content.data or '' }}</textarea>
         </div>
 
-        <!-- 저장하기 및 취소 버튼 -->
-        <button type="submit" class="btn btn-primary">저장하기</button>
-        <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
+        <p class="text-end mt-2">
+           <!-- 저장하기 및 취소 버튼 -->
+            <button type="submit" class="common-button my-0">저장하기</button>
+            <button type="button" class="cancel-button my-0" onclick="history.back()">취소</button>
+        </p>
     </form>
 </div>
 {% endblock %}
