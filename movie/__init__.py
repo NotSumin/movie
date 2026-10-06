@@ -30,7 +30,7 @@ def create_app():
     from . import models
 
     # 블루프린트 등록
-    from .views import main_views, auth_views, movie_views, question_views, notice_views, answer_views, booking_views, mypage_views, payment_views, fakesite_views
+    from .views import main_views, auth_views, movie_views, question_views, notice_views, answer_views, booking_views, mypage_views, payment_views, fakesite_views, store_views
     app.register_blueprint(main_views.bp)
     app.register_blueprint(auth_views.bp)
     app.register_blueprint(movie_views.bp)
@@ -41,9 +41,19 @@ def create_app():
     app.register_blueprint(mypage_views.bp)
     app.register_blueprint(payment_views.bp)
     app.register_blueprint(fakesite_views.bp)
+    app.register_blueprint(store_views.bp)
 
     # 필터 등록
     from .filter import format_datetime
     app.jinja_env.filters['datetime'] = format_datetime
+
+    # 네비바 장바구니 배지용 컨텍스트 프로세서
+    @app.context_processor
+    def inject_cart_count():
+        from flask import g, session
+        if not g.user:
+            return {'cart_count': 0}
+        cart = session.get('cart', [])
+        return {'cart_count': sum(item['qty'] for item in cart)}
 
     return app

@@ -24,6 +24,15 @@ TOSS_SECRET_KEY = 'test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6'
 TOSS_CONFIRM_URL = 'https://api.tosspayments.com/v1/payments/confirm'
 
 
+@bp.after_app_request
+def add_header(response):
+    """This runs globally for ALL routes across all files."""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+
 def _build_payment_context():
     schedule_id = session.get('schedule_id') or request.args.get('schedule_id', type=int)
 
@@ -157,7 +166,7 @@ def mock_complete():
         'orderId': order_id,
         'method': method,
         'totalAmount': amount,
-        'approvedAt': datetime.now().strftime('%Y-%m-%dT%H:%M:%S+09:00'),
+        'approvedAt': datetime.now().strftime('%Y-%m-%d %H:%M'),
     }
 
     if g.user and 0 < applied_points <= g.user.point:
@@ -205,6 +214,7 @@ def toss_success():
 
     if res.status_code == 200:
         payment = res.json()
+        payment['approvedAt'] = datetime.fromisoformat(payment['approvedAt']).strftime('%Y-%m-%d %H:%M')
         context = _build_payment_context()
 
         if g.user and 0 < applied_points <= g.user.point:

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 900px;">
+    <h3 class="mb-4">장바구니</h3>
+    {% if cart %}
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>상품</th>
+                <th class="text-center">단가</th>
+                <th class="text-center">수량</th>
+                <th class="text-center">소계</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            <tr>
+                <td class="d-flex align-items-center gap-2">
+                    <img src="{{ item.image }}" alt="{{ item.name }}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
+                    {{ item.name }}
+                </td>
+                <td class="text-center">{{ '{:,}'.format(item.price) }}원</td>
+                <td class="text-center">
+                    <form action="{{ url_for('store.cart_update') }}" method="post" class="d-inline-flex align-items-center gap-2">
+                        <input type="hidden" name="product_id" value="{{ item.id }}">
+                        <button type="submit" name="action" value="dec" class="btn btn-sm btn-outline-secondary">-</button>
+                        <span>{{ item.qty }}</span>
+                        <button type="submit" name="action" value="inc" class="btn btn-sm btn-outline-secondary">+</button>
+                    </form>
+                </td>
+                <td class="text-center">{{ '{:,}'.format(item.price * item.qty) }}원</td>
+                <td class="text-center">
+                    <form action="{{ url_for('store.cart_update') }}" method="post">
+                        <input type="hidden" name="product_id" value="{{ item.id }}">
+                        <input type="hidden" name="action" value="remove">
+                        <button type="submit" class="btn btn-sm btn-link text-secondary">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-end align-items-center gap-3 mt-4">
+        <strong class="fs-5">총 합계 {{ '{:,}'.format(total) }}원</strong>
+        <a href="{{ url_for('store.checkout') }}" class="btn btn-danger btn-lg">결제하기</a>
+    </div>
+    {% else %}
+    <div class="text-center text-secondary py-5">
+        장바구니가 비어있습니다.
+        <div class="mt-3"><a href="{{ url_for('store.index') }}" class="btn btn-outline-secondary">스토어 둘러보기</a></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

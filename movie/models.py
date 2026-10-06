@@ -145,3 +145,22 @@ class Reservation(db.Model):
     method = db.Column(db.String(50), nullable=True)
     paid_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     canceled_at = db.Column(db.DateTime, nullable=True)
+
+class Purchase(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    user = db.relationship(User, backref=db.backref('purchases', cascade='all, delete-orphan'))
+    order_id = db.Column(db.String(100), nullable=False)
+    total_amount = db.Column(db.Integer, nullable=False)
+    method = db.Column(db.String(50), nullable=True)
+    purchased_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    canceled_at = db.Column(db.DateTime, nullable=True)
+
+class PurchaseItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    purchase_id = db.Column(db.Integer, db.ForeignKey('purchase.id', ondelete='CASCADE'), nullable=False)
+    purchase = db.relationship(Purchase, backref=db.backref('items', cascade='all, delete-orphan'))
+    name = db.Column(db.String(200), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    qty = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.String(300), nullable=True)
