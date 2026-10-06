@@ -57,9 +57,19 @@ def _build_payment_context():
             + senior * schedule.senior_price
             + disabled * schedule.disabled_price
         )
+        max_ticket_price = max(
+            (price for count, price in (
+                (adult, schedule.adult_price),
+                (child, schedule.child_price),
+                (senior, schedule.senior_price),
+                (disabled, schedule.disabled_price),
+            ) if count > 0),
+            default=0,
+        )
     else:
         audience_count = request.args.get('count', default=len(seats) or 1, type=int)
         amount = TICKET_PRICE * audience_count
+        max_ticket_price = TICKET_PRICE
 
     order_name = f'{schedule.movie.title} ({audience_count}매)' if schedule else '영화 예매'
 
@@ -70,6 +80,7 @@ def _build_payment_context():
         'audience_count': audience_count,
         'amount': amount,
         'adult_price': schedule.adult_price if schedule else 0,
+        'max_ticket_price': max_ticket_price,
         'point_balance': g.user.point if g.user else 0,
         'vip_coupon_count': g.user.vip_coupon_count if g.user else 0,
         'screening_voucher_count': g.user.screening_voucher_count if g.user else 0,

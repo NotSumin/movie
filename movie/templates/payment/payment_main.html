@@ -23,6 +23,7 @@
     data-seats="{{ seats|join(',') }}"
     data-count="{{ audience_count }}"
     data-adult-price="{{ adult_price }}"
+    data-max-ticket-price="{{ max_ticket_price }}"
 >
     <div class="booking-steps">
         <a href="{{ url_for('booking.index') }}">
@@ -328,6 +329,7 @@
     const discountAmountText = document.getElementById('discountAmountText');
     const totalAmountTextEl = document.getElementById('totalAmountText');
     const adultPrice = parseInt(paymentContainer.dataset.adultPrice, 10) || 0;
+    const maxTicketPrice = parseInt(paymentContainer.dataset.maxTicketPrice, 10) || 0;
     let appliedPoints = 0;
     let selectedCoupon = '';
     let couponDiscount = 0;
@@ -342,7 +344,7 @@
             return Math.round(baseAmount * 0.8);
         }
         if (coupon === 'voucher') {
-            return adultPrice;
+            return maxTicketPrice;
         }
         if (coupon === 'discount') {
             return Math.round(baseAmount * 0.15);
