@@ -87,26 +87,6 @@
     outline: none;
 }
 
-/* textarea 높이 조절 */
-textarea.form-control {
-    min-height: 150px;
-    resize: vertical;
-}
-
-.form-group {
-    display: flex;
-}
-
-.form-group textarea, input[type="text"] {
-    width:100%;
-    border:1px solid #ccc;
-    border-radius: 5px;
-}
-
-.form-group .form-label {
-    font-weight:500;
-}
-
 /* 버튼 스타일 */
 .signup-button {
     width: 100%;
