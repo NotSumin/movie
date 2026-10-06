@@ -18,11 +18,16 @@ def mypage():
         Reservation.canceled_at.isnot(None),
     ).order_by(Reservation.canceled_at.desc()).all()
     purchases = Purchase.query.filter_by(user_id=g.user.id).order_by(Purchase.purchased_at.desc()).all()
+    canceled_purchases = Purchase.query.filter(
+        Purchase.user_id == g.user.id,
+        Purchase.canceled_at.isnot(None),
+    ).order_by(Purchase.canceled_at.desc()).all()
     return render_template(
         'mypage/mypage.html',
         reservations=reservations,
         canceled_reservations=canceled_reservations,
         purchases=purchases,
+        canceled_purchases=canceled_purchases,
         korean_days=korean_days
     )
 
@@ -52,4 +57,4 @@ def cancel_purchase(purchase_id):
     if not purchase.canceled_at:
         purchase.canceled_at = datetime.now()
         db.session.commit()
-    return redirect(url_for('mypage.mypage'))
+    return redirect(url_for('mypage.mypage') + '#purchase-tab-pane')

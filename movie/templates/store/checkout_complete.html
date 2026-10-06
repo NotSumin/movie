@@ -39,7 +39,10 @@
                 <p>{{ payment.approvedAt }}</p>
             </div>
         </div>
-        <a href="{{ url_for('store.index') }}" class="btn-payment-confirm">스토어로</a>
+        <div class="payment-confirm-buttons">
+            <a href="{{ url_for('store.index') }}" class="btn-payment-confirm">스토어로</a>
+            <a href="{{ url_for('mypage.mypage') }}#purchase-tab-pane" class="btn-payment-confirm">마이페이지</a>
+        </div>
         {% else %}
         <div class="payment-complete-icon fail">✕</div>
         <h2>결제에 실패했습니다</h2>

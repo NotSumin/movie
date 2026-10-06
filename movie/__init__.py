@@ -44,8 +44,9 @@ def create_app():
     app.register_blueprint(store_views.bp)
 
     # 필터 등록
-    from .filter import format_datetime
+    from .filter import format_datetime, korean_days
     app.jinja_env.filters['datetime'] = format_datetime
+    app.jinja_env.globals['korean_days'] = korean_days
 
     # 네비바 장바구니 배지용 컨텍스트 프로세서
     @app.context_processor
