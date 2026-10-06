@@ -7,25 +7,68 @@
     border-radius: 8px;
 }
 
-/* 제목 스타일 */
-.container h5 {
-    color: #333333;
-    font-weight: bold;
-    font-size: 1.4rem;
-}
-
-/* 각각의 입력 필드 간격 */
 .question-field {
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 60px;
+}
+.question-field > label {
+    width: 70px;
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.question-field > input {
+    width: calc(100% - 95px);
+    height: 40px;
+}
+.question-field > textarea {
+    width: calc(100% - 95px);
+    height: 150px;
+}
+.question-field > span {
+    width: 25px;
+    color: #e60012;
+    font-size: 18px;
+    padding-left: 4px;
+}
+.question-field.textarea-field {
+    height: 170px;
+}
+.char-counter {
+    width: 100%;
+    font-size: 14px;
+    margin-top: -5px;
+    margin-bottom: 10px;
 }
 
-/* 라벨 스타일 */
-.question-field label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555555;
-    font-weight: 600;
-}
+.question-radio-field {
+    display: flex;
+    height: 40px;
+    color: #333;
+    margin: 0;
+    align-items: center;
+    font-size: 14px;
+ }
+.question-radio-field li {
+    display: flex;
+    align-items: center;
+    height: 24px;
+ }
+.question-radio-field li input {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    margin-right: 4px;
+ }
+.question-radio-field li label {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+ }
 
 /* 입력 상자(input, textarea) 스타일 */
 .form-control {

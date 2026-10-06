@@ -1,14 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms.fields.choices import SelectField
+from wtforms.fields.choices import SelectField, RadioField
 from wtforms.fields.simple import StringField, TextAreaField, SubmitField, PasswordField, EmailField
 from wtforms.validators import DataRequired, Length, EqualTo, Email
 from flask_wtf.file import MultipleFileField, FileAllowed
 
 
 class QuestionForm(FlaskForm):
+    kind = RadioField('종류', choices=[('영화관 문의', '영화관 문의'), ('기타 문의', '기타 문의')], validators=[DataRequired('종류는 필수 입력 항목입니다.')])
     title = StringField('제목', validators=[DataRequired('제목은 필수 입력 항목입니다.')])
     content = TextAreaField('내용', validators=[DataRequired('내용은 필수 입력 항목입니다.')])
-    image = MultipleFileField('이미지 업로드', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'], '이미지 파일만 업로드 가능합니다.')])
+    image = MultipleFileField('첨부파일', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'], '이미지 파일만 업로드 가능합니다.')])
     submit = SubmitField('확인')
 
 class AnswerForm(FlaskForm):
