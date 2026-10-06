@@ -3,7 +3,9 @@
 .detail-top { display: flex; gap: 40px; align-items: center; justify-content: center;}
 .poster img { width: 316px; height: 446px; object-fit: cover; border-radius: 10px;}
 .info { width:614px; height:414px; flex: none; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;}
-.badge { display: inline-block; padding: 6px 10px; border-radius: 4px; background: #333333; font-size: 13px; margin-right: 6px; }
+.badge { display: inline-block;}
+.badge-wrap { position: relative;}
+.badge-rating-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 25px; height: 25px; }
 .title { font-size: 28px; margin: 8px 0; font-weight: bold;}
 .tag-row, .score-row { margin: 10px 0; display: flex; align-items: center;}
 .divider {font-weight: bold;}
