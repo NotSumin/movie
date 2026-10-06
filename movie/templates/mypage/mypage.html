@@ -137,18 +137,37 @@
                                                         </div>
 
                                                         {% if not r.canceled_at %}
-                                                        <form
-                                                            action="{{ url_for('mypage.cancel_reservation', reservation_id=r.id) }}"
-                                                            method="post"
-                                                            class="d-inline">
+                                                        <button
+                                                            type="button"
+                                                            class="reservation-cancel-btn btn btn-sm border"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#cancelResModal{{ r.id }}">
+                                                            예매취소
+                                                        </button>
 
-                                                            <button
-                                                                type="submit"
-                                                                class="reservation-cancel-btn btn btn-sm border">
-                                                                예매취소
-                                                            </button>
-
-                                                        </form>
+                                                        <div class="modal fade" id="cancelResModal{{ r.id }}" tabindex="-1"
+                                                             aria-labelledby="cancelResModal{{ r.id }}Label" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="cancelResModal{{ r.id }}Label">예매취소</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p class="mb-0">예매 취소를 하시겠습니까?</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                                        <form
+                                                                            action="{{ url_for('mypage.cancel_reservation', reservation_id=r.id) }}"
+                                                                            method="post"
+                                                                            class="d-inline">
+                                                                            <button type="submit" class="btn btn-danger">확인</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         {% endif %}
 
                                                     </div>
@@ -329,18 +348,37 @@
 
                                             {% if not p.canceled_at %}
 
-                                            <form
-                                                action="{{ url_for('mypage.cancel_purchase', purchase_id=p.id) }}"
-                                                method="post"
-                                                class="d-inline">
+                                            <button
+                                                type="button"
+                                                class="reservation-cancel-btn btn btn-sm border"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#cancelPurchaseModal{{ p.id }}">
+                                                제품환불
+                                            </button>
 
-                                                <button
-                                                    type="submit"
-                                                    class="reservation-cancel-btn btn btn-sm border">
-                                                    제품환불
-                                                </button>
-
-                                            </form>
+                                            <div class="modal fade" id="cancelPurchaseModal{{ p.id }}" tabindex="-1"
+                                                 aria-labelledby="cancelPurchaseModal{{ p.id }}Label" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="cancelPurchaseModal{{ p.id }}Label">제품환불</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p class="mb-0">제품을 환불 하시겠습니까?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                            <form
+                                                                action="{{ url_for('mypage.cancel_purchase', purchase_id=p.id) }}"
+                                                                method="post"
+                                                                class="d-inline">
+                                                                <button type="submit" class="btn btn-danger">확인</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             {% endif %}
 
@@ -411,8 +449,9 @@
                         <table class="mypage-table table">
                             <thead>
                                 <tr class="table-light">
+                                    <th class="text-center">구분</th>
                                     <th class="text-center">취소일시</th>
-                                    <th class="text-center">영화명</th>
+                                    <th class="text-center">상품명</th>
                                     <th class="text-center">극장</th>
                                     <th class="text-center">상영일시</th>
                                     <th class="text-center">취소금액</th>
@@ -421,6 +460,7 @@
                             <tbody>
                                 {% for r in canceled_reservations %}
                                 <tr>
+                                    <td class="text-center">예매</td>
                                     <td class="text-center">{{ r.canceled_at.strftime('%Y.%m.%d') }} ({{ korean_days(r.canceled_at.strftime("%A")) }}) {{ r.canceled_at.strftime('%H:%M') }}</td>
                                     <td class="text-center">{{ r.schedule.movie.title }}</td>
                                     <td class="text-center">{{ r.schedule.auditorium.theater.name }} {{ r.schedule.auditorium.name }}</td>
@@ -428,9 +468,24 @@
                                     <td class="text-center">{{ '{:,}'.format(r.total_amount) }}원</td>
                                 </tr>
                                 {% endfor %}
-                                {% if not canceled_reservations %}
+                                {% for p in canceled_purchases %}
                                 <tr>
-                                    <td colspan="5" class="text-center">
+                                    <td class="text-center">구매</td>
+                                    <td class="text-center">{{ p.canceled_at.strftime('%Y.%m.%d') }} ({{ korean_days(p.canceled_at.strftime("%A")) }}) {{ p.canceled_at.strftime('%H:%M') }}</td>
+                                    <td class="text-center">
+                                        {{ p.items[0].name }}
+                                        {% if p.items|length > 1 %}
+                                        외 {{ p.items|length - 1 }}건
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">-</td>
+                                    <td class="text-center">-</td>
+                                    <td class="text-center">{{ '{:,}'.format(p.total_amount) }}원</td>
+                                </tr>
+                                {% endfor %}
+                                {% if not canceled_reservations and not canceled_purchases %}
+                                <tr>
+                                    <td colspan="6" class="text-center">
                                         취소내역이 없습니다.
                                     </td>
                                 </tr>
@@ -499,4 +554,19 @@
             </div>
         </div>
     </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    if (window.location.hash) {
+        const targetPane = document.querySelector(window.location.hash);
+        if (targetPane && targetPane.classList.contains('tab-pane')) {
+            const targetTab = document.querySelector('[data-bs-target="' + window.location.hash + '"]');
+            if (targetTab) {
+                new bootstrap.Tab(targetTab).show();
+            }
+        }
+    }
+</script>
 {% endblock %}

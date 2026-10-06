@@ -24,7 +24,10 @@
                 <a href="{{ url_for('store.cart') }}" class="main-nav-cart">🛒<span class="main-nav-cart-badge">{{ cart_count }}</span></a>
             </li>
             <li>
-                <a href="{{ url_for('mypage.mypage') }}">마이페이지</a>
+                <a href="{{ url_for('mypage.mypage') }}" class="mypage-link">
+                    <img src="{{ url_for('static', filename='img/mypage.png') }}" alt="마이페이지">
+                    <span>마이</span>
+                </a>
             </li>
             <li>
                 <a href="{{ url_for('auth.logout') }}">{{ g.user.username }} (로그아웃)</a>
