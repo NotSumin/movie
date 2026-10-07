@@ -1,7 +1,7 @@
 .venv/
 .idea/
 __pycache__/
-static/photo/
+movie/static/photo/
 
 migrations/
 instance/
