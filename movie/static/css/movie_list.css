@@ -1,0 +1,56 @@
+/*notice*/
+.movie-table {
+    border-top: 1px solid #ddd;
+}
+.movie-table th {
+    height: 60px;
+    vertical-align: middle;
+}
+.movie-table td {
+    height: 100px;
+    vertical-align: middle;
+}
+.movie-table th {
+    font-weight: 500;
+}
+.movie-table td img {
+    width: 70px;
+    height: 100px;
+}
+.movie-table .movie-title a {
+    display: flex;
+}
+.movie-table .movie-title .movie-rating {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    color: #fff;
+    font-size: 16px;
+    margin-right: 4px;
+}
+.movie-table .movie-title .movie-rating.rating-all {
+    background: url("../img/rating_all.png");
+}
+.movie-table .movie-title .movie-rating.rating-12 {
+    background: url("../img/rating_12.png");
+}
+.movie-table .movie-title .movie-rating.rating-15 {
+    background: url("../img/rating_15.png");
+}
+.movie-table .movie-title .movie-rating.rating-19 {
+    background: url("../img/rating_19.png");
+}
+
+.page-link {
+    color: #333;
+}
+.page-link:hover {
+    color: #cc0010;
+}
+.page-item.active .page-link {
+    background-color: #e60012;
+    border-color: #e60012;
+    color: #fff;
+}
