@@ -35,18 +35,19 @@
         </thead>
         <tbody>
             <tr>
-                <td>
-                    <div class="p-3 question-content-box" style="min-height:400px;">
+                <td class="p-3">
+                    <div class="question-content-box" style="min-height:400px;">
                         {{ question.content }}
-
                         {% if question.image_path %}
-                        <div class="my-3">
-                            <img src="{{ url_for('static', filename=question.image_path.replace('static/', '')) }}" alt="첨부 이미지"
+                            {% for path in question.image_path.split(',') %}
+                            <div class="my-3">
+                                <img src="{{ url_for('static', filename=path) }}" alt="첨부 이미지"
                                  style="max-width: 100%; height: auto;" class="img-thumbnail">
-                        </div>
+                            </div>
+                            {% endfor %}
                         {% endif %}
 
-                        <div class="fix-btn-box py-2 px-3">
+                        <div class="fix-btn-box">
                             {% if g.user == question.user %}
                             <a href="{{ url_for('question.modify', question_id=question.id) }}"
                                 class="btn btn-sm btn-outline-secondary">수정</a>

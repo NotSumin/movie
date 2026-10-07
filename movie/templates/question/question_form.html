@@ -1,107 +1,69 @@
 {% extends 'base.html' %}
-{% block head %}
-<!-- CSS 파일 연결 -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/question_form.css') }}">
-{% endblock %}
+    {% block head %}
+    <!-- CSS 파일 연결 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/question_form.css') }}">
+    {% endblock %}
 
 {% block content %}
 <!-- 화면 중앙 배치를 위한 메인 컨테이너 -->
 <div class="container common-container">
-
+    <div class="card-body p-3">
     <!-- 메인 제목 -->
-    <h3 class="main-title">문의내용</h3>
-    <hr/>
+        <h5 class="my-3 pb-2">문의하기</h5>
+        <form method="post" novalidate enctype="multipart/form-data">
+            {{ form.csrf_token() }}
+            {% include 'form_errors.html' %}
 
-    <form method="post" enctype="multipart/form-data">
-
-        {{ csrf_token() if csrf_token }}
-
-        <!-- 👈👇 [1. 종류 선택 영역 수정 - 버튼 및 hidden input 제거] 👇👈 -->
-        <div class="form-group d-flex align-items-center gap-5">
-            <label class="form-label" style="width: 150px">
-                종류 <span class="text-dark">*</span>
-            </label>
-            <div class="d-flex align-items-center gap-4">
-                <!-- 라디오 버튼 1: 영화관문의 -->
-                <label class="radio-label">
-                    <input type="radio" name="kind" value="영화관문의" id="kind_theater"
-                           {% if not question or question.kind == '영화관문의' %}checked{% endif %}>
-                    <span>영화관문의</span>
-                </label>
-
-                <!-- 라디오 버튼 2: 기타 문의 -->
-                <label class="radio-label">
-                    <input type="radio" name="kind" value="기타 문의" id="kind_etc"
-                           {% if question and question.kind == '기타 문의' %}checked{% endif %}>
-                    <span>기타 문의</span>
-                </label>
+            <div class="question-field">
+                {{ form.kind.label }} <span>*</span>
+                <ul class="question-radio-field" id="kind">
+                    {% for value, label in form.kind.choices %}
+                        <li>
+                            <input type="radio"
+                                   name="{{ form.kind.name }}"
+                                   value="{{ value }}"
+                                   id="{{ form.kind.id }}-{{ loop.index0 }}"
+                                   {% if question and question.kind == value %}checked{% endif %}>
+                            <label for="{{ form.kind.id }}-{{ loop.index0 }}">{{ label }}</label>
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
-        </div>
-        <!-- 👈👆 [종류 선택 영역 수정 완료] 👆👈 -->
-        <hr/>
 
-        <!-- 2. 제목 입력 영역 -->
-        <div class="form-group row">
-            <label for="title" class="form-label col-lg-2">
-                제목 <span>*</span>
-            </label>
-
-            <input
-
-                type="text"
-                id="title"
-                name="title"
-                class="form-input col-lg-10"
-                placeholder="제목을 입력해주세요"
-                value="{{ question.title if question else '' }}"
-                maxlength="50"
-                oninput="updateCharCount(this)"
-                required
-            >
+            <div class="question-field">
+                {{ form.title.label }} <span>*</span>
+                {{ form.title(class='form-control', placeholder="제목을 입력해주세요", value=(question.title if question else ''),
+                        oninput="updateCharCount(this)", maxlength="50") }}
+            </div>
             <div class="char-counter text-end">
-                <span id="charCount">0</span>/한글 50자
+                <span id="charCount">0</span>/50 자
             </div>
-        </div>
-        <hr/>
 
-        <!-- 3. 내용 입력 영역 -->
-        <div class="form-group row">
-            <label for="content" class="form-label col-lg-2">
-                내용 <span>*</span>
-            </label>
-
-            <textarea
-                id="content"
-                name="content"
-                class="form-input col-lg-10"
-                placeholder="내용 및 첨부파일에 개인정보(카드번호, 계좌번호, 주민번호)가 포함되지 않도록 유의하여 입력해주세요"
-                maxlength="2000"
-                oninput="updateCharCount(this)"
-                required
-            >{{ question.content if question else '' }}</textarea>
+            <div class="question-field textarea-field">
+                {{ form.content.label }} <span>*</span>
+                <textarea id="{{ form.content.id }}"
+                    name="{{ form.content.name }}"
+                    class="form-control"
+                    placeholder="내용 및 첨부파일에 개인정보(카드번호, 계좌번호, 주민번호)가 포함되지 않도록 유의하여 입력해주세요"
+                    oninput="updateCharCount(this)"
+                    maxlength="2000"
+                >{{ question.content if question else '' }}</textarea>
+            </div>
             <div class="char-counter text-end">
-                <span id="contentCount">0</span>/한글 2,000자
+                <span id="contentCount">0</span>/2,000 자
             </div>
-        </div>
-        <hr/>
 
-        <!-- 4. 첨부파일 영역 -->
-        <div class="form-group">
-            <label class="form-label col-lg-2">
-                첨부파일
-            </label>
+            <div class="question-field">
+                {{ form.image.label }} <span></span>
+                {{ form.image(class='form-control') }}
+            </div>
 
-            <input type="file" name="image" id="image">
-        </div>
-        <hr/>
-
-        <div style="text-align: center;">
-            <button type="button" class="cancel-button" style="width: 100px;" onclick="history.back()">취소</button>
-            <button type="submit" class="common-button" style="width: 100px;">저장하기</button>
-        </div>
-
-    </form>
-
+            <div style="text-align: center;">
+                <button type="button" class="cancel-button" style="width: 100px;" onclick="history.back()">취소</button>
+                <button type="submit" class="common-button" style="width: 100px;">저장하기</button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
 

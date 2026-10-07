@@ -18,8 +18,8 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        <div class="p-3" style="min-height:400px;">
+                    <td class="p-3">
+                        <div style="min-height:400px;">
                             {{ notice.content }}
                         </div>
                     </td>
@@ -56,8 +56,8 @@
             </tbody>
         </table>
 
-        <p class="text-center">
-            <a class="btn btn-dark" href="{{ url_for('notice.notice_list') }}">목록</a>
+        <p class="text-center mt-5">
+            <a class="cancel-button px-3" href="{{ url_for('notice.notice_list') }}">목록</a>
         </p>
     </div>
 {% endblock %}
