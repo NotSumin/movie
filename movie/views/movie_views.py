@@ -1,9 +1,10 @@
 from datetime import datetime
+from operator import or_
 
-from flask import Blueprint, render_template, redirect, url_for, g, jsonify
+from flask import Blueprint, render_template, redirect, url_for, g, jsonify, request
 
 from movie import db
-from movie.models import LikedMovie, Movie, Review, Trailer
+from movie.models import LikedMovie, Movie, Review, Trailer, Genre
 from movie.forms import ReviewCreateForm
 from movie.views.auth_views import login_required
 
@@ -84,8 +85,19 @@ def review_new(movie_id):
 
 @bp.route('/list')
 def _list():
-    movies = Movie.query.order_by(Movie.created_at.desc()).all()
-    return render_template('movie/movie_list.html', movies=movies)
+    page = request.args.get('page', default=1, type=int)
+    kw = request.args.get('kw', default='', type=str)
+    movies = db.session.query(Movie).order_by(Movie.created_at.desc())
+    if kw:
+        movies = movies.filter(
+            or_(
+                Movie.title.ilike(f'%{kw}%'),
+                Movie.genres.any(Genre.name.ilike(f'%{kw}%'))
+            )
+        )
+    pagination = db.paginate(movies, page=page, per_page=10)
+
+    return render_template('movie/movie_list.html', movies=pagination, page=page, kw=kw)
 
 
 @bp.route('/trailer/<int:movie_id>')

@@ -3,6 +3,9 @@
         <a class="main-nav-logo" href="{{ url_for('main.index') }}"><img id="mainNavLogo" src="{{ url_for('static', filename='img/logo.png') }}"></a>
         <ul class="main-nav-list main-nav-list-start">
             <li>
+                <a href="{{ url_for('movie._list') }}">영화</a>
+            </li>
+            <li>
                 <a href="{{ url_for('booking.index') }}">예매</a>
             </li>
             <li>

@@ -289,6 +289,9 @@
     }
 
     function confirmBooking() {
+        this.addEventListener('click', async function (e) {
+            e.preventDefault();
+        });
         let total_tickets = parseInt(adult_tickets.value) +
                 parseInt(child_tickets.value) +
                 parseInt(senior_tickets.value) +
