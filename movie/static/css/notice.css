@@ -1,6 +1,7 @@
 /*notice*/
 .notice-table {
     border-top:1px solid #ddd;
+    table-layout: fixed;
 }
 .notice-table th, td {
     height:60px;
@@ -12,6 +13,12 @@
 .notice-table th.notice-title {
     height:65px;
 }
+.text-overflow-hidden {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .page-link {
     color:#333;
 }

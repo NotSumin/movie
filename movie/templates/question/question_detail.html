@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container py-4 common-container">
+<div class="container py-5 common-container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-danger" role="alert">
         {{ message }}
@@ -25,7 +25,7 @@
                     <ul class="table-list1">
                         <li>{{ question.kind }}</li>
                         <li>글쓴이: {{ question.user.username }}</li>
-                        <li>등록일: {{ question.created_at|datetime }}</li>
+                        <li>작성일: {{ question.created_at|datetime }}</li>
                         {% if question.updated_at %}
                         <li>수정일: {{ question.updated_at|datetime }}</li>
                         {% endif %}
@@ -81,7 +81,7 @@
                     <div class="col-9 d-flex justify-content-end">
                         <ul class="table-list1">
                             <li>답변자: {{ answer.user.username }}</li>
-                            <li>등록일: {{ answer.created_at|datetime }}</li>
+                            <li>작성일: {{ answer.created_at|datetime }}</li>
                             {% if answer.updated_at %}
                             <li>수정일: {{ answer.updated_at|datetime }}</li>
                             {% endif %}
