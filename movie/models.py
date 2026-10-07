@@ -89,7 +89,7 @@ class Question(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
-    image_path = db.Column(db.String(200), nullable=True)
+    image_path = db.Column(db.Text, nullable=True)
     user = db.relationship('User', backref=db.backref('question_set'))
 
 class Answer(db.Model):

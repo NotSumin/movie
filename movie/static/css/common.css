@@ -18,6 +18,17 @@ ul {
     padding-inline: 0;
 }
 
+.page-link:focus {
+    color: #e60012;
+}
+.page-link:focus {
+    box-shadow: 0 0 0 0.25rem rgba(230, 0, 18, 0.25);
+}
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(230, 0, 18, 0.25);
+    border-color: transparent;
+}
+
 #movieModal .modal-footer {
     background-color: #f8f8f8;
 }
@@ -74,7 +85,6 @@ ul {
     height: 100%;
     display: flex;
     margin-left:  clamp(10px, 3vw, 50px);
-    gap: 20px;
 }
 #mainNav .main-nav-container .main-nav-list li {
     height: 40px;
@@ -154,6 +164,7 @@ ul {
     align-items: center;
     justify-content: flex-end;
     padding: 0 20px;
+    gap: 20px;
 }
 #mainNav .main-nav-container .main-nav-list-end li {
     padding: 0 10px;
@@ -213,7 +224,7 @@ ul {
     min-width:1280px;
 }
 .footer-inner {
-    max-width: 1280px;
+    max-width: 1320px;
     margin: 0 auto;
     width: 100%;
 }
@@ -336,6 +347,13 @@ ul {
     width: 100%;
     margin: 0 auto;
 }
+@media (min-width:1320px) {
+    .common-container {
+        padding:0;
+    }
+}
+
+/* 마이페이지 링크 */
 .mypage-link {
     display: flex;
     align-items: center;

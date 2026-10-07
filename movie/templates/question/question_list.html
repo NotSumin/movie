@@ -8,7 +8,7 @@
 
     {% block content %}
     <!-- 화면 중앙 배치를 위한 메인 컨테이너 -->
-    <div class="container py-4 common-container">
+    <div class="container py-5 common-container">
 
         <!-- 메인 제목 -->
         <h4 class="main-title pb-2 border-bottom mb-1">문의목록</h4>
@@ -18,16 +18,16 @@
         <table class="table table-hover notice-table">
             <colgroup>
                 <col style="width:10%;">
-                <col>
-                <col>
-                <col>
+                <col style="width:50%;">
+                <col style="width:15%;">
+                <col style="width:25%;">
             </colgroup>
             <thead>
                 <tr class="text-center table-light">
                    <th>번호</th>
                    <th>제목</th>
                    <th>글쓴이</th>
-                   <th>작성일시</th>
+                   <th>작성일</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,13 +35,13 @@
                 {% for question in question_list.items %}
                 <tr class="text-center">
                 <td>{{ question_list.total - ((question_list.page - 1)*question_list.per_page) - loop.index0 }}</td>
-                <td class="text-start">
+                <td class="text-start text-overflow-hidden">
                     <a href="{{ url_for('question.detail', question_id=question.id) }}">{{ question.title }}</a>
                     {% if question.answers|length > 0 %}
                     <span class="text-danger small mx-2">[{{ question.answers|length }}]</span>
                     {% endif %}
                 </td>
-                <td>{{ question.user.username }}</td>
+                <td class="text-overflow-hidden">{{ question.user.username }}</td>
                 <td>{{ question.created_at|datetime }}</td>
                 </tr>
                 {% endfor %}
