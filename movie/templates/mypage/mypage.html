@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container py-4 common-container page-inner">
+    <div class="container py-5 common-container page-inner">
         <h4 class="mb-4">마이페이지</h4>
         <ul class="nav nav-underline border-bottom" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
@@ -32,7 +32,7 @@
                         <div class="reservation-item">
                             <!-- 왼쪽 날짜 -->
                             <div class="reservation-date">
-                                {{ r.paid_at.strftime('%Y.%m.%d') }} ({{ korean_days(r.paid_at.strftime("%A")) }}) {{ r.paid_at.strftime('%H:%M') }}
+                                {{ r.paid_at.strftime('%Y.%m.%d') }} ({{ korean_days(r.paid_at.strftime("%A")) }})
                             </div>
 
                             <!-- 타임라인 -->
@@ -264,7 +264,7 @@
 
                 <!-- 왼쪽 날짜 -->
                 <div class="reservation-date">
-                    {{ p.purchased_at.strftime('%Y.%m.%d(%a)') }}
+                    {{ p.purchased_at.strftime('%Y.%m.%d') }} ({{ korean_days(p.purchased_at.strftime("%A")) }})
                 </div>
 
                 <!-- 타임라인 -->
