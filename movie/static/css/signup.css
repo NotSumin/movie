@@ -37,6 +37,7 @@
 .page-bg {
     width:100%;
     background-color:#f2f2f2;
+    min-width:1280px;
 }
 .login-left {
     width: calc(100% - 111px);

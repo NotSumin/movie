@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container py-4 common-container page-inner">
+    <div class="container py-5 common-container page-inner">
         <h4 class="pb-2 border-bottom mb-1">공지사항</h4>
         <div class="row my-2 justify-content-end">
             <div class="col-md-4">
@@ -22,8 +22,8 @@
         <table class="notice-table table table-hover">
             <colgroup>
                 <col style="width:10%;">
-                <col>
-                <col>
+                <col style="width:65%;">
+                <col style="width:25%;">
             </colgroup>
             <thead>
                 <tr class="table-light">
@@ -36,7 +36,7 @@
                 {% for notice in notice_list.items %}
                 <tr>
                     <td class="text-center">{{ notice_list.total - ((notice_list.page - 1) * notice_list.per_page) - loop.index0 }}</td>
-                    <td>
+                    <td class="text-overflow-hidden">
                         <a href="{{ url_for('notice.notice_detail', notice_id=notice.id) }}">
                             {{ notice.title }}
                         </a>
