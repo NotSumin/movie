@@ -188,7 +188,7 @@
     cursor: pointer;
 }
 
-@media (max-width: 992px) {
+/*@media (max-width: 992px) {
     .store-categories { flex-direction: column; }
     .store-product-grid { grid-template-columns: repeat(2, 1fr); }
-}
+}*/
