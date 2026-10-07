@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import SelectField, RadioField
 from wtforms.fields.simple import StringField, TextAreaField, SubmitField, PasswordField, EmailField
-from wtforms.validators import DataRequired, Length, EqualTo, Email
+from wtforms.validators import DataRequired, Length, EqualTo, Email, Regexp, Optional
 from flask_wtf.file import MultipleFileField, FileAllowed
 
 
@@ -17,11 +17,11 @@ class AnswerForm(FlaskForm):
     submit = SubmitField('답변등록')
 
 class UserCreateForm(FlaskForm):
-    username = StringField('아이디', validators=[DataRequired(), Length(min=3, max=25)])
-    password1 = PasswordField('비밀번호', validators=[DataRequired(), EqualTo('password2', message='비밀번호가 일치하지 않습니다.')])
-    password2 = PasswordField('비밀번호 확인', validators=[DataRequired()])
-    email = EmailField('이메일', validators=[DataRequired(), Email()])
-    contact = StringField('전화번호')
+    username = StringField('아이디', validators=[DataRequired('아이디는 필수 입력 항목입니다.'), Length(min=3, max=25, message='3-25자리의 문자를 입력해주세요.')])
+    password1 = PasswordField('비밀번호', validators=[DataRequired('비밀번호 필수 입력 항목입니다.'), EqualTo('password2', message='비밀번호가 일치하지 않습니다.')])
+    password2 = PasswordField('비밀번호 확인', validators=[DataRequired('비밀번호를 재입력해 주세요.')])
+    email = EmailField('이메일', validators=[DataRequired('이메일은 필수 입력 항목입니다.'), Email('이메일 형식이 올바르지 않습니다.')])
+    contact = StringField('전화번호', validators=[Optional(), Regexp(r'^\d+$', message='전화번호 형식이 올바르지 않습니다.')])
     submit = SubmitField('저장하기')
 
 class UserLoginForm(FlaskForm):
