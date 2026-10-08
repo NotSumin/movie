@@ -109,7 +109,7 @@ Flask로 만든 영화 티켓 예매용 웹사이트
 
 <br>
 
-## 🖥️ 구현 화면
+## 👨🏻‍💻 구현 화면
 <details>
   <summary>메인 페이지</summary>
   <video src="https://github.com/user-attachments/assets/082d1537-17a6-46c7-9c17-bd5237fb44fa"></video>
