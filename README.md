@@ -13,8 +13,9 @@ Flask로 만든 영화 티켓 예매용 웹사이트
 2. [팀원 소개](#-팀원-소개)
 3. [개발 환경](#-개발-환경)
 4. [ERD](#-erd)
-5. [기능](#-기능)
-6. [시작하기](#-시작하기)
+5. [주요 기능](#-주요-기능)
+6. [구현 화면](#-구현-화면)
+7. [시작하기](#-시작하기)
 
 <br>
 
@@ -47,58 +48,119 @@ Flask로 만든 영화 티켓 예매용 웹사이트
 
 <br>
 
-## ⚙️ 기능
+## ⚙️ 주요 기능
+<details>
+  <summary>회원</summary>
+  <ul>
+    <li>회원가입</li>
+    <li>로그인 / 로그아웃</li>
+  </ul>
+</details>
+<details>
+  <summary>영화</summary>
+  <ul>
+    <li>영화 목록 / 상세 조회</li>
+    <li>영화 예고편 재생</li>
+    <li>영화 스틸컷 조회</li>
+    <li>장르 / 평점 조회</li>
+    <li>영화 좋아요</li>
+    <li>리뷰 작성</li>
+  </ul>
+</details>
+<details>
+  <summary>예매 / 결제</summary>
+  <ul>
+    <li>극장 · 날짜별 상영정보 조회</li>
+    <li>좌석 선택</li>
+    <li>BG.POINT 사용</li>
+    <li>VIP 쿠폰 / 관람권 / 할인 쿠폰 사용</li>
+    <li>토스페이먼츠 V2 샌드박스 결제 연동</li>
+  </ul>
+</details>
+<details>
+  <summary>스토어</summary>
+  <ul>
+    <li>굿즈 / 관람권 / 선물 상품 조회</li>
+    <li>장바구니</li>
+    <li>체크아웃</li>
+    <li>토스페이먼츠 결제</li>
+  </ul>
+</details>
+<details>
+  <summary>고객센터</summary>
+  <ul>
+    <li>공지사항</li>
+    <li>Q&amp;A 문의 작성 및 수정/삭제</li>
+    <li>Q&amp;A 답변 작성 및 수정/삭제</li>
+  </ul>
+</details>
+<details>
+  <summary>마이페이지</summary>
+  <ul>
+    <li>예매내역 조회</li>
+    <li>구매내역 조회</li>
+    <li>취소내역 조회</li>
+    <li>예매취소</li>
+    <li>제품환불</li>
+    <li>회원정보 조회</li>
+    <li>회원탈퇴</li>
+  </ul>
+</details>
+
+<br>
+
+## 🖥️ 구현 화면
 <details>
   <summary>메인 페이지</summary>
-  <video src="https://github.com/user-attachments/assets/5b164b90-48c6-4013-a2cb-00773616b1d4"></video>
+  <video src="https://github.com/user-attachments/assets/082d1537-17a6-46c7-9c17-bd5237fb44fa"></video>
 </details>
 <details>
   <summary>회원가입</summary>
   
   회원가입 기능
-  <div><video src="https://github.com/user-attachments/assets/082d1537-17a6-46c7-9c17-bd5237fb44fa"></video></div>
+  <div><video src="https://github.com/user-attachments/assets/e8f33ce9-e1ea-49fc-9834-6812c7a0d8f8"></video></div>
   
   회원가입 오류
-  <div><video src="https://github.com/user-attachments/assets/c7b1572c-2a22-4785-acd2-a5173ac428a4"></video></div>
+  <div><video src="https://github.com/user-attachments/assets/851081bb-134b-41b9-a97e-c14e4b6d61a9"></video></div>
 </details>
 <details>
   <summary>로그인</summary>
   
   로그인 기능
-  <div><video src="https://github.com/user-attachments/assets/1228e1d3-2669-4728-a851-a41ec5cbc93d"></video></div>
+  <div><video src="https://github.com/user-attachments/assets/32c8662c-e662-415b-be62-ba012c856006"></video></div>
 
   로그인 오류
-  <div><video src="https://github.com/user-attachments/assets/5d286b0e-a5bd-4749-99fc-d2affa5fec13"></video></div>
+  <div><video src="https://github.com/user-attachments/assets/17d403e5-0971-480d-950d-d9a3e4c45757"></video></div>
 </details>
 <details>
   <summary>영화 페이지</summary>
-  <video src="https://github.com/user-attachments/assets/dcca4045-c631-4eab-ad39-8ac2c5530d69"></video>
+  <video src="https://github.com/user-attachments/assets/191fc4e2-af56-44b9-8dcc-fc6463fa7cbf"></video>
 </details>
 <details>
   <summary>예매</summary>
-  <video src="https://github.com/user-attachments/assets/3df80333-f4d7-4f6c-8f22-cc56a42b16a2"></video>
+  <video src="https://github.com/user-attachments/assets/05b9117e-2ef2-4e07-b35c-f658bd2a9479"></video>
 </details>
 <details>
   <summary>스토어</summary>
-  <video src="https://github.com/user-attachments/assets/b73ade39-ed37-4d38-a634-545c36f3dfb5"></video>
+  <video src="https://github.com/user-attachments/assets/89dbc589-2979-4721-9763-2830ed043fe3"></video>
 </details>
 <details>
   <summary>고객센터</summary>
 
   Q&A
-  <div><video src="https://github.com/user-attachments/assets/bbde7b66-92a9-4f13-a51e-81ff774cb3ca"></video></div>
+  <div><video src="https://github.com/user-attachments/assets/fbb145bc-0b3d-447f-8846-2ba66d642d3f"></video></div>
 
   공지사항
-  <div><video src="https://github.com/user-attachments/assets/22fd7ffc-b5ea-40f4-8fe7-76b06449a061"></video></div>
+  <div><video src="https://github.com/user-attachments/assets/0d8ae8ee-f92a-4eaa-a67c-9c9408f1bc70"></video></div>
 </details>
 <details>
   <summary>마이페이지</summary>
   
   마이페이지 내역 있음
-  <div><video src="https://github.com/user-attachments/assets/ce2a2d60-691c-4ad4-9a57-92f45ab72433"></video></div>
+  <div><video src="https://github.com/user-attachments/assets/e78123be-6e50-46ff-b466-643a87f5c80b"></video></div>
 
   마이페이지 내역 없음
-  <div><video src="https://github.com/user-attachments/assets/60a0379a-7c74-4f92-9b66-4c399ee52a50"></video></div>
+  <div><video src="https://github.com/user-attachments/assets/a4f8d5e7-c199-41dc-a79f-ae1feff3ea3a"></video></div>
 </details>
 
 <br>
