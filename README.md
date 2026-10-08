@@ -9,22 +9,22 @@ Flask로 만든 영화 티켓 예매용 웹사이트
 <br>
 
 ## ⫶☰ 목차
-1. [프로젝트 소개](#-프로젝트-소개)
-2. [팀원 소개](#-팀원-소개)
-3. [개발 환경](#-개발-환경)
-4. [ERD](#-erd)
-5. [주요 기능](#-주요-기능)
-6. [구현 화면](#-구현-화면)
-7. [시작하기](#-시작하기)
+1. [프로젝트 소개](#anchor_project)
+2. [팀원 소개](#anchor_team)
+3. [개발 환경](#anchor_tools)
+4. [ERD](#anchor_erd)
+5. [주요 기능](#anchor_features)
+6. [구현 화면](#anchor_view)
+7. [시작하기](#anchor_start)
 
 <br>
 
-## 💻 프로젝트 소개
+## <a id="anchor_project"></a>💻 프로젝트 소개
 부귀영화는 사용자 가입 및 로그인, 영화 검색, 기존 영화에 대한 "좋아요" 버튼 및 리뷰 기능, 예매 및 결제 시스템, 상품 구매를 위한 스토어, 관리자와의 Q&A 시스템, 예약 확인 또는 취소를 위한 "My Page"와 같은 핵심 기능을 갖춘 영화 예매 웹사이트입니다. 사용자가 원하는 시간과 장소에서 영화 티켓을 예매할 수 있도록, 끊김 없는 경험을 제공하는 것을 목표로 합니다.
 
 <br>
 
-## 👥 팀원 소개
+## <a id="anchor_team"></a>👥 팀원 소개
 
 | &nbsp;&nbsp;<img width="150" height="166" alt="3" src="https://github.com/user-attachments/assets/3d393785-126d-4b4e-beb2-5521d0451392" />&nbsp;&nbsp;<br>김유진 | &nbsp;&nbsp;<img width="150" height="166" alt="1" src="https://github.com/user-attachments/assets/99855661-16ed-44e7-a9ff-4dc957a6ea01" />&nbsp;&nbsp;<br>이동형 | &nbsp;&nbsp;<img width="150" height="166" alt="2" src="https://github.com/user-attachments/assets/f28a6521-90de-471c-8923-f8a43c64d900" />&nbsp;&nbsp;<br>조수민 | &nbsp;&nbsp;<img width="150" height="166" alt="4" src="https://github.com/user-attachments/assets/1d5dacca-2714-4525-aa12-1de297b984d3" />&nbsp;&nbsp;<br>함선혜 |
 | :---: | :---: | :---: | :---: |
@@ -35,12 +35,12 @@ Flask로 만든 영화 티켓 예매용 웹사이트
 
 <br>
 
-## 🛠️ 개발 환경
+## <a id="anchor_tools"></a>🛠️ 개발 환경
 [![개발 환경](https://skillicons.dev/icons?i=html,css,bootstrap,js,flask,py,mysql,figma,docker,github)](https://skillicons.dev)
 
 <br>
 
-## 📈 ERD
+## <a id="anchor_erd"></a>📈 ERD
 <details>
   <summary>여기를 클릭하여 ERD 보기</summary>
   <img width="7032" height="6136" alt="image" src="https://github.com/user-attachments/assets/eb8c67be-9f7e-45a1-9e19-a48bb3e37164" />
@@ -48,7 +48,7 @@ Flask로 만든 영화 티켓 예매용 웹사이트
 
 <br>
 
-## ⚙️ 주요 기능
+## <a id="anchor_features"></a>⚙️ 주요 기능
 <details>
   <summary>회원</summary>
   <ul>
@@ -109,7 +109,7 @@ Flask로 만든 영화 티켓 예매용 웹사이트
 
 <br>
 
-## 👨🏻‍💻 구현 화면
+## <a id="anchor_view"></a>👨🏻‍💻 구현 화면
 <details>
   <summary>메인 페이지</summary>
   <video src="https://github.com/user-attachments/assets/082d1537-17a6-46c7-9c17-bd5237fb44fa"></video>
@@ -165,7 +165,7 @@ Flask로 만든 영화 티켓 예매용 웹사이트
 
 <br>
 
-## 🚀 시작하기
+## <a id="anchor_start"></a>🚀 시작하기
 ```
 git clone https://github.com/moviemoviee/movie.git
 cd movie
